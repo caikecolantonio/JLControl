@@ -3,8 +3,8 @@ from django.db import models
 
 class Contrato(models.Model):
     nome = models.CharField(max_length=100, null=False)
-    rg = models.IntegerField(null=False)
-    cpf = models.IntegerField(max_length=11)
+    rg = models.IntegerField(null=True)
+    cpf = models.IntegerField(null=True)
     email = models.EmailField(null=True)
     telefone = models.IntegerField()
     descricao = models.CharField(max_length=3000, null=True, blank=True)
