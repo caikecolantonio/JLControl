@@ -8,7 +8,7 @@ class Contrato(models.Model):
     email = models.EmailField(null=True)
     telefone = models.IntegerField()
     descricao = models.CharField(max_length=3000, null=True, blank=True)
-    documento_externo = models.CharField(max_length=50)
+    documento_externo = models.CharField(max_length=50, null=True)
 
     def __str__(self):
         return self.nome.capitalize()
