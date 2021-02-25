@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from controle.models import Locacao
-from controle.forms import ConsultarLocacoes
+from controle.models import Contrato
+from controle.forms import ConsultarContrato
 
 # Create your views here.
 
@@ -14,13 +15,24 @@ def cancelar(request):
     pass
 
 def consultar(request):
-
-    consulta = Locacao.objects.all()
+    ConsultarContratoForm = ConsultarContrato(request.POST or None)
+    contrato = None
+    if  ConsultarContratoForm.is_valid:
+        cpf =  ConsultarContratoForm.data['cpf']
+        if cpf != '':
+            contrato = Contrato.objects.filter(cpf=cpf)
+            if contrato.count == 0:
+                contrato = 'Contrato não encontrado'
+        else:
+            contrato = 'Digite a porra do cpf'
+    
     consultas = {
-        'consulta': consulta,
-        'form': ConsultarLocacoes,
+        'contrato': contrato,
+        'form': ConsultarContrato,
     }
 
 
     return render(request, 'consultar.html', consultas)
+
+
 
