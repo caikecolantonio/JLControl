@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from controle.models import Locacao
 from controle.models import Contrato
-from controle.forms import ConsultarContrato
+from controle.forms import ConsultarContrato, ConsultarTraje
 
 # Create your views here.
 
@@ -18,7 +18,7 @@ def consultar(request):
     ConsultarContratoForm = ConsultarContrato(request.POST or None)
     contrato, locacoes, items = None,None,None
     locacao_detalhes = {}
-    if  ConsultarContratoForm.is_valid:
+    if ConsultarContratoForm.is_valid:
         for cpf in ConsultarContratoForm.data.items():
             if 'cpf' in cpf:
                 if cpf[1] != '':
@@ -48,6 +48,7 @@ def consultar(request):
         'contrato': contrato,
         'locacoes': locacao_detalhes,
         'form': ConsultarContrato,
+        'form_traje': ConsultarTraje,
     }
 
 
