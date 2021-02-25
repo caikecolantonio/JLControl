@@ -16,22 +16,26 @@ def cancelar(request):
 
 def consultar(request):
     ConsultarContratoForm = ConsultarContrato(request.POST or None)
-    contrato = None
+    contrato, locacao, items = None,None,None
     if  ConsultarContratoForm.is_valid:
-        cpf =  ConsultarContratoForm.data.items()
-        for itens in cpf:
-            print(itens)
-            if 'cpf' in itens:
-                print(itens[1])
-                if itens[1] != '':
-                   contrato = Contrato.objects.filter(cpf=itens[1])
-                   if contrato.count == 0:
-                        contrato = 'Contrato não encontrado'
+        for cpf in ConsultarContratoForm.data.items():
+            if 'cpf' in cpf:
+                if cpf[1] != '':
+                   contrato = Contrato.objects.get(cpf=cpf[1])
+                   #Verifica se encontrou o contrato
+                   if contrato:
+                        locacao = contrato.locacao_set.select_related()
+                        #items = locacao.item
+                   else:
+                       contrato = 'Nenhum contrato encontrado'
                 else:
-                    contrato = 'Digite a porra do cpf'
+                    contrato = 'CPF não digitado'
+            
     
     consultas = {
         'contrato': contrato,
+        'locacoes': locacao,
+        'itens':items,
         'form': ConsultarContrato,
     }
 

@@ -1,8 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
 
-{% if contrato is not None %}
-{{ contrato }}
+{% if locacoes is not None %}
+{% for locacao in locacoes %}
+<div class="container">
+    <div class="row">
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#ID{{ locacao.id }}" aria-expanded="false" aria-controls="collapseExample">
+            {{ locacao }}
+          </button>
+        </p>
+        <div class="collapse" id="ID{{ locacao.id }}">
+          <div class="card card-body">
+            {{ item }}
+          </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
 {% endif %}
 
 {% endblock %}
