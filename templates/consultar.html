@@ -2,10 +2,14 @@
 % load static %}
 {% block content %}
 {% if contrato == '#ERRO1' %}
-CONTRATO NÃO ENCONTRADO
+<div class="alert alert-danger" role="alert">
+    Contrato não encontrado.
+  </div>
 {% endif %}
 {% if contrato == '#ERRO2' %}
-DIGITE O CPF
+<div class="alert alert-danger" role="alert">
+    Por favor digite o CPF.
+  </div>
 {% endif %}
 
 {% if locacoes is not None %}
