@@ -22,9 +22,9 @@ def consultar(request):
         for cpf in ConsultarContratoForm.data.items():
             if 'cpf' in cpf:
                 if cpf[1] != '':
-                   contrato = Contrato.objects.get(cpf=cpf[1])
-                   #Verifica se encontrou o contrato
-                   if contrato:
+                    if Contrato.objects.filter(cpf=cpf[1]):
+                        contrato = Contrato.objects.get(cpf=cpf[1])
+                        #Verifica se encontrou o contrato
                         QntLocacao = 0
                         for locacoes in contrato.locacao_set.select_related().values():
                             QntLocacao += 1
@@ -37,12 +37,13 @@ def consultar(request):
                                 for trajes in items:
                                     count += 1
                                     locacao_detalhes[QntLocacao]['item'][count] = trajes
-                   else:
-                       contrato = 'Nenhum contrato encontrado'
+                    else:
+                        #Contrato não encontrado
+                        contrato = '#ERRO1'
                 else:
-                    contrato = 'CPF não digitado'
-            
-    
+                    #CPF não digitado
+                    contrato = '#ERRO2'
+
     consultas = {
         'contrato': contrato,
         'locacoes': locacao_detalhes,

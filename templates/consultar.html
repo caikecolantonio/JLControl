@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 % load static %}
 {% block content %}
+{% if contrato == '#ERRO1' %}
+CONTRATO NÃO ENCONTRADO
+{% endif %}
+{% if contrato == '#ERRO2' %}
+DIGITE O CPF
+{% endif %}
 
 {% if locacoes is not None %}
 {% for key, locacao in locacoes.items %}
