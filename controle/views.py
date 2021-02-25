@@ -18,13 +18,17 @@ def consultar(request):
     ConsultarContratoForm = ConsultarContrato(request.POST or None)
     contrato = None
     if  ConsultarContratoForm.is_valid:
-        cpf =  ConsultarContratoForm.data['cpf']
-        if cpf != '':
-            contrato = Contrato.objects.filter(cpf=cpf)
-            if contrato.count == 0:
-                contrato = 'Contrato não encontrado'
-        else:
-            contrato = 'Digite a porra do cpf'
+        cpf =  ConsultarContratoForm.data.items()
+        for itens in cpf:
+            print(itens)
+            if 'cpf' in itens:
+                print(itens[1])
+                if itens[1] != '':
+                   contrato = Contrato.objects.filter(cpf=itens[1])
+                   if contrato.count == 0:
+                        contrato = 'Contrato não encontrado'
+                else:
+                    contrato = 'Digite a porra do cpf'
     
     consultas = {
         'contrato': contrato,
