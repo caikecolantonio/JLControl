@@ -22,10 +22,17 @@ class Lancamento(models.Model):
         return str(self.id)
 
 class Traje(models.Model):
+    codigo = models.CharField(max_length=20, null=False, unique=True)
     nome = models.CharField(max_length=80, null=False)
     modelo = models.CharField(max_length=80, null=False)
     corte = models.CharField(max_length=80, null=False)
     valor = models.DecimalField(max_digits=5, decimal_places=2)
+    ATIVO_CHOISE = [
+        ('nao', 'Não'),
+        ('sim', 'Sim'),
+    ]
+    ativo = models.CharField(choices=ATIVO_CHOISE, max_length=100, default='sim')
+
 
     def __str__(self):
         return self.nome.capitalize() + ' - ' + 'R$:' + str(self.valor)

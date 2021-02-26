@@ -1,6 +1,5 @@
 from django.shortcuts import render
-from controle.models import Locacao
-from controle.models import Contrato
+from controle.models import Locacao,Contrato, Traje
 from controle.forms import ConsultarContrato, ConsultarTraje
 
 # Create your views here.
@@ -16,7 +15,9 @@ def cancelar(request):
 
 def consultar(request):
     ConsultarContratoForm = ConsultarContrato(request.POST or None)
+    ConsultarTrajeForm = ConsultarTraje(request.POST or None)
     contrato, locacoes, items = None,None,None
+    traje = Traje.objects.all()
     locacao_detalhes = {}
     if ConsultarContratoForm.is_valid:
         for cpf in ConsultarContratoForm.data.items():
@@ -44,11 +45,22 @@ def consultar(request):
                     #CPF não digitado
                     contrato = '#ERRO2'
 
+    #FORMULARIO CONSULTAR TRAJE
+
+    if ConsultarTraje.is_valid:
+        todos_trajes = Traje.objects.all()
+        if 'todos' in ConsultarTrajeForm:
+            #selecionados_trajes = Traje.objects.
+            pass
+
+
+
     consultas = {
         'contrato': contrato,
         'locacoes': locacao_detalhes,
         'form': ConsultarContrato,
         'form_traje': ConsultarTraje,
+        'traje': traje,
     }
 
 
