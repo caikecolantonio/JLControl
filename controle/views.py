@@ -74,7 +74,7 @@ def consultar(request):
 
 def autocomplete_nome(request):
     if 'term' in request.GET:
-        query = Contrato.objects.filter(contrato__icontains=request.GET.get('term'))
+        query = Contrato.objects.filter(nome__contains=request.GET.get('term'))
         results = list()
         for contratos in query:
             results.append(contratos.nome)

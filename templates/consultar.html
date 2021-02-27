@@ -2,6 +2,7 @@
 % load static %}
 {% block content %}
 {% if contrato == '#ERRO001' %}
+
 <div class="alert alert-danger" role="alert">
     Telefone duplicado ou não encontrado
   </div>
@@ -11,7 +12,6 @@
     Por favor digite o CPF.
   </div>
 {% endif %}
-
 {% if locacoes is not None %}
 {% for key, locacao in locacoes.items %}
 <div class="container">
