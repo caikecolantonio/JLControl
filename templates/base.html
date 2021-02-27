@@ -60,9 +60,9 @@
                 
                 <div>CPF: {{ form.CPF }}</div>
                 <div>Telefone: {{ form.Telefone }}</div>
-                <div>Nome:   {{ form.Nome }}</div>
-
-                <input id="formContrato" name="formContrato">
+                
+                <label for="Nome">Nome: </label>
+                <input id="formContrato" type="text" name="Nome" maxlength="100" required>
                 <div>Documento Externo: {{ form.DocumentoExterno }}</div>
               
               </div>
