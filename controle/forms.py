@@ -1,10 +1,10 @@
 from django import forms
 
 class ConsultarContrato(forms.Form):
-    cpf = forms.IntegerField(label='CPF', required=False)
-    telefone = forms.IntegerField(label='Telefone', required=False)
-    nome = forms.CharField(label='Nome', required=False)
-    documento_externo = forms.CharField(label='Documento Externo', required=False)
+    CPF = forms.IntegerField(label='CPF', required=False)
+    Telefone = forms.IntegerField(label='Telefone', required=False)
+    Nome = forms.CharField(label='Nome', required=False)
+    DocumentoExterno = forms.CharField(label='Documento Externo', required=False)
 
 class ConsultarTraje(forms.Form):
     nome = forms.CharField(label='Nome', required=False)

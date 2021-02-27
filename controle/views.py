@@ -1,7 +1,8 @@
 from django.shortcuts import render
-from controle.models import Locacao,Contrato, Traje
+from controle.models import Locacao, Contrato, Traje
 from controle.forms import ConsultarContrato, ConsultarTraje
-from controle.funcoes import is_traje_disponivel
+from controle.funcoes import is_traje_disponivel, busca_locacao_por_contrato
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -16,33 +17,37 @@ def cancelar(request):
 
 def consultar(request):
     ConsultarContratoForm = ConsultarContrato(request.POST or None)
-    contrato, locacoes, items = None,None,None
+    contrato = None
     locacao_detalhes = {}
     if ConsultarContratoForm.is_valid():
-        for cpf in ConsultarContratoForm.data.items():
-            if 'cpf' in cpf:
-                if cpf[1] != '':
-                    if Contrato.objects.filter(cpf=cpf[1]):
-                        contrato = Contrato.objects.get(cpf=cpf[1])
-                        #Verifica se encontrou o contrato
-                        QntLocacao = 0
-                        for locacoes in contrato.locacao_set.select_related().values():
-                            QntLocacao += 1
-                            locacao_detalhes[QntLocacao] = locacoes
-                            locacaoRelacionados = Locacao.objects.filter(id=locacoes['id']).select_related()
-                            locacao_detalhes[QntLocacao]['item'] = {}
-                            count = 0
-                            for locacao in locacaoRelacionados:
-                                items  = locacao.item.all().values()
-                                for trajes in items:
-                                    count += 1
-                                    locacao_detalhes[QntLocacao]['item'][count] = trajes
-                    else:
-                        #Contrato não encontrado
-                        contrato = '#ERRO1'
-                else:
-                    #CPF não digitado
-                    contrato = '#ERRO2'
+        campos = ConsultarContratoForm.cleaned_data
+        if campos['CPF']:
+            if Contrato.objects.filter(cpf=campos['CPF']):
+                contrato = Contrato.objects.get(cpf=campos['CPF'])
+                #Verifica se encontrou o contrato
+                locacoes = busca_locacao_por_contrato(contrato)
+                if locacoes:
+                    locacao_detalhes = locacoes
+        if campos['Telefone']:
+            if len(Contrato.objects.filter(telefone=campos['Telefone'])) == 1:
+                contrato = Contrato.objects.get(telefone=campos['Telefone'])
+                #Verifica se encontrou o contrato
+                locacoes = busca_locacao_por_contrato(contrato)
+                if locacoes:
+                    locacao_detalhes = locacoes
+            else:
+                contrato = '#ERRO001'
+        if campos['Nome']:
+            if Contrato.objects.filter(nome=campos['Nome']):
+                contrato = Contrato.objects.get(nome=campos['Nome'])
+                #Verifica se encontrou o contrato
+                locacoes = busca_locacao_por_contrato(contrato)
+                if locacoes:
+                    locacao_detalhes = locacoes
+
+                
+                 
+                
 
     #FORMULARIO CONSULTAR TRAJE
     ConsultarTrajeForm = ConsultarTraje(request.POST or None)
@@ -67,5 +72,12 @@ def consultar(request):
 
     return render(request, 'consultar.html', consultas)
 
+def autocomplete_nome(request):
+    if 'term' in request.GET:
+        query = Contrato.objects.filter(contrato__icontains=request.GET.get('term'))
+        results = list()
+        for contratos in query:
+            results.append(contratos.nome)
+        return JsonResponse(results, safe=False)
 
 

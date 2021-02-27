@@ -15,12 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from controle.views import devolver, locar, consultar, cancelar
+from controle.views import devolver, locar, consultar, cancelar, autocomplete_nome
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('devolver/', devolver),
     path('locar/', locar),
     path('cancelar/', cancelar),
-    path('consultar/', consultar)
+    path('consultar/', consultar),
+    path('autocomplete-nome/', autocomplete_nome, name='autocomplete-nome')
 ]
