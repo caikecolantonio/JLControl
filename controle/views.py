@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from controle.models import Locacao,Contrato, Traje
 from controle.forms import ConsultarContrato, ConsultarTraje
+from controle.funcoes import is_traje_disponivel
 
 # Create your views here.
 
@@ -15,11 +16,9 @@ def cancelar(request):
 
 def consultar(request):
     ConsultarContratoForm = ConsultarContrato(request.POST or None)
-    ConsultarTrajeForm = ConsultarTraje(request.POST or None)
     contrato, locacoes, items = None,None,None
-    traje = Traje.objects.all()
     locacao_detalhes = {}
-    if ConsultarContratoForm.is_valid:
+    if ConsultarContratoForm.is_valid():
         for cpf in ConsultarContratoForm.data.items():
             if 'cpf' in cpf:
                 if cpf[1] != '':
@@ -46,13 +45,15 @@ def consultar(request):
                     contrato = '#ERRO2'
 
     #FORMULARIO CONSULTAR TRAJE
-
-    if ConsultarTraje.is_valid:
+    ConsultarTrajeForm = ConsultarTraje(request.POST or None)
+    trajes_disponiveis = []
+    if ConsultarTrajeForm.is_valid():
         todos_trajes = Traje.objects.all()
-        if 'todos' in ConsultarTrajeForm:
-            #selecionados_trajes = Traje.objects.
-            pass
-
+        if 'todos' in ConsultarTrajeForm.data and ConsultarTrajeForm.data['todos'] in 'on':
+            for traje in todos_trajes:
+                is_disponivel = is_traje_disponivel(traje)
+                if is_disponivel:
+                    trajes_disponiveis.append(is_disponivel)
 
 
     consultas = {
@@ -60,7 +61,7 @@ def consultar(request):
         'locacoes': locacao_detalhes,
         'form': ConsultarContrato,
         'form_traje': ConsultarTraje,
-        'traje': traje,
+        'trajes_disponiveis': trajes_disponiveis,
     }
 
 
