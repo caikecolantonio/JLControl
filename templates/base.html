@@ -24,10 +24,10 @@
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
     crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-      <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <link rel="stylesheet" href="/resources/demos/style.css">
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 </head>
 
 <body>
@@ -56,36 +56,50 @@
           <div class="modal-body">
             <form action="" method="post">
               {% csrf_token %}
-              <div style="">
-                
-                <div>CPF: {{ form.CPF }}</div>
-                <p></p>
-                <div>Telefone: {{ form.Telefone }}</div>                
-                <p></p>
-                <label for="Nome">Nome: </label>
-                <input id="formContrato" type="text" name="Nome" maxlength="100">
-                <p></p>
-                <div>Documento Externo: {{ form.DocumentoExterno }}</div>
-              
+              <div class="form-group row">
+                <label for="CPF" class="col-sm-2 col-form-label">CPF: </label>
+                <div class="col-sm-10">
+                  <input id="formCPF" class="form-control" type="text" name="CPF" maxlength="11"
+                    placeholder="Digite o CPF">
+                </div>
               </div>
-              <button type="submit" class="btn btn-primary">Pesquisar</button>
-
+              <div class="form-group row">
+                <label for="Telefone" class="col-sm-2 col-form-label">Telefone: </label>
+                <div class="col-sm-10">
+                  <input id="formTelefone" class="form-control" type="text" name="Telefone" maxlength="11"
+                    placeholder="Digite o Telefone">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="Nome" class="col-sm-2 col-form-label">Nome: </label>
+                <div class="col-sm-10">
+                  <input id="formNome" class="form-control" type="text" name="Nome" maxlength="100"
+                    placeholder="Digite o Nome">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="DocumentoExterno" class="col-sm-2 col-form-label">Documento Externo: </label>
+                <div class="col-sm-10">
+                  <input id="formDocumentoExterno" class="form-control" type="text" name="DocumentoExterno"
+                    maxlength="100" placeholder="Digite o Documento Externo">
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary btn-lg btn-block">Pesquisar</button>
+              <button type="button" class="btn btn-secondary btn-lg btn-block" data-dismiss="modal">Fechar</button>
             </form>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-  <script>
-    $(function () {
-      $("#formContrato").autocomplete({
-        source: '{% url 'autocomplete-nome' %}',
-        minLength: 3,
-        max: 5
-      });
-    });
-  </script>
-          </div>
+          <script>
+            $(function () {
+              $("#formNome").autocomplete({
+                source: '{% url 'autocomplete-nome' %}',
+                minLength: 3,
+                max: 5
+              });
+            });
+          </script>
         </div>
       </div>
+    </div>
     </div>
 
 
@@ -103,13 +117,54 @@
           <div class="modal-body">
             <form action="" method="post">
               {% csrf_token %}
-              <div style="">{{ form_traje.as_p }}</div>
-              <button type="submit" class="btn btn-primary">Pesquisar</button>
 
+              <div class="form-group row">
+                <label for="codigo" class="col-sm-2 col-form-label">Código: </label>
+                <div class="col-sm-10">
+                  <input id="formcodigo" class="form-control" type="text" name="codigo" maxlength="50"
+                    placeholder="Digite o Codigo do traje">
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="nome" class="col-sm-2 col-form-label">Nome: </label>
+                <div class="col-sm-10">
+                  <input id="formnome" class="form-control" type="text" name="nome" maxlength="100"
+                    placeholder="Digite o Nome do traje">
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="modelo" class="col-sm-2 col-form-label">Modelo: </label>
+                <div class="col-sm-10">
+                  <input id="formmodelo" class="form-control" type="text" name="modelo" maxlength="100"
+                    placeholder="Digite o Modelo">
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="corte" class="col-sm-2 col-form-label">Corte: </label>
+                <div class="col-sm-10">
+                  <input id="formcorte" class="form-control" type="text" name="corte" maxlength="100"
+                    placeholder="Digite o Corte">
+                </div>
+              </div>
+
+              <div class="form-group form-check form-switch row">
+                <div class="col-sm-2"> </div>
+                <div class="col-sm-5">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="todos" name="todos">
+                    <label class="form-check-label" for="gridCheck1">
+                      Mostrar todos
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-lg btn-block">Pesquisar</button>
+              <button type="button" class="btn btn-secondary btn-lg btn-block" data-dismiss="modal">Fechar</button>
             </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
           </div>
         </div>
       </div>

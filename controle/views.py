@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from controle.models import Locacao, Contrato, Traje
 from controle.forms import ConsultarContrato, ConsultarTraje
-from controle.funcoes import is_traje_disponivel, busca_locacao_por_contrato
+from controle.funcoes import is_traje_disponivel, busca_locacao_por_contrato, busca_traje
 from django.http import JsonResponse
+import json
 
 # Create your views here.
 
@@ -53,13 +54,27 @@ def consultar(request):
     ConsultarTrajeForm = ConsultarTraje(request.POST or None)
     trajes_disponiveis = []
     if ConsultarTrajeForm.is_valid():
-        todos_trajes = Traje.objects.all()
-        if 'todos' in ConsultarTrajeForm.data and ConsultarTrajeForm.data['todos'] in 'on':
+        campos_trajes = ConsultarTrajeForm.cleaned_data
+        if campos_trajes['todos']:
+            todos_trajes = Traje.objects.all()
             for traje in todos_trajes:
                 is_disponivel = is_traje_disponivel(traje)
                 if is_disponivel:
                     trajes_disponiveis.append(is_disponivel)
 
+        if campos_trajes['codigo']:
+            trajes_disponiveis = busca_traje('codigo', campos_trajes['codigo'])
+
+        if campos_trajes['nome']:
+            trajes_disponiveis = busca_traje('nome', campos_trajes['nome'])
+
+        if campos_trajes['modelo']:
+            trajes_disponiveis = busca_traje('modelo', campos_trajes['modelo'])
+        
+        if campos_trajes['corte']:
+            trajes_disponiveis = busca_traje('corte', campos_trajes['corte'])
+
+    
 
     consultas = {
         'contrato': contrato,
@@ -67,6 +82,7 @@ def consultar(request):
         'form': ConsultarContrato,
         'form_traje': ConsultarTraje,
         'trajes_disponiveis': trajes_disponiveis,
+        'count_trajes': 1
     }
 
 

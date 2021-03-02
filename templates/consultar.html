@@ -1,5 +1,8 @@
 {% extends "base.html" %}
-% load static %}
+
+{% load static %}
+{% load controle_comandos %}
+
 {% block content %}
 {% if contrato == '#ERRO001' %}
 
@@ -32,9 +35,44 @@
 </div>
 {% endfor %}
 {% endif %}
-    {% for traje in trajes_disponiveis %}
-        {{ traje }}<p></p>
 
+{% if trajes_disponiveis %}
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Codigo</th>
+      <th scope="col">Nome</th>
+      <th scope="col">Modelo</th>
+      <th scope="col">Corte</th>
+      <th scope="col">Valor</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for traje in trajes_disponiveis %}
+        <tr>
+          <th scope="row">{{ forloop.counter }}</th>
+          <td>{{ traje.codigo }}</td>
+          <td>{{ traje.nome }}</td>
+          <td>{{ traje.modelo }}</td>
+          <td>{{ traje.corte }}</td>
+          <td>{{ traje.valor }}</td>
+        </tr>
     {% endfor %}
+          <tr class="thead-light">
+            <th>Total:</th>
+            <th>{{ trajes_disponiveis|length }} </th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+          </tr>
+  </tbody>
+</table>
+{% endif %}
+
+
 
 {% endblock %}
+
+

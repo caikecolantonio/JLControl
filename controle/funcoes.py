@@ -33,6 +33,15 @@ def busca_locacao_por_contrato(contrato):
     if locacao_detalhes:
         return locacao_detalhes
 
+def busca_traje(tipo, pesquisa):
+    Filtros = {tipo: pesquisa}
+    volta = []
+    todos_trajes = Traje.objects.filter(**Filtros)
+    for traje in todos_trajes:
+        is_disponivel = is_traje_disponivel(traje)
+        if is_disponivel:
+            volta.append(is_disponivel)
+    return volta
 
 def busca_contrato_por_telefone(telefone):
     pass
