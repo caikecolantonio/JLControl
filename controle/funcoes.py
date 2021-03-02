@@ -34,9 +34,8 @@ def busca_locacao_por_contrato(contrato):
         return locacao_detalhes
 
 def busca_traje(tipo, pesquisa):
-    Filtros = {tipo: pesquisa}
     volta = []
-    todos_trajes = Traje.objects.filter(**Filtros)
+    todos_trajes = Traje.objects.filter(**{tipo: pesquisa})
     for traje in todos_trajes:
         is_disponivel = is_traje_disponivel(traje)
         if is_disponivel:
