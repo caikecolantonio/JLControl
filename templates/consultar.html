@@ -46,6 +46,7 @@
       <th scope="col">Modelo</th>
       <th scope="col">Corte</th>
       <th scope="col">Valor</th>
+      <th scope="col">Disponibilidade</th>
     </tr>
   </thead>
   <tbody>
@@ -57,11 +58,17 @@
           <td>{{ traje.modelo }}</td>
           <td>{{ traje.corte }}</td>
           <td>{{ traje.valor }}</td>
+          {% if MostraAlocados %}
+          <td>Alocado</td>
+          {% else %}
+          <td>Disponivel <button class="btn btn-primary" type="button">Alocar</button></td>
+          {% endif %}
         </tr>
     {% endfor %}
           <tr class="thead-light">
             <th>Total:</th>
             <th>{{ trajes_disponiveis|length }} </th>
+            <th></th>
             <th></th>
             <th></th>
             <th></th>

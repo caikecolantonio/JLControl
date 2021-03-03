@@ -12,3 +12,4 @@ class ConsultarTraje(forms.Form):
     modelo = forms.CharField(label='Modelo', required=False)
     corte = forms.CharField(label='Corte', required=False)
     todos = forms.BooleanField(label='Consultar Todos Disponíveis', required=False)
+    alocados = forms.BooleanField(label='Consultar os alocados', required=False)

@@ -53,26 +53,30 @@ def consultar(request):
     #FORMULARIO CONSULTAR TRAJE
     ConsultarTrajeForm = ConsultarTraje(request.POST or None)
     trajes_disponiveis = []
+    MostraAlocados = None
     if ConsultarTrajeForm.is_valid():
         campos_trajes = ConsultarTrajeForm.cleaned_data
+        MostraAlocados = (True if campos_trajes['alocados'] else False)
+        print(MostraAlocados)
+
         if campos_trajes['todos']:
             todos_trajes = Traje.objects.all()
             for traje in todos_trajes:
-                is_disponivel = is_traje_disponivel(traje)
+                is_disponivel = is_traje_disponivel(traje, MostraAlocados)
                 if is_disponivel:
                     trajes_disponiveis.append(is_disponivel)
 
         if campos_trajes['codigo']:
-            trajes_disponiveis = busca_traje('codigo', campos_trajes['codigo'])
+            trajes_disponiveis = busca_traje('codigo', campos_trajes['codigo'], MostraAlocados)
 
         if campos_trajes['nome']:
-            trajes_disponiveis = busca_traje('nome', campos_trajes['nome'])
+            trajes_disponiveis = busca_traje('nome', campos_trajes['nome'], MostraAlocados)
 
         if campos_trajes['modelo']:
-            trajes_disponiveis = busca_traje('modelo', campos_trajes['modelo'])
+            trajes_disponiveis = busca_traje('modelo', campos_trajes['modelo'], MostraAlocados)
         
         if campos_trajes['corte']:
-            trajes_disponiveis = busca_traje('corte', campos_trajes['corte'])
+            trajes_disponiveis = busca_traje('corte', campos_trajes['corte'], MostraAlocados)
 
     
 
@@ -82,6 +86,7 @@ def consultar(request):
         'form': ConsultarContrato,
         'form_traje': ConsultarTraje,
         'trajes_disponiveis': trajes_disponiveis,
+        'MostraAlocados': MostraAlocados,
         'count_trajes': 1
     }
 

@@ -38,7 +38,7 @@
         Pesquisar Locações
       </button>
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal2">
-        Pesquisar Estoque Traje
+        Pesquisar Trajes
       </button>
     </a>
 
@@ -109,7 +109,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Pesquisar os dados do Traje:</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Pesquisar Trajes:</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -117,6 +117,17 @@
           <div class="modal-body">
             <form action="" method="post">
               {% csrf_token %}
+              <div class="form-group form-check form-switch row">
+                <div class="col-sm-2"> </div>
+                <div class="col-sm-5">
+                  <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="alocados" name="alocados">
+                    <label class="form-check-label" for="gridCheck1">
+                      Mostrar os alocados
+                    </label>
+                  </div>
+                </div>
+              </div>
 
               <div class="form-group row">
                 <label for="codigo" class="col-sm-2 col-form-label">Código: </label>
