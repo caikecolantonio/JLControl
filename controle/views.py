@@ -17,7 +17,7 @@ def cancelar(request):
     pass
 
 def consultar(request):
-    ConsultarContratoForm = ConsultarContrato(request.POST or None)
+    ConsultarContratoForm = ConsultarContrato(request.POST)
     contrato = None
     locacao_detalhes = {}
     if ConsultarContratoForm.is_valid():
@@ -51,32 +51,36 @@ def consultar(request):
                 
 
     #FORMULARIO CONSULTAR TRAJE
-    ConsultarTrajeForm = ConsultarTraje(request.POST or None)
+    ConsultarTrajeForm = ConsultarTraje(request.POST)
     trajes_disponiveis = []
+    entrou = False
     MostraAlocados = None
-    if ConsultarTrajeForm.is_valid():
+
+    if request.method == 'POST' and ConsultarTrajeForm.is_valid() and not ConsultarContratoForm.has_changed():
         campos_trajes = ConsultarTrajeForm.cleaned_data
         MostraAlocados = (True if campos_trajes['alocados'] else False)
-        print(MostraAlocados)
+        if campos_trajes['codigo']:
+            trajes_disponiveis = busca_traje('codigo', campos_trajes['codigo'], MostraAlocados)
+            entrou = True
 
-        if campos_trajes['todos']:
+        if campos_trajes['nome']:
+            trajes_disponiveis = busca_traje('nome', campos_trajes['nome'], MostraAlocados)
+            entrou = True
+
+        if campos_trajes['modelo']:
+            trajes_disponiveis = busca_traje('modelo', campos_trajes['modelo'], MostraAlocados)
+            entrou = True
+
+        if campos_trajes['corte']:
+            trajes_disponiveis = busca_traje('corte', campos_trajes['corte'], MostraAlocados)
+            entrou = True
+
+        if not entrou:
             todos_trajes = Traje.objects.all()
             for traje in todos_trajes:
                 is_disponivel = is_traje_disponivel(traje, MostraAlocados)
                 if is_disponivel:
                     trajes_disponiveis.append(is_disponivel)
-
-        if campos_trajes['codigo']:
-            trajes_disponiveis = busca_traje('codigo', campos_trajes['codigo'], MostraAlocados)
-
-        if campos_trajes['nome']:
-            trajes_disponiveis = busca_traje('nome', campos_trajes['nome'], MostraAlocados)
-
-        if campos_trajes['modelo']:
-            trajes_disponiveis = busca_traje('modelo', campos_trajes['modelo'], MostraAlocados)
-        
-        if campos_trajes['corte']:
-            trajes_disponiveis = busca_traje('corte', campos_trajes['corte'], MostraAlocados)
 
     
 

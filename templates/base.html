@@ -1,3 +1,5 @@
+{% load static %}
+
 <!doctype html>
 <html lang="en">
 
@@ -28,7 +30,29 @@
   <link rel="stylesheet" href="/resources/demos/style.css">
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script type="text/javascript" src="{% static 'javaScript/scripts_base.js' %}"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </head>
+<style>
+  .modalx {
+    text-align: center;
+  }
+
+  @media screen and (min-width: 768px) {
+    .modalx:before {
+      display: inline-block;
+      vertical-align: middle;
+      content: " ";
+      height: 25%;
+    }
+  }
+
+  .modal-dialogx {
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle;
+  }
+</style>
 
 <body>
   <nav class="navbar navbar-dark bg-dark">
@@ -54,7 +78,7 @@
             </button>
           </div>
           <div class="modal-body">
-            <form action="" method="post">
+            <form name="formContrato" action="" method="post">
               {% csrf_token %}
               <div class="form-group row">
                 <label for="CPF" class="col-sm-2 col-form-label">CPF: </label>
@@ -84,24 +108,57 @@
                     maxlength="100" placeholder="Digite o Documento Externo">
                 </div>
               </div>
-              <button type="submit" class="btn btn-primary btn-lg btn-block">Pesquisar</button>
+              <button type="button" class="btn btn-primary btn-lg btn-block" onclick="validaCampos()">Pesquisar</button>
               <button type="button" class="btn btn-secondary btn-lg btn-block" data-dismiss="modal">Fechar</button>
             </form>
           </div>
-          <script>
-            $(function () {
-              $("#formNome").autocomplete({
-                source: '{% url 'autocomplete-nome' %}',
-                minLength: 3,
-                max: 5
+        </div>
+
+      </div>
+      <script>
+        $(function () {
+          $("#formNome").autocomplete({
+            source: '{% url 'autocomplete-nome' %}',
+            minLength: 3,
+            max: 5
               });
             });
-          </script>
+      </script>
+      <!--      <script>
+    var counter = 5;
+    var interval = setInterval(function() {
+    counter--;
+    // Display 'counter' wherever you want to display it.
+    if (counter <= 0) {
+     		clearInterval(interval);
+        document.getElementById("alertaCPF").style.display="block";
+        console.log("passou");
+        return;
+    }
+}, 1000);
+      </script>-->
+      <script>function validaCampos() {
+          if (formContrato.CPF.value == '' && formContrato.Telefone.value == '' && formContrato.Nome.value == '' && formContrato.DocumentoExterno.value == '') {
+            document.getElementById("botaoAlerta").click();
+          }
+          else {
+            formContrato.submit();
+          }
+        }
+      </script>
+
+      <!-- Modal -->
+      <div class="modal fade modalx" style="color:#ff6666" id="alertaCPF" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialogx" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h6 class="modal-title" id="exampleModalLabel">Digite pelo menos um dos campos</h6>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    </div>
-
 
     <!-- Modal Trajes -->
     <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2"
@@ -115,20 +172,8 @@
             </button>
           </div>
           <div class="modal-body">
-            <form action="" method="post">
+            <form name="formTraje" action="" method="post">
               {% csrf_token %}
-              <div class="form-group form-check form-switch row">
-                <div class="col-sm-2"> </div>
-                <div class="col-sm-5">
-                  <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="alocados" name="alocados">
-                    <label class="form-check-label" for="gridCheck1">
-                      Mostrar os alocados
-                    </label>
-                  </div>
-                </div>
-              </div>
-
               <div class="form-group row">
                 <label for="codigo" class="col-sm-2 col-form-label">Código: </label>
                 <div class="col-sm-10">
@@ -160,18 +205,19 @@
                     placeholder="Digite o Corte">
                 </div>
               </div>
-
               <div class="form-group form-check form-switch row">
                 <div class="col-sm-2"> </div>
                 <div class="col-sm-5">
                   <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="todos" name="todos">
+                    <input class="form-check-input" type="checkbox" id="alocados" name="alocados">
                     <label class="form-check-label" for="gridCheck1">
-                      Mostrar todos
+                      Mostrar os alocados
                     </label>
                   </div>
                 </div>
               </div>
+
+              <input type="hidden" id="todos" name="todos" value='1'>
 
               <button type="submit" class="btn btn-primary btn-lg btn-block">Pesquisar</button>
               <button type="button" class="btn btn-secondary btn-lg btn-block" data-dismiss="modal">Fechar</button>
@@ -181,7 +227,9 @@
       </div>
     </div>
   </nav>
-
+  <!-- Button trigger modal -->
+  <button id="botaoAlerta" type="button" class="btn btn-primary" data-toggle="modal" data-target="#alertaCPF"
+    hidden="true"> </button>
 
 
 
