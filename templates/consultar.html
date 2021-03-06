@@ -4,13 +4,13 @@
 {% load controle_comandos %}
 
 {% block content %}
-{% if contrato == '#ERRO001' %}
+{% if cliente == '#ERRO001' %}
 
 <div class="alert alert-danger" role="alert">
     Telefone duplicado ou não encontrado
   </div>
 {% endif %}
-{% if contrato == '#ERRO2' %}
+{% if cliente == '#ERRO2' %}
 <div class="alert alert-danger" role="alert">
     Por favor digite o CPF.
   </div>
@@ -20,7 +20,7 @@
 <div class="container">
     <div class="row">
         <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#ID{{ locacao.id }}" aria-expanded="false" aria-controls="collapseExample">
-            {{contrato.nome }} / ID: {{ locacao.id }} - {{ locacao.status }} - {{ locacao.data_locacao}}
+            {{cliente.nome }} / ID: {{ locacao.id }} - {{ locacao.status }} - {{ locacao.data_locacao}}
           </button>
         </p>
         <div class="collapse" id="ID{{ locacao.id }}">

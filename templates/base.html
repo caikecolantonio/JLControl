@@ -82,7 +82,7 @@
             </button>
           </div>
           <div class="modal-body">
-            <form name="formContrato" action="" method="post">
+            <form name="formCliente" action="" method="post">
               {% csrf_token %}
               <div class="form-group row">
                 <label for="CPF" class="col-sm-2 col-form-label">CPF: </label>
@@ -142,11 +142,11 @@
 }, 1000);
       </script>-->
       <script>function validaCampos() {
-          if (formContrato.CPF.value == '' && formContrato.Telefone.value == '' && formContrato.Nome.value == '' && formContrato.DocumentoExterno.value == '') {
+          if (formCliente.CPF.value == '' && formCliente.Telefone.value == '' && formCliente.Nome.value == '' && formCliente.DocumentoExterno.value == '') {
             document.getElementById("botaoAlerta").click();
           }
           else {
-            formContrato.submit();
+            formCliente.submit();
           }
         }
       </script>
@@ -181,7 +181,7 @@
               <div class="form-group row">
                 <label for="codigo" class="col-sm-2 col-form-label">Código: </label>
                 <div class="col-sm-10">
-                  <input id="formcodigo" class="form-control" type="text" name="codigo" maxlength="50"
+                  <input id="formTrajeCodigo" class="form-control AutoCompleteTraje" type="text" name="codigo" maxlength="50"
                     placeholder="Digite o Codigo do traje">
                 </div>
               </div>
@@ -189,7 +189,7 @@
               <div class="form-group row">
                 <label for="nome" class="col-sm-2 col-form-label">Nome: </label>
                 <div class="col-sm-10">
-                  <input id="formnome" class="form-control" type="text" name="nome" maxlength="100"
+                  <input id="formTrajeNome" class="form-control AutoCompleteTraje" type="text" name="nome" maxlength="100"
                     placeholder="Digite o Nome do traje">
                 </div>
               </div>
@@ -197,7 +197,7 @@
               <div class="form-group row">
                 <label for="modelo" class="col-sm-2 col-form-label">Modelo: </label>
                 <div class="col-sm-10">
-                  <input id="formmodelo" class="form-control" type="text" name="modelo" maxlength="100"
+                  <input id="formTrajeModelo" class="form-control AutoCompleteTraje" type="text" name="modelo" maxlength="100"
                     placeholder="Digite o Modelo">
                 </div>
               </div>
@@ -205,7 +205,7 @@
               <div class="form-group row">
                 <label for="corte" class="col-sm-2 col-form-label">Corte: </label>
                 <div class="col-sm-10">
-                  <input id="formcorte" class="form-control" type="text" name="corte" maxlength="100"
+                  <input id="formTrajeCorte" class="form-control AutoCompleteTraje" type="text" name="corte" maxlength="100"
                     placeholder="Digite o Corte">
                 </div>
               </div>
@@ -231,6 +231,24 @@
       </div>
     </div>
   </nav>
+
+ 
+
+    <script>
+      function Atualiza() {
+      try {
+        focus = document.getElementById(document.activeElement.id).name 
+      } catch (error) {}    
+      
+      $(function () {
+      $(".AutoCompleteTraje").autocomplete({
+      source: '{% url 'autocomplete-traje' %}?tipo='+focus,
+      minLength: 3,
+      max: 5
+      });
+      });}
+      setInterval(Atualiza, 300);
+    </script>
   <!-- Button trigger modal -->
   <button id="botaoAlerta" type="button" class="btn btn-primary" data-toggle="modal" data-target="#alertaCPF"
     hidden="true"> </button>

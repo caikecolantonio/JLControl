@@ -1,13 +1,12 @@
 from django.db import models
 # Create your models here.
 
-class Contrato(models.Model):
+class Cliente(models.Model):
     nome = models.CharField(max_length=100, null=False)
     rg = models.IntegerField(null=True)
     cpf = models.IntegerField(null=True)
     email = models.EmailField(null=True)
     telefone = models.IntegerField()
-    descricao = models.CharField(max_length=3000, null=True, blank=True)
     documento_externo = models.CharField(max_length=50, null=True)
 
     def __str__(self):
@@ -70,9 +69,10 @@ class Locacao(models.Model):
         ('Atraso', 'Em Atraso'),
     ]
     status = models.CharField(choices=STATUS_CHOISE, max_length=100)
+    descricao = models.CharField(max_length=3000, null=True, blank=True)
     item = models.ManyToManyField(Item)
-    contrato = models.ForeignKey(Contrato, on_delete=models.CASCADE)
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     lancamento = models.ForeignKey(Lancamento, on_delete=models.CASCADE)
     def __str__(self):
 
-        return str(self.id) + ' - ' + self.contrato.nome + ' - Data Devolução: ' + str(self.data_devolucao.strftime("%d-%m-%Y %H:%M:%S"))
+        return str(self.id) + ' - ' + self.cliente.nome + ' - Data Devolução: ' + str(self.data_devolucao.strftime("%d-%m-%Y %H:%M:%S"))

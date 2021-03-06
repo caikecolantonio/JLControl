@@ -1,6 +1,6 @@
 from django import forms
 
-class ConsultarContrato(forms.Form):
+class ConsultarCliente(forms.Form):
     CPF = forms.IntegerField(label='CPF', required=False)
     Telefone = forms.IntegerField(label='Telefone', required=False)
     Nome = forms.CharField(label='Nome', required=False)

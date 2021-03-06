@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Contrato',
+            name='Cliente',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('nome', models.CharField(max_length=100)),
@@ -21,7 +21,6 @@ class Migration(migrations.Migration):
                 ('cpf', models.IntegerField(null=True)),
                 ('email', models.EmailField(max_length=254, null=True)),
                 ('telefone', models.IntegerField()),
-                ('descricao', models.CharField(blank=True, max_length=3000, null=True)),
                 ('documento_externo', models.CharField(max_length=50, null=True)),
             ],
         ),
@@ -73,7 +72,8 @@ class Migration(migrations.Migration):
                 ('data_devolucao', models.DateTimeField(blank=True, null=True)),
                 ('data_previsao_devolucao', models.DateTimeField()),
                 ('status', models.CharField(choices=[('Alocado', 'Alocado'), ('Devolvido', 'Devolvido'), ('Atraso', 'Em Atraso')], max_length=100)),
-                ('contrato', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='controle.contrato')),
+                ('descricao', models.CharField(blank=True, max_length=3000, null=True)),
+                ('cliente', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='controle.cliente')),
                 ('item', models.ManyToManyField(to='controle.Item')),
                 ('lancamento', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='controle.lancamento')),
             ],

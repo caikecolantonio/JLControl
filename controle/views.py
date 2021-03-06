@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from controle.models import Locacao, Contrato, Traje
-from controle.forms import ConsultarContrato, ConsultarTraje
-from controle.funcoes import is_traje_disponivel, busca_locacao_por_contrato, busca_traje
+from controle.models import Locacao, Cliente, Traje
+from controle.forms import ConsultarCliente, ConsultarTraje
+from controle.funcoes import is_traje_disponivel, busca_locacao_por_cliente, busca_traje
 from django.http import JsonResponse
 import json
 
@@ -17,32 +17,32 @@ def cancelar(request):
     pass
 
 def consultar(request):
-    ConsultarContratoForm = ConsultarContrato(request.POST)
-    contrato = None
+    ConsultarClienteForm = ConsultarCliente(request.POST)
+    cliente = None
     locacao_detalhes = {}
-    if ConsultarContratoForm.is_valid():
-        campos = ConsultarContratoForm.cleaned_data
+    if ConsultarClienteForm.is_valid():
+        campos = ConsultarClienteForm.cleaned_data
         if campos['CPF']:
-            if Contrato.objects.filter(cpf=campos['CPF']):
-                contrato = Contrato.objects.get(cpf=campos['CPF'])
-                #Verifica se encontrou o contrato
-                locacoes = busca_locacao_por_contrato(contrato)
+            if Cliente.objects.filter(cpf=campos['CPF']):
+                cliente = Cliente.objects.get(cpf=campos['CPF'])
+                #Verifica se encontrou o cliente pelo o cpf
+                locacoes = busca_locacao_por_cliente(cliente)
                 if locacoes:
                     locacao_detalhes = locacoes
         if campos['Telefone']:
-            if len(Contrato.objects.filter(telefone=campos['Telefone'])) == 1:
-                contrato = Contrato.objects.get(telefone=campos['Telefone'])
-                #Verifica se encontrou o contrato
-                locacoes = busca_locacao_por_contrato(contrato)
+            if len(Cliente.objects.filter(telefone=campos['Telefone'])) == 1:
+                cliente = Cliente.objects.get(telefone=campos['Telefone'])
+                #Verifica se encontrou o cliente pelo o telefone
+                locacoes = busca_locacao_por_cliente(cliente)
                 if locacoes:
                     locacao_detalhes = locacoes
             else:
-                contrato = '#ERRO001'
+                cliente = '#ERRO001'
         if campos['Nome']:
-            if Contrato.objects.filter(nome=campos['Nome']):
-                contrato = Contrato.objects.get(nome=campos['Nome'])
-                #Verifica se encontrou o contrato
-                locacoes = busca_locacao_por_contrato(contrato)
+            if Cliente.objects.filter(nome=campos['Nome']):
+                cliente = Cliente.objects.get(nome=campos['Nome'])
+                #Verifica se encontrou o cliente pelo o nome
+                locacoes = busca_locacao_por_cliente(cliente)
                 if locacoes:
                     locacao_detalhes = locacoes
 
@@ -56,7 +56,7 @@ def consultar(request):
     entrou = False
     MostraAlocados = None
 
-    if request.method == 'POST' and ConsultarTrajeForm.is_valid() and not ConsultarContratoForm.has_changed():
+    if request.method == 'POST' and ConsultarTrajeForm.is_valid() and not ConsultarClienteForm.has_changed():
         campos_trajes = ConsultarTrajeForm.cleaned_data
         MostraAlocados = (True if campos_trajes['alocados'] else False)
         if campos_trajes['codigo']:
@@ -85,9 +85,9 @@ def consultar(request):
     
 
     consultas = {
-        'contrato': contrato,
+        'cliente': cliente,
         'locacoes': locacao_detalhes,
-        'form': ConsultarContrato,
+        'form': ConsultarCliente,
         'form_traje': ConsultarTraje,
         'trajes_disponiveis': trajes_disponiveis,
         'MostraAlocados': MostraAlocados,
@@ -99,10 +99,21 @@ def consultar(request):
 
 def autocomplete_nome(request):
     if 'term' in request.GET:
-        query = Contrato.objects.filter(nome__contains=request.GET.get('term'))
+        query = Cliente.objects.filter(nome__contains=request.GET.get('term'))
         results = list()
-        for contratos in query:
-            results.append(contratos.nome)
+        for clientes in query:
+            results.append(clientes.nome)
+        return JsonResponse(results, safe=False)
+
+def autocomplete_traje(request):
+    if 'term' in request.GET:
+        #                               Pega o "Tipo" que é qual atributo que ele vai buscar
+        query = Traje.objects.filter(**{request.GET.get('tipo')+"__contains": request.GET.get('term')})
+        results = list()
+        for trajes in query:
+            #Verifica se já não adicionou, não faz sentido aparecer varias vezes
+            if getattr(trajes,request.GET.get('tipo')) not in results:
+                results.append(getattr(trajes,request.GET.get('tipo')))
         return JsonResponse(results, safe=False)
 
 
