@@ -11,21 +11,27 @@ def devolver(request):
     pass
 
 def locar(request):
-    ConsultarClienteForm = ConsultarCliente(request.POST)
     cliente = None
-    if ConsultarClienteForm.is_valid():
-        campos = ConsultarClienteForm.cleaned_data
-        if campos['CPF']:
-            if Cliente.objects.filter(cpf=campos['CPF']):
-                cliente = Cliente.objects.get(cpf=campos['CPF'])
-        if campos['Telefone']:
-            if len(Cliente.objects.filter(telefone=campos['Telefone'])) == 1:
-                cliente = Cliente.objects.get(telefone=campos['Telefone'])
-            else:
-                cliente = '#ERRO001'
-        if campos['Nome']:
-            if Cliente.objects.filter(nome=campos['Nome']):
-                cliente = Cliente.objects.get(nome=campos['Nome'])
+    if request.method == 'POST':
+        ConsultarClienteForm = ConsultarCliente(request.POST)
+        
+        if ConsultarClienteForm.is_valid():
+            campos = ConsultarClienteForm.cleaned_data
+            if campos['CPF']:
+                if Cliente.objects.filter(cpf=campos['CPF']):
+                    cliente = Cliente.objects.get(cpf=campos['CPF'])
+            if campos['Telefone']:
+                if len(Cliente.objects.filter(telefone=campos['Telefone'])) == 1:
+                    cliente = Cliente.objects.get(telefone=campos['Telefone'])
+                else:
+                    cliente = '#ERRO001'
+            if campos['Nome']:
+                if Cliente.objects.filter(nome=campos['Nome']):
+                    cliente = Cliente.objects.get(nome=campos['Nome'])
+            
+            if cliente == None:
+                cliente = 0
+    
     consultas = {
         'cliente': cliente
     }

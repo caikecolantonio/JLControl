@@ -107,7 +107,7 @@
             <div class="form-group row">
               <label for="Nome" class="col-sm-2 col-form-label">Nome: </label>
               <div class="col-sm-10">
-                <input id="formNome" class="form-control" type="text" name="Nome" maxlength="100"
+                <input id="formNome" class="form-control AutoCompleteClienteNome" type="text" name="Nome" maxlength="100"
                   placeholder="Digite o Nome">
               </div>
             </div>
@@ -127,7 +127,7 @@
     </div>
     <script>
       $(function () {
-        $("#formNome").autocomplete({
+        $(".AutoCompleteClienteNome").autocomplete({
           source: '{% url 'autocomplete-nome' %}',
           minLength: 3,
           max: 5
