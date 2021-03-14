@@ -20,7 +20,7 @@ from controle.views import devolver, locar, consultar, cancelar, autocomplete_no
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('devolver/', devolver),
-    path('locar/', locar),
+    path('locar/', locar, name= 'locar'),
     path('cancelar/', cancelar),
     path('consultar/', consultar),
     path('autocomplete-nome/', autocomplete_nome, name='autocomplete-nome'),

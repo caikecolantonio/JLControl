@@ -11,7 +11,25 @@ def devolver(request):
     pass
 
 def locar(request):
-    pass
+    ConsultarClienteForm = ConsultarCliente(request.POST)
+    cliente = None
+    if ConsultarClienteForm.is_valid():
+        campos = ConsultarClienteForm.cleaned_data
+        if campos['CPF']:
+            if Cliente.objects.filter(cpf=campos['CPF']):
+                cliente = Cliente.objects.get(cpf=campos['CPF'])
+        if campos['Telefone']:
+            if len(Cliente.objects.filter(telefone=campos['Telefone'])) == 1:
+                cliente = Cliente.objects.get(telefone=campos['Telefone'])
+            else:
+                cliente = '#ERRO001'
+        if campos['Nome']:
+            if Cliente.objects.filter(nome=campos['Nome']):
+                cliente = Cliente.objects.get(nome=campos['Nome'])
+    consultas = {
+        'cliente': cliente
+    }
+    return render(request, 'locar.html', consultas)
 
 def cancelar(request):
     pass
@@ -91,7 +109,8 @@ def consultar(request):
         'form_traje': ConsultarTraje,
         'trajes_disponiveis': trajes_disponiveis,
         'MostraAlocados': MostraAlocados,
-        'count_trajes': 1
+        'count_trajes': 1,
+        'paginaConsultar': '/consultar/'
     }
 
 

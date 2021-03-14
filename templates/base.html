@@ -32,7 +32,7 @@
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script type="text/javascript" src="{% static 'javaScript/scripts_base.js' %}"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 </head>
 <style>
   .modalx {
@@ -53,82 +53,88 @@
     text-align: left;
     vertical-align: middle;
   }
-  .ui-autocomplete{
-   z-index: 1050 !important;
-}
+
+  .ui-autocomplete {
+    z-index: 1050 !important;
+  }
 </style>
 
 <body>
   <nav class="navbar navbar-dark bg-dark">
-    <a class="navbar-brand">
+    <div class="navbar-brand">
       <!-- Button trigger modal -->
+      <a href="{% url 'locar' %}" style="margin-left: 0px;">
+        <button type="button" class="btn btn-primary">Locar Trajes</button>
+      </a>
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
         Pesquisar Locações
       </button>
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal2">
         Pesquisar Trajes
       </button>
-    </a>
+    </div>
+  </nav>
 
 
-    <!-- Modal1 Locações -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Pesquise locações com:</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form name="formCliente" action="" method="post">
-              {% csrf_token %}
-              <div class="form-group row">
-                <label for="CPF" class="col-sm-2 col-form-label">CPF: </label>
-                <div class="col-sm-10">
-                  <input id="formCPF" class="form-control" type="text" name="CPF" maxlength="11"
-                    placeholder="Digite o CPF">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="Telefone" class="col-sm-2 col-form-label">Telefone: </label>
-                <div class="col-sm-10">
-                  <input id="formTelefone" class="form-control" type="text" name="Telefone" maxlength="11"
-                    placeholder="Digite o Telefone">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="Nome" class="col-sm-2 col-form-label">Nome: </label>
-                <div class="col-sm-10">
-                  <input id="formNome" class="form-control" type="text" name="Nome" maxlength="100"
-                    placeholder="Digite o Nome">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="DocumentoExterno" class="col-sm-2 col-form-label">Documento Externo: </label>
-                <div class="col-sm-10">
-                  <input id="formDocumentoExterno" class="form-control" type="text" name="DocumentoExterno"
-                    maxlength="100" placeholder="Digite o Documento Externo">
-                </div>
-              </div>
-              <button type="button" class="btn btn-primary btn-lg btn-block" onclick="validaCampos()">Pesquisar</button>
-              <button type="button" class="btn btn-secondary btn-lg btn-block" data-dismiss="modal">Fechar</button>
-            </form>
-          </div>
+  <!-- Modal1 Locações -->
+
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Pesquise locações com:</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
-
+        <div class="modal-body">
+          <form name="formCliente" action="/consultar/" method="post">
+            {% csrf_token %}
+            <div class="form-group row">
+              <label for="CPF" class="col-sm-2 col-form-label">CPF: </label>
+              <div class="col-sm-10">
+                <input id="formCPF" class="form-control" type="text" name="CPF" maxlength="11"
+                  placeholder="Digite o CPF">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="Telefone" class="col-sm-2 col-form-label">Telefone: </label>
+              <div class="col-sm-10">
+                <input id="formTelefone" class="form-control" type="text" name="Telefone" maxlength="11"
+                  placeholder="Digite o Telefone">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="Nome" class="col-sm-2 col-form-label">Nome: </label>
+              <div class="col-sm-10">
+                <input id="formNome" class="form-control" type="text" name="Nome" maxlength="100"
+                  placeholder="Digite o Nome">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="DocumentoExterno" class="col-sm-2 col-form-label">Documento Externo: </label>
+              <div class="col-sm-10">
+                <input id="formDocumentoExterno" class="form-control" type="text" name="DocumentoExterno"
+                  maxlength="100" placeholder="Digite o Documento Externo">
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary btn-lg btn-block" onclick="validaCampos()">Pesquisar</button>
+            <button type="button" class="btn btn-secondary btn-lg btn-block" data-dismiss="modal">Fechar</button>
+          </form>
+        </div>
       </div>
-      <script>
-        $(function () {
-          $("#formNome").autocomplete({
-            source: '{% url 'autocomplete-nome' %}',
-            minLength: 3,
-            max: 5
+
+    </div>
+    <script>
+      $(function () {
+        $("#formNome").autocomplete({
+          source: '{% url 'autocomplete-nome' %}',
+          minLength: 3,
+          max: 5
               });
             });
-      </script>
-      <!--      <script>
+    </script>
+    <!--      <script>
     var counter = 5;
     var interval = setInterval(function() {
     counter--;
@@ -141,114 +147,102 @@
     }
 }, 1000);
       </script>-->
-      <script>function validaCampos() {
-          if (formCliente.CPF.value == '' && formCliente.Telefone.value == '' && formCliente.Nome.value == '' && formCliente.DocumentoExterno.value == '') {
-            document.getElementById("botaoAlerta").click();
-          }
-          else {
-            formCliente.submit();
-          }
+    <script>function validaCampos() {
+        if (formCliente.CPF.value == '' && formCliente.Telefone.value == '' && formCliente.Nome.value == '' && formCliente.DocumentoExterno.value == '') {
+          document.getElementById("botaoAlerta").click();
         }
-      </script>
-
-      <!-- Modal -->
-      <div class="modal fade modalx" style="color:#ff6666" id="alertaCPF" tabindex="-1" role="dialog"
-        aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialogx" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h6 class="modal-title" id="exampleModalLabel">Digite pelo menos um dos campos</h6>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal Trajes -->
-    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2"
-      aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Pesquisar Trajes:</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form name="formTraje" action="" method="post">
-              {% csrf_token %}
-              <div class="form-group row">
-                <label for="codigo" class="col-sm-2 col-form-label">Código: </label>
-                <div class="col-sm-10">
-                  <input id="formTrajeCodigo" class="form-control AutoCompleteTraje" type="text" name="codigo" maxlength="50"
-                    placeholder="Digite o Codigo do traje">
-                </div>
-              </div>
-
-              <div class="form-group row">
-                <label for="nome" class="col-sm-2 col-form-label">Nome: </label>
-                <div class="col-sm-10">
-                  <input id="formTrajeNome" class="form-control AutoCompleteTraje" type="text" name="nome" maxlength="100"
-                    placeholder="Digite o Nome do traje">
-                </div>
-              </div>
-
-              <div class="form-group row">
-                <label for="modelo" class="col-sm-2 col-form-label">Modelo: </label>
-                <div class="col-sm-10">
-                  <input id="formTrajeModelo" class="form-control AutoCompleteTraje" type="text" name="modelo" maxlength="100"
-                    placeholder="Digite o Modelo">
-                </div>
-              </div>
-
-              <div class="form-group row">
-                <label for="corte" class="col-sm-2 col-form-label">Corte: </label>
-                <div class="col-sm-10">
-                  <input id="formTrajeCorte" class="form-control AutoCompleteTraje" type="text" name="corte" maxlength="100"
-                    placeholder="Digite o Corte">
-                </div>
-              </div>
-              <div class="form-group form-check form-switch row">
-                <div class="col-sm-2"> </div>
-                <div class="col-sm-5">
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="alocados" name="alocados">
-                    <label class="form-check-label" for="gridCheck1">
-                      Mostrar os alocados
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              <input type="hidden" id="todos" name="todos" value='1'>
-
-              <button type="submit" class="btn btn-primary btn-lg btn-block">Pesquisar</button>
-              <button type="button" class="btn btn-secondary btn-lg btn-block" data-dismiss="modal">Fechar</button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </nav>
-
- 
-
-    <script>
-      function Atualiza() {
-      try {
-        focus = document.getElementById(document.activeElement.id).name 
-      } catch (error) {}    
-      
-      $(function () {
-      $(".AutoCompleteTraje").autocomplete({
-      source: '{% url 'autocomplete-traje' %}?tipo='+focus,
-      minLength: 3,
-      max: 5
-      });
-      });}
-      setInterval(Atualiza, 300);
+        else {
+          formCliente.submit();
+        }
+      }
     </script>
+  </div>
+
+  <!-- Modal Trajes -->
+  <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Pesquisar Trajes:</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form name="formTraje" action="/consultar/" method="post">
+            {% csrf_token %}
+            <div class="form-group row">
+              <label for="codigo" class="col-sm-2 col-form-label">Código: </label>
+              <div class="col-sm-10">
+                <input id="formTrajeCodigo" class="form-control AutoCompleteTraje" type="text" name="codigo"
+                  maxlength="50" placeholder="Digite o Codigo do traje">
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="nome" class="col-sm-2 col-form-label">Nome: </label>
+              <div class="col-sm-10">
+                <input id="formTrajeNome" class="form-control AutoCompleteTraje" type="text" name="nome" maxlength="100"
+                  placeholder="Digite o Nome do traje">
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="modelo" class="col-sm-2 col-form-label">Modelo: </label>
+              <div class="col-sm-10">
+                <input id="formTrajeModelo" class="form-control AutoCompleteTraje" type="text" name="modelo"
+                  maxlength="100" placeholder="Digite o Modelo">
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="corte" class="col-sm-2 col-form-label">Corte: </label>
+              <div class="col-sm-10">
+                <input id="formTrajeCorte" class="form-control AutoCompleteTraje" type="text" name="corte"
+                  maxlength="100" placeholder="Digite o Corte">
+              </div>
+            </div>
+            <div class="form-group form-check form-switch row">
+              <div class="col-sm-2"> </div>
+              <div class="col-sm-5">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="alocados" name="alocados">
+                  <label class="form-check-label" for="gridCheck1">
+                    Mostrar os alocados
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <input type="hidden" id="todos" name="todos" value='1'>
+
+            <button type="submit" class="btn btn-primary btn-lg btn-block">Pesquisar</button>
+            <button type="button" class="btn btn-secondary btn-lg btn-block" data-dismiss="modal">Fechar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <script>
+    function Atualiza() {
+      try {
+        focus = document.getElementById(document.activeElement.id).name
+      } catch (error) { }
+
+      $(function () {
+        $(".AutoCompleteTraje").autocomplete({
+          source: '{% url 'autocomplete-traje' %}?tipo=' + focus,
+          minLength: 3,
+          max: 5
+      });
+    });}
+    setInterval(Atualiza, 300);
+  </script>
   <!-- Button trigger modal -->
   <button id="botaoAlerta" type="button" class="btn btn-primary" data-toggle="modal" data-target="#alertaCPF"
     hidden="true"> </button>
@@ -257,6 +251,17 @@
 
   <div id="content">{% block content %}{% endblock %}</div>
 
+  <!-- Modal -->
+  <div class="modal fade modalx" style="color:#ff6666" id="alertaCPF" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialogx" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title" id="exampleModalLabel">Digite pelo menos um dos campos</h6>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Optional JavaScript; choose one of the two! -->
 
