@@ -137,8 +137,16 @@ def autocomplete_traje(request):
         results = list()
         for trajes in query:
             #Verifica se já não adicionou, não faz sentido aparecer varias vezes
-            if getattr(trajes,request.GET.get('tipo')) not in results:
-                results.append(getattr(trajes,request.GET.get('tipo')))
+            if request.GET.get('Unifica') == 'True':
+                if getattr(trajes,request.GET.get('tipo')) not in results:
+                    results.append(getattr(trajes,request.GET.get('tipo')))
+            else:
+                trajeDisponivel = is_traje_disponivel(trajes, False)
+                if trajeDisponivel != None:
+                    results.append("Codigo:" + trajeDisponivel.codigo+ " Modelo: "+ getattr(trajeDisponivel,request.GET.get('tipo')))
         return JsonResponse(results, safe=False)
+
+def retornaTrajeSelecionado(request):
+    return JsonResponse(list(Traje.objects.filter(codigo=request.GET.get('Traje')[7:request.GET.get('Traje').index(" ")]).values()), safe=False)
 
 

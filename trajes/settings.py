@@ -125,5 +125,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'statics/')
 
 DATETIME_INPUT_FORMATS = [
     '%d/%m/%Y %H:%M',
+]
 
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+    '/static/',
 ]

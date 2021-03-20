@@ -19,5 +19,6 @@ class ConsultarClienteNovo(forms.Form):
     RG = forms.IntegerField(label='RG', required=False)
     Telefone = forms.IntegerField(label='Telefone', required=False)
     Nome = forms.CharField(label='Nome', required=False)
+    Endereco = forms.CharField(label='Endereco', required=False)
     Email = forms.EmailField(label='email', required=False)
     DocumentoExterno = forms.CharField(label='Documento Externo', required=False)

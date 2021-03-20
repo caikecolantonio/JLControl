@@ -2,152 +2,200 @@
 
 {% load static %}
 {% block content %}
+
 <div class="modal fade" id="exampleModalLocar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Pesquise locações com:</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Pesquise locações com:</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form name="formClienteLocar" action="" method="post">
+                    {% csrf_token %}
+                    <div class="form-group row">
+                        <label for="CPFLocar" class="col-sm-2 col-form-label">CPF: </label>
+                        <div class="col-sm-10">
+                            <input id="formCPFLocar" class="form-control" type="text" name="CPF" maxlength="11"
+                                placeholder="Digite o CPF">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="TelefoneLocar" class="col-sm-2 col-form-label">Telefone: </label>
+                        <div class="col-sm-10">
+                            <input id="TelefoneLocar" class="form-control" type="text" name="Telefone" maxlength="11"
+                                placeholder="Digite o Telefone">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="NomeLocar" class="col-sm-2 col-form-label">Nome: </label>
+                        <div class="col-sm-10">
+                            <input id="formNomeLocar" class="form-control AutoCompleteClienteNome" type="text"
+                                name="Nome" maxlength="100" placeholder="Digite o Nome">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="DocumentoExternoLocar" class="col-sm-2 col-form-label">Documento Externo: </label>
+                        <div class="col-sm-10">
+                            <input id="formDocumentoExternLocar" class="form-control" type="text"
+                                name="DocumentoExterno" maxlength="100" placeholder="Digite o Documento Externo">
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-lg btn-block"
+                        onclick="validaCamposLocar()">Pesquisar</button>
+                    <button type="button" class="btn btn-primary btn-lg btn-block" data-dismiss="modal">Adicionar
+                        novo</button>
+                </form>
+            </div>
         </div>
-        <div class="modal-body">
-          <form name="formClienteLocar" action="" method="post">
-            {% csrf_token %}
-            <div class="form-group row">
-              <div id="testado" ><label for="CPFLocar" class="col-sm-2 col-form-label">CPF: </label></div>
-              <div class="col-sm-10">
-                <input id="formCPFLocar" class="form-control" type="text" name="CPF" maxlength="11"
-                  placeholder="Digite o CPF">
-              </div>
-            </div>
-            <div class="form-group row">
-              <label for="TelefoneLocar" class="col-sm-2 col-form-label">Telefone: </label>
-              <div class="col-sm-10">
-                <input id="formTelefone" class="form-control" type="text" name="Telefone" maxlength="11"
-                  placeholder="Digite o Telefone">
-              </div>
-            </div>
-            <div class="form-group row">
-              <label for="NomeLocar" class="col-sm-2 col-form-label">Nome: </label>
-              <div class="col-sm-10">
-                <input id="formNomeLocar" class="form-control AutoCompleteClienteNome" type="text" name="Nome" maxlength="100"
-                  placeholder="Digite o Nome">
-              </div>
-            </div>
-            <div class="form-group row">
-              <label for="DocumentoExternoLocar" class="col-sm-2 col-form-label">Documento Externo: </label>
-              <div class="col-sm-10">
-                <input id="formDocumentoExternLocar" class="form-control" type="text" name="DocumentoExterno"
-                  maxlength="100" placeholder="Digite o Documento Externo">
-              </div>
-            </div>
-            <button type="button" class="btn btn-primary btn-lg btn-block" onclick="validaCamposLocar()">Pesquisar</button>
-            <button type="button" class="btn btn-primary btn-lg btn-block" data-dismiss="modal">Adicionar novo</button>
-          </form>
-        </div>
-      </div>
     </div>
 </div>
 <script>function validaCamposLocar() {
-    if (formClienteLocar.CPF.value == '' && formClienteLocar.Telefone.value == '' && formClienteLocar.Nome.value == '' && formClienteLocar.DocumentoExterno.value == '') {
-      document.getElementById("botaoAlerta").click();
+        if (formClienteLocar.CPF.value == '' && formClienteLocar.Telefone.value == '' && formClienteLocar.Nome.value == '' && formClienteLocar.DocumentoExterno.value == '') {
+            document.getElementById("botaoAlerta").click();
+        }
+        else {
+            formClienteLocar.submit();
+        }
     }
-    else {
-        formClienteLocar.submit();
-    }
-  }
 </script>
 
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLocar">
-    Encontrar cliente
-  </button>
+<script type="text/javascript">
+    function Esconde(value) {
+        if (document.getElementById("isEstrangeiro").checked) {
+            document.getElementById("FormNovoCPF").placeholder = "Documento Externo"
+            document.getElementById("FormNovoCPF").name = "DocumentoExterno"
+            document.getElementById("labelNovoCPF").innerHTML = "Documento Externo"
+            document.getElementById("FormNovoRG").style.visibility = "hidden"
+            document.getElementById("labelNovoRG").style.visibility = "hidden"
+        }
+        else {
+            document.getElementById("FormNovoCPF").placeholder = "CPF"
+            document.getElementById("FormNovoCPF").name = "CPF"
+            document.getElementById("labelNovoCPF").innerHTML = "CPF"
+            document.getElementById("FormNovoRG").style.visibility = "visible"
+            document.getElementById("labelNovoRG").style.visibility = "visible"
+        }
+    };
+</script>
+<p></p>
+
+<div class="container">
+    <div class="form-check">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLocar" style="margin-right: 3%;">
+        Encontrar cliente
+    </button>    
+        <input class="form-check-input" type="checkbox" value="" name="isEstrangeiro" id="isEstrangeiro" onclick="Esconde()">
+        <label class="form-check-label" for="isEstrangeiro">
+         Cliente Estrangeiro
+        </label>
+      </div>
+    <p></p>
+    <form>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label id="labelNovoCPF" for="FormNovoCPF">CPF</label>
+                <input type="text" class="form-control" id="FormNovoCPF" placeholder="CPF" name="CPF">
+            </div>
+            <div class="form-group col-md-6">
+                <label id="labelNovoRG" for="FormNovoRG">RG</label>
+                <input type="number" class="form-control" id="FormNovoRG" placeholder="RG" name="RG">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="FormNovoNome">Nome</label>
+                <input type="text" class="form-control" id="FormNovoNome" placeholder="Nome" name="Nome">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="FormNovoTelefone">Telefone</label>
+                <input type="tel" class="form-control" id="FormNovoTelefone" name="Telefone">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="FormNovoEndereco">Endereço</label>
+                <input type="text" class="form-control" id="FormNovoEndereco" name="Endereco">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="FormNovoEmail">Email</label>
+                <input type="text" class="form-control" id="FormNovoEmail" name="Email">
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="container">
+    <div class="row">
+      <div class="col-md-auto col-lg-10">
+        <form id="FormTrajePequisa">
+            <div class="form-group">
+                <label for="FormModeloBusca">Pesquisar Traje com o Modelo:</label>
+                <input type="text" class="form-control AutoCompleteTrajePesquisa" id="FormModeloBusca"
+                    name="CodigoTraje">
+            </div>
+        </form>
+      </div>
+      <div class="col" style="margin-top: 2.5%;">
+        <button onclick="AdicionaTraje()"><img src='{% static 'img/add.png'%}' width="40" height="40"></button>
+      </div>
+      <div class="col" style="margin-top: 2.5%;">
+        <a><img src='{% static 'img/remove.png'%}' width="40" height="40"></a>
+      </div>
+    </div>
+  </div>
 
 {% if cliente is not None and cliente != 0 %}
 
-{{cliente}}
-{{cliente.Nome}}
+<script>
+    document.getElementById("isEstrangeiro").disabled = true
+    document.getElementById("FormNovoCPF").value = "{{cliente.cpf}}"
+    document.getElementById("FormNovoRG").value = "{{cliente.rg}}"
+    document.getElementById("FormNovoNome").value = "{{cliente.nome}}"
+    document.getElementById("FormNovoTelefone").value = "{{cliente.telefone}}"
+    document.getElementById("FormNovoEndereco").value = "{{cliente.endereco}}"
+    document.getElementById("FormNovoEmail").value = "{{cliente.email}}"
+    {% if cliente.documento_externo is not None %}
+    document.getElementById("isEstrangeiro").checked = true
+    document.getElementById("isEstrangeiro").disabled = true
+    Esconde();
+    document.getElementById("FormNovoCPF").value = "{{cliente.documento_externo}}"
+    {% endif %}
+
+</script>
 
 {% elif cliente == 0 %}
-<div id="toastClienteNaoEncontrado" class="toast fade show" style="position: absolute; top: 20px; right: 20px;">
-    <div class="toast-header">
-    <svg class="bd-placeholder-img rounded mr-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img"><rect fill="#FF0000" width="100%" height="100%"></rect></svg>
-    <strong class="mr-auto">Cliente não encontrado</strong>
-    <small>11 mins ago</small>
-    <button type="button" class="ml-2 mb-1 close" onclick="fechaToast()" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-    </div>
-    <div class="toast-body">
-    Procure de novo ou crie um novo.
-    </div>
-</div>
 
-<script>function fechaToast() {
-    document.getElementById("toastClienteNaoEncontrado").className = "toast fade hide"}
+<script>
+    aToastClienteNaoEncontrado();
 </script>
-  
-
 {% endif %}
 
-<input type="checkbox" name="mycheckbox" id="mycheckbox" value="0" />
-<div id="mycheckboxdiv" style="display:none">
-    This content should appear when the checkbox is checked
-</div>
+<script>
+    function AdicionaTraje() {
+    const trajeSelecionado = document.getElementById("FormModeloBusca").value
+    console.log(trajeSelecionado)
+    const url = '{% url 'retornaTrajeSelecionado' %}?Traje='+trajeSelecionado
+    
+    fetch(url).then(response =>{
+        return response.json();
+    }).then(resposta =>{
+        console.log(resposta[0]['codigo']);
+    });
+    }
+</script>
 
-<script type="text/javascript">
-    function Esconde(){
-        document.getElementById("testado").style.visibility="hidden";
-    };
-    </script>
 
-<div class="container">
-<form>
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="inputEmail4">CPF</label>
-      <input type="email" class="form-control" id="inputEmail4" placeholder="CPF">
-    </div>
-    <div class="form-group col-md-6">
-      <label for="inputPassword4">Nome</label>
-      <input type="password" class="form-control" id="inputPassword4" placeholder="Nome">
-    </div>
-  </div>
-      <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="inputEmail4">RG</label>
-      <input type="email" class="form-control" id="inputEmail4" placeholder="CPF">
-    </div>
-    <div class="form-group col-md-6">
-      <label for="inputPassword4">Telefone</label>
-      <input type="password" class="form-control" id="inputPassword4" placeholder="Nome">
-    </div>
-  </div>
-  <div class="form-group">
-    <label for="inputAddress">Endereço</label>
-    <input type="text" class="form-control" id="inputAddress" placeholder="Avenida Paulista, 45">
-  </div>
+<script>
+    $(function () {
+        $(".AutoCompleteTrajePesquisa").autocomplete({
+            source: '{% url 'autocomplete-traje' %}?Unifica=False&tipo=modelo',
+            minLength: 3,
+            max: 5
+      });
+    });
+</script>
 
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="inputCity">Cidade</label>
-      <input type="text" class="form-control" id="inputCity" placeholder="São Paulo">
-    </div>
-
-    <div class="form-group col-md-6">
-      <label for="Nome">Nome</label>
-      <input type="text" class="form-control" id="inputPassword4" placeholder="Nome">
-    </div>
-  </div>
-  <div class="form-group">
-    <div class="form-check">
-      <input class="form-check-input" type="checkbox" id="gridCheck">
-      <label class="form-check-label" for="gridCheck">
-        Check me out
-      </label>
-    </div>
-  </div>
-  <button type="submit" class="btn btn-primary">Sign in</button>
-</form>
-</div>
 {% endblock %}

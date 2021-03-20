@@ -3,11 +3,12 @@ from django.db import models
 
 class Cliente(models.Model):
     nome = models.CharField(max_length=100, null=False)
-    rg = models.IntegerField(null=True)
-    cpf = models.IntegerField(null=True)
+    rg = models.IntegerField(null=True, blank=True)
+    cpf = models.IntegerField(null=True, blank=True)
     email = models.EmailField(null=True)
+    endereco = models.CharField(max_length=255, null=True, blank=True)
     telefone = models.IntegerField()
-    documento_externo = models.CharField(max_length=50, null=True)
+    documento_externo = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self):
         return self.nome.capitalize()
