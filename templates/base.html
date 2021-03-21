@@ -63,20 +63,26 @@
 </style>
 
 <body>
-  <nav class="navbar navbar-dark bg-dark">
-    <div class="navbar-brand">
-      <!-- Button trigger modal -->
-      <a href="{% url 'locar' %}" style="margin-left: 0px;">
-        <button type="button" class="btn btn-primary">Locar Trajes</button>
-      </a>
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-        Pesquisar Locações
-      </button>
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal2">
-        Pesquisar Trajes
-      </button>
-    </div>
-  </nav>
+    <!-- MENU -->
+
+        <div class="navbar navbar-expand-lg bg-dark navbar-dark ">
+            <div class="container-fluid">
+                <a href="/" class="navbar-brand">JL Control</a>
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                    <div class="navbar-nav ml-auto">
+                        <a href="{% url 'locar' %}" class="nav-item nav-link active">Locar</a>
+                        <a href="" class="nav-item nav-link active" data-toggle="modal" data-target="#exampleModal">Pesquisar Locações</a>
+                        <a href="" class="nav-item nav-link active" data-toggle="modal" data-target="#exampleModal2">Pesquisar Trajes</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!--EndMenu -->
 
 
   <!-- Modal1 Locações -->
@@ -85,7 +91,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Pesquise locações com:</h5>
+          <h5 class="modal-title" id="exampleModalLabel" style="margin-left: 25%">Pesquise locações com:</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -115,13 +121,13 @@
               </div>
             </div>
             <div class="form-group row">
-              <label for="DocumentoExterno" class="col-sm-2 col-form-label">Documento Externo: </label>
+              <label for="DocumentoExterno" class="col-sm-2 col-form-label">Externo:</label>
               <div class="col-sm-10">
                 <input id="formDocumentoExterno" class="form-control" type="text" name="DocumentoExterno"
                   maxlength="100" placeholder="Digite o Documento Externo">
               </div>
             </div>
-            <button type="button" class="btn btn-primary btn-lg btn-block" onclick="validaCampos()">Pesquisar</button>
+            <button type="button" class="btn btn-info btn-lg btn-block" onclick="validaCampos()">Pesquisar</button>
             <button type="button" class="btn btn-secondary btn-lg btn-block" data-dismiss="modal">Fechar</button>
           </form>
         </div>
@@ -167,7 +173,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Pesquisar Trajes:</h5>
+          <h5 class="modal-title" id="exampleModalLabel" style="margin-left: 25%">Pesquisar Trajes:</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -220,7 +226,7 @@
 
             <input type="hidden" id="todos" name="todos" value='1'>
 
-            <button type="submit" class="btn btn-primary btn-lg btn-block">Pesquisar</button>
+            <button type="submit" class="btn btn-info btn-lg btn-block">Pesquisar</button>
             <button type="button" class="btn btn-secondary btn-lg btn-block" data-dismiss="modal">Fechar</button>
           </form>
         </div>

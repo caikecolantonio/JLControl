@@ -81,20 +81,31 @@
     };
 </script>
 <p></p>
-
 <div class="container">
-    <div class="form-check">
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLocar" style="margin-right: 3%;">
-        Encontrar cliente
-    </button>    
-        <input class="form-check-input" type="checkbox" value="" name="isEstrangeiro" id="isEstrangeiro" onclick="Esconde()">
+<div class="row">
+    <div class="col-sm">
+                <input class="form-check-input" type="checkbox" value="" name="isEstrangeiro" id="isEstrangeiro" onclick="Esconde()">
         <label class="form-check-label" for="isEstrangeiro">
          Cliente Estrangeiro
         </label>
+
+    </div>
+        <div class="col-sm">
+            <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#exampleModalLocar" style="margin-right: 3%;">
+        Encontrar cliente
+    </button>
+    </div>
+        <div class="col-sm">
+            <button type="button" class="btn btn-dark"> Medidas</button>
+    </div>
+</div>
+</div>
+
+
       </div>
     <p></p>
     <form>
-        <div class="form-row">
+        <div class="form-row" style="margin-left: 5%; margin-right: 5%">
             <div class="form-group col-md-6">
                 <label id="labelNovoCPF" for="FormNovoCPF">CPF</label>
                 <input type="text" class="form-control" id="FormNovoCPF" placeholder="CPF" name="CPF">
@@ -104,7 +115,7 @@
                 <input type="number" class="form-control" id="FormNovoRG" placeholder="RG" name="RG">
             </div>
         </div>
-        <div class="form-row">
+        <div class="form-row" style="margin-left: 5%; margin-right: 5%">
             <div class="form-group col-md-6">
                 <label for="FormNovoNome">Nome</label>
                 <input type="text" class="form-control" id="FormNovoNome" placeholder="Nome" name="Nome">
@@ -114,7 +125,7 @@
                 <input type="tel" class="form-control" id="FormNovoTelefone" name="Telefone">
             </div>
         </div>
-        <div class="form-row">
+        <div class="form-row" style="margin-left: 5%; margin-right: 5%">
             <div class="form-group col-md-6">
                 <label for="FormNovoEndereco">Endereço</label>
                 <input type="text" class="form-control" id="FormNovoEndereco" name="Endereco">
@@ -127,28 +138,35 @@
     </form>
 </div>
 
-<div class="container">
-    <div class="row">
-      <div class="col-md-auto col-lg-10">
-        <form id="FormTrajePequisa">
-            <div class="form-group">
-                <label for="FormCodigoTraje">Codigo</label>
+
+
+
+
+<form id="FormTrajePequisa">
+  <div class="row">
+    <div class="col-sm" style="margin-left:5%">
+      <label for="FormCodigoTraje">Codigo</label>
                 <input type="text" class="form-control AutoCompleteTrajePesquisaCodigo" id="FormCodigoTraje"
                     name="CodigoTraje">
-                <label for="FormModeloBusca">Modelo</label>
+    </div>
+    <div class="col-6">
+      <label for="FormModeloBusca">Modelo</label>
                 <input type="text" class="form-control AutoCompleteTrajePesquisaModelo" id="FormModeloBusca"
                     name="ModeloTraje">
-            </div>
-        </form>
-      </div>
-      <div class="col" style="margin-top: 2.5%;">
-        <button onclick="AdicionaTraje()"><img src='{% static 'img/add.png'%}' width="40" height="40"></button>
-      </div>
-      <div class="col" style="margin-top: 2.5%;">
-        <button onclick="RemoverTraje()"><img src='{% static 'img/remove.png'%}' width="40" height="40"></button>
-      </div>
+    </div>
+    <div class="col-sm" style="">
+        <input style="visibility: hidden">
+      <img src='{% static 'img/add.png'%}' width="40" height="40" onclick="AdicionaTraje()">
+    </div>
+          <div class="col-sm" style="">
+              <input style="visibility: hidden">
+      <img src='{% static 'img/remove.png'%}' width="40" height="40" onclick="RemoverTraje()">
     </div>
   </div>
+    </form>
+
+
+<p></p>
 
 {% if cliente is not None and cliente != 0 %}
 
@@ -312,8 +330,6 @@
     <tbody class="">
         <tr class="thead-light">
             <th id = "trValor"></th>
-            <th></th>
-            <th></th>
             <th></th>
             <th></th>
             <th></th>

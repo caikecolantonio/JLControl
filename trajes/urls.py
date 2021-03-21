@@ -25,6 +25,7 @@ urlpatterns = [
     path('locar/', locar, name= 'locar'),
     path('cancelar/', cancelar),
     path('', consultar),
+    path('consultar/', consultar),
     path('autocomplete-nome/', autocomplete_nome, name='autocomplete-nome'),
     path('autocomplete-traje/', autocomplete_traje, name='autocomplete-traje'),
     path('retornatrajeselecionado/', retornaTrajeSelecionado, name='retornaTrajeSelecionado')
