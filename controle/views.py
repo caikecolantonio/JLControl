@@ -3,6 +3,7 @@ from controle.models import Locacao, Cliente, Traje
 from controle.forms import ConsultarCliente, ConsultarTraje
 from controle.funcoes import is_traje_disponivel, busca_locacao_por_cliente, busca_traje
 from django.http import JsonResponse
+from django.forms.models import model_to_dict
 import json
 
 # Create your views here.
@@ -147,12 +148,15 @@ def autocomplete_traje(request):
         return JsonResponse(results, safe=False)
 
 def retornaTrajeSelecionado(request):
-    traje = Traje.objects.filter(codigo=request.GET.get('Traje'))
-    if traje:
-        trajeDisponivel = is_traje_disponivel(traje, False)
-        return JsonResponse(trajeDisponivel, safe=False)
+    query = Traje.objects.filter(codigo=request.GET.get('Traje'))
+    if query:
+        for traje in query:
+            trajeDisponivel = is_traje_disponivel(traje, False)
+            if trajeDisponivel:
+                return JsonResponse(model_to_dict(trajeDisponivel), safe=False)
+            return JsonResponse("NAODISPONIVEL", safe=False)
     else:
-        return JsonResponse("ERRO", safe=False)
+        return JsonResponse("CODIGOINVALIDO", safe=False)
 
     
 

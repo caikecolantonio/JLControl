@@ -145,7 +145,7 @@
         <button onclick="AdicionaTraje()"><img src='{% static 'img/add.png'%}' width="40" height="40"></button>
       </div>
       <div class="col" style="margin-top: 2.5%;">
-        <a><img src='{% static 'img/remove.png'%}' width="40" height="40"></a>
+        <button onclick="RemoverTraje()"><img src='{% static 'img/remove.png'%}' width="40" height="40"></button>
       </div>
     </div>
   </div>
@@ -177,25 +177,67 @@
 {% endif %}
 
 <script>
+    var listaTrajes = [];
+
     function AdicionaTraje() {
     const trajeSelecionado = document.getElementById("FormCodigoTraje").value
-    console.log(trajeSelecionado)
     const url = '{% url 'retornaTrajeSelecionado' %}?Traje='+trajeSelecionado
     
     fetch(url).then(response =>{
         return response.json();
     }).then(resposta =>{
-        if (resposta == "ERRO"){
+        var naotem = true
+        if (resposta == "CODIGOINVALIDO"){
             alert("não achou")
         }
-        if (resposta == null){
+        else if (resposta == "NAODISPONIVEL"){
             alert("traje não disponivel")
         }
-        console.log(resposta[0]['codigo']);
+        else {
+        //logica da lista
+        for (var traje in listaTrajes){
+            if (listaTrajes[traje]["codigo"] === resposta.codigo){
+                alert("traje já adicionado");
+                naotem = false;
+            }            
+        }
+        if (naotem){
+        listaTrajes.push(resposta);
+        
+        var html_corpo = 
+            '<tr onclick="seleciona(this.id)" id= '+ resposta.codigo+'>'+
+            '<td>'+ resposta.codigo +'</td>'+
+            '<td>'+ resposta.nome +'</td>'+
+            '<td>'+ resposta.modelo +'</td>'+
+            '<td>'+ resposta.corte +'</td>'+
+            '<td>'+ resposta.valor +'</td>'+
+            '</tr>'+$(".listaTrajes").html()
+        $(".listaTrajes").html(html_corpo)
+
+        }
+        }
+        //fim logica da lista
+        document.getElementById("FormCodigoTraje").value = "";
+        document.getElementById("FormModeloBusca").value = ""; 
     });
     }
+
 </script>
 
+<script>
+    function seleciona(id) {
+        if (document.getElementById(id).classList.contains("table-primary")){
+            document.getElementById(id).classList.remove("table-primary")
+            document.getElementById(id).classList.remove("listaSelecionada")
+        }
+        else
+        {
+            document.getElementById(id).classList.add("table-primary")
+            document.getElementById(id).classList.add("listaSelecionada")
+        }
+    }
+
+</script>
 
 <script>
     $(function () {
@@ -223,5 +265,62 @@
       });       
     });
 </script>
+
+<script>
+    function AtualizaValor() {
+    var totalLista = 0
+    //Atualiza valor
+    for (var traje in listaTrajes){
+        totalLista = totalLista + parseInt(listaTrajes[traje]["valor"])
+    }
+    document.getElementById("trValor").innerHTML = "Valor Total: R$" + totalLista
+    //fim Atualiza valor}
+    }
+    setInterval(AtualizaValor, 300);
+  </script>
+
+<script>
+    function RemoverTraje() {
+        var linhas = document.getElementsByClassName("listaSelecionada");
+        for (linha in linhas){
+            if (linhas[linha].id){
+                for (traje in listaTrajes){
+                    if (listaTrajes[traje]["codigo"] == linhas[linha].id){
+                        listaTrajes.splice(traje,1);
+                        $(document.getElementById(linhas[linha].id)).remove();
+                    }
+                }
+            }
+        }
+    }
+
+</script>
+
+<table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Codigo</th>
+        <th scope="col">Nome</th>
+        <th scope="col">Modelo</th>
+        <th scope="col">Corte</th>
+        <th scope="col">Valor</th>
+      </tr>
+    </thead>
+    <tbody class="listaTrajes">
+
+    </tbody>
+    <tbody class="">
+        <tr class="thead-light">
+            <th id = "trValor"></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+          </tr>
+    </tbody>
+  </table>
+
 
 {% endblock %}
