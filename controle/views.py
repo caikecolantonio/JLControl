@@ -143,10 +143,17 @@ def autocomplete_traje(request):
             else:
                 trajeDisponivel = is_traje_disponivel(trajes, False)
                 if trajeDisponivel != None:
-                    results.append("Codigo:" + trajeDisponivel.codigo+ " Modelo: "+ getattr(trajeDisponivel,request.GET.get('tipo')))
+                    results.append("Codigo:" + trajeDisponivel.codigo+ " Modelo: "+ trajeDisponivel.modelo)
         return JsonResponse(results, safe=False)
 
 def retornaTrajeSelecionado(request):
-    return JsonResponse(list(Traje.objects.filter(codigo=request.GET.get('Traje')[7:request.GET.get('Traje').index(" ")]).values()), safe=False)
+    traje = Traje.objects.filter(codigo=request.GET.get('Traje'))
+    if traje:
+        trajeDisponivel = is_traje_disponivel(traje, False)
+        return JsonResponse(trajeDisponivel, safe=False)
+    else:
+        return JsonResponse("ERRO", safe=False)
+
+    
 
 

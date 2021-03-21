@@ -132,9 +132,12 @@
       <div class="col-md-auto col-lg-10">
         <form id="FormTrajePequisa">
             <div class="form-group">
-                <label for="FormModeloBusca">Pesquisar Traje com o Modelo:</label>
-                <input type="text" class="form-control AutoCompleteTrajePesquisa" id="FormModeloBusca"
+                <label for="FormCodigoTraje">Codigo</label>
+                <input type="text" class="form-control AutoCompleteTrajePesquisaCodigo" id="FormCodigoTraje"
                     name="CodigoTraje">
+                <label for="FormModeloBusca">Modelo</label>
+                <input type="text" class="form-control AutoCompleteTrajePesquisaModelo" id="FormModeloBusca"
+                    name="ModeloTraje">
             </div>
         </form>
       </div>
@@ -175,13 +178,19 @@
 
 <script>
     function AdicionaTraje() {
-    const trajeSelecionado = document.getElementById("FormModeloBusca").value
+    const trajeSelecionado = document.getElementById("FormCodigoTraje").value
     console.log(trajeSelecionado)
     const url = '{% url 'retornaTrajeSelecionado' %}?Traje='+trajeSelecionado
     
     fetch(url).then(response =>{
         return response.json();
     }).then(resposta =>{
+        if (resposta == "ERRO"){
+            alert("não achou")
+        }
+        if (resposta == null){
+            alert("traje não disponivel")
+        }
         console.log(resposta[0]['codigo']);
     });
     }
@@ -190,11 +199,28 @@
 
 <script>
     $(function () {
-        $(".AutoCompleteTrajePesquisa").autocomplete({
+        $(".AutoCompleteTrajePesquisaModelo").autocomplete({
             source: '{% url 'autocomplete-traje' %}?Unifica=False&tipo=modelo',
             minLength: 3,
-            max: 5
+            max: 5,
+            select: function (e, ui) {
+                document.getElementById("FormCodigoTraje").value = ui.item.value.slice(7,ui.item.value.indexOf(" ",7));
+                document.getElementById("FormModeloBusca").value = (ui.item.value.slice(ui.item.value.indexOf("Modelo: ",7),ui.item.value.length)).replace("Modelo: ","");
+                return false
+            }
       });
+    });  
+      $(function () {
+        $(".AutoCompleteTrajePesquisaCodigo").autocomplete({
+            source: '{% url 'autocomplete-traje' %}?Unifica=False&tipo=codigo',
+            minLength: 3,
+            max: 5,
+            select: function (e, ui) {
+                document.getElementById("FormCodigoTraje").value = ui.item.value.slice(7,ui.item.value.indexOf(" ",7));
+                document.getElementById("FormModeloBusca").value = (ui.item.value.slice(ui.item.value.indexOf("Modelo: ",7),ui.item.value.length)).replace("Modelo: ","");
+                return false
+            }
+      });       
     });
 </script>
 
