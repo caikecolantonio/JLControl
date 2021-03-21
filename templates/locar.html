@@ -142,10 +142,10 @@
         </form>
       </div>
       <div class="col" style="margin-top: 2.5%;">
-        <button onclick="AdicionaTraje()"><img src='{% static 'img/add.png'%}' width="40" height="40"></button>
+        <img src='{% static 'img/add.png'%}' width="40" height="40" onclick="AdicionaTraje()">
       </div>
       <div class="col" style="margin-top: 2.5%;">
-        <button onclick="RemoverTraje()"><img src='{% static 'img/remove.png'%}' width="40" height="40"></button>
+        <img src='{% static 'img/remove.png'%}' width="40" height="40" onclick="RemoverTraje()">
       </div>
     </div>
   </div>
@@ -203,6 +203,7 @@
         }
         if (naotem){
         listaTrajes.push(resposta);
+        console.log(listaTrajes);
         
         var html_corpo = 
             '<tr onclick="seleciona(this.id)" id= '+ resposta.codigo+'>'+
@@ -282,15 +283,21 @@
 <script>
     function RemoverTraje() {
         var linhas = document.getElementsByClassName("listaSelecionada");
+        var linhasDeletadas = []
         for (linha in linhas){
             if (linhas[linha].id){
                 for (traje in listaTrajes){
+                    console.log(listaTrajes[traje]["codigo"])
                     if (listaTrajes[traje]["codigo"] == linhas[linha].id){
                         listaTrajes.splice(traje,1);
-                        $(document.getElementById(linhas[linha].id)).remove();
+                        linhasDeletadas.push(linhas[linha].id)
                     }
                 }
             }
+        }
+        for (id in linhasDeletadas){
+            console.log(linhasDeletadas[id])
+            $(document.getElementById(linhasDeletadas[id])).remove();
         }
     }
 
