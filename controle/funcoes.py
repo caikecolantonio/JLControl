@@ -1,4 +1,5 @@
-from controle.models import Locacao, Cliente, Traje
+from controle.models import Locacao, Cliente, Traje, Lancamento, Item, Ficha
+from datetime import date, time, datetime
 
 #"""Função que busca se o traje está disponivel ou alocado"""
 #Recebe o objeto traje e o true or false do MostraAlocados.
@@ -70,3 +71,55 @@ def busca_traje(tipo, pesquisa, MostraAlocados):
             volta.append(is_disponivel)
     return volta
 
+def validate_cpf(cpf):
+    ''' Expects a numeric-only CPF string. '''
+    if len(cpf) < 11:
+        return False
+
+    if cpf in [s * 11 for s in [str(n) for n in range(10)]]:
+        return False
+
+    calc = lambda t: int(t[1]) * (t[0] + 2)
+    d1 = (sum(map(calc, enumerate(reversed(cpf[:-2])))) * 10) % 11
+    d2 = (sum(map(calc, enumerate(reversed(cpf[:-1])))) * 10) % 11
+    return str(d1) == cpf[-2] and str(d2) == cpf[-1]
+
+def criar_locacao(cliente, dataPrevisao, listaTrajes, valorTotal):
+    lanc = Lancamento(data=date.today(), hora=str(datetime.now().hour)+':'+str(datetime.now().minute), valor=valorTotal)
+    lanc.save()
+
+    locacao = Locacao(data_previsao_devolucao = dataPrevisao, 
+    status='Alocado', 
+    descricao= '', 
+    cliente = cliente, 
+    lancamento = lanc)
+    locacao.save()
+
+    for traje in listaTrajes:
+        item = Item(valor=traje['valor'], 
+        status='Pronto' if traje['precisaAjuste']==False else 'Aguardando', 
+        data_entrega='' if traje['precisaAjuste']==False else datetime.now(),
+        medidas=Ficha.objects.get(id=traje['id_medida']),
+        traje=Traje.objects.get(codigo=traje['codigo']))
+        item.save()
+        locacao.item.add(item)
+
+        
+            
+        
+
+def procura_ou_cria_cliente(info, tipo, pesquisa):
+    query = Cliente.objects.filter(**{tipo: pesquisa})
+    if query:
+        return Cliente.objects.get(**{tipo: pesquisa})
+    else:
+        criar_cliente(info)
+        return Cliente.objects.get(**{tipo: pesquisa})
+
+def criar_cliente(info):
+    if info['isEstrangeiro'] == True:
+        cliente = Cliente(nome=info["Nome"], email=info["Email"], endereco=info["Endereco"], telefone=info["Telefone"], documento_externo=info["DocumentoExterno"])
+    else:
+        cliente = Cliente(nome=info["Nome"], email=info["Email"], endereco=info["Endereco"], telefone=info["Telefone"], rg=info["RG"], cpf=info["CPF"])
+    cliente.save()
+    

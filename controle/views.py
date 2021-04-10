@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from controle.models import Locacao, Cliente, Traje
-from controle.forms import ConsultarCliente, ConsultarTraje
-from controle.funcoes import is_traje_disponivel, busca_locacao_por_cliente, busca_traje
+from controle.models import Locacao, Cliente, Traje, Ficha
+from controle.forms import ConsultarCliente, ConsultarTraje, FormFicha
+from controle.funcoes import is_traje_disponivel, busca_locacao_por_cliente, busca_traje, validate_cpf, criar_cliente, criar_locacao, procura_ou_cria_cliente
 from django.http import JsonResponse
 from django.forms.models import model_to_dict
 import json
@@ -147,6 +147,13 @@ def autocomplete_traje(request):
                     results.append("Codigo:" + trajeDisponivel.codigo+ " Modelo: "+ trajeDisponivel.modelo)
         return JsonResponse(results, safe=False)
 
+def cria_ficha_medidas(request):
+    info = json.loads(request.GET.get('info'))
+    ficha = Ficha(paleto_barra = float(info['paleto']), calca_barra = float(info['calca']), torax = float(info['torax']), costas = float(info['costas']))
+    ficha.save()    
+    return JsonResponse(ficha.id, safe=False)
+
+
 def retornaTrajeSelecionado(request):
     query = Traje.objects.filter(codigo=request.GET.get('Traje'))
     if query:
@@ -160,7 +167,38 @@ def retornaTrajeSelecionado(request):
 
 
 def SalvarLocacao(request):
-    listaTrajes = request.GET.get('listatraje')
-    print(listaTrajes["0"])
-    print(request.GET.get('form')["CPF"])
+    infoCliente = json.loads(request.GET.get('form'))
+    listaTrajes = json.loads(request.GET.get('listatraje'))
+    dataPrevisao = request.GET.get('dPrevDevolucao')
+    valorTotal = request.GET.get('valorTotal')
+
+    if infoCliente['isEstrangeiro'] == False:
+        if validate_cpf(infoCliente['CPF']):
+            cliente = procura_ou_cria_cliente(infoCliente, "cpf", infoCliente['CPF'])
+        else:
+            cliente = procura_ou_cria_cliente(infoCliente, "cpf", infoCliente['CPF'])
+            #return JsonResponse("CPF digitado invalido", safe=False)
+    else:
+        cliente = procura_ou_cria_cliente(infoCliente, "documento_externo", infoCliente['DocumentoExterno'])
+
+    criar_locacao(cliente, dataPrevisao, listaTrajes, valorTotal)
+    
     return JsonResponse("deu certo", safe=False)
+
+def devolver_locacao(request):
+    locacao_detalhes = {}
+
+    id_locacao = json.loads(request.GET.get('id_locacao'))
+    locacao = Locacao.objects.get(id=id_locacao)
+    locacao.status = 'Devolvido'
+    locacao.save()
+    cliente = locacao.cliente
+    locacoes = busca_locacao_por_cliente(cliente)
+    if locacoes:
+        locacao_detalhes = locacoes
+
+    consultas = {
+        'locacoes': locacao_detalhes,
+        'cliente': cliente
+    }    
+    return render(request, 'consultar.html', consultas)

@@ -21,4 +21,10 @@ class ConsultarClienteNovo(forms.Form):
     Nome = forms.CharField(label='Nome', required=False)
     Endereco = forms.CharField(label='Endereco', required=False)
     Email = forms.EmailField(label='email', required=False)
-    DocumentoExterno = forms.CharField(label='Documento Externo', required=False)
+    DocumentoExterno = forms.CharField(label='DocumentoExterno', required=False)
+
+class FormFicha(forms.Form):
+    paleto_barra = forms.DecimalField(label='paleto_barra', max_digits=5, decimal_places=2)
+    calca_barra = forms.DecimalField(label='calca_barra', max_digits=5, decimal_places=2)
+    torax = forms.DecimalField(label='torax', max_digits=5, decimal_places=2)
+    costas = forms.DecimalField(label='costas', max_digits=5, decimal_places=2)

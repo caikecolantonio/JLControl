@@ -47,14 +47,13 @@ class Ficha(models.Model):
         return str(self.id)
 
 class Item(models.Model):
-    quantidade = models.IntegerField()
     valor = models.DecimalField(max_digits=5, decimal_places=2)
     STATUS_CHOISE = [
         ('Pronto', 'Pronto'),
         ('Aguardando', 'Aguardando'),
     ]
     status = models.CharField(choices=STATUS_CHOISE, max_length=100)
-    data_entrega = models.DateTimeField(auto_now=False, auto_now_add=False)
+    data_entrega = models.DateTimeField(auto_now=False, auto_now_add=False, null=True, blank=True)
     medidas = models.ForeignKey(Ficha, on_delete=models.CASCADE, null=True, blank=True)
     traje = models.ForeignKey(Traje, on_delete=models.CASCADE)
     def __str__(self):
@@ -76,4 +75,4 @@ class Locacao(models.Model):
     lancamento = models.ForeignKey(Lancamento, on_delete=models.CASCADE)
     def __str__(self):
 
-        return str(self.id) + ' - ' + self.cliente.nome + ' - Data Devolução: ' + str(self.data_devolucao.strftime("%d-%m-%Y %H:%M:%S"))
+        return str(self.id) + ' - ' + self.cliente.nome 

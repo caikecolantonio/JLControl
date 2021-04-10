@@ -7,31 +7,40 @@
 {% if cliente == '#ERRO001' %}
 
 <div class="alert alert-danger" role="alert">
-    Telefone duplicado ou não encontrado
-  </div>
+  Telefone duplicado ou não encontrado
+</div>
 {% endif %}
 {% if cliente == '#ERRO2' %}
 <div class="alert alert-danger" role="alert">
-    Por favor digite o CPF.
-  </div>
+  Por favor digite o CPF.
+</div>
 {% endif %}
 {% if locacoes is not None %}
 {% for key, locacao in locacoes.items %}
 <div class="container">
-    <div class="row">
-        <button class="btn btn-dark" type="button" data-toggle="collapse" data-target="#ID{{ locacao.id }}" aria-expanded="false" aria-controls="collapseExample">
-            {{cliente.nome }} / ID: {{ locacao.id }} - {{ locacao.status }} - {{ locacao.data_locacao}}
-          </button>
-        </p>
-        <div class="collapse" id="ID{{ locacao.id }}">
-          <div class="card card-body">
-            {% for key, traje in locacao.item.items %}
-            {{ traje.id }} - {{ traje.status }} - {{ traje.data_entrega }}<br>
-            {% endfor %}
+  <div class="row">
+    <table>
+      <td scope="col">
+        <button class="btn btn-dark btn-lg btn-block" type="button" data-toggle="collapse"
+          data-target="#ID{{ locacao.id }}" aria-expanded="false" aria-controls="collapseExample">
+          {{cliente.nome }} / ID: {{ locacao.id }} - {{ locacao.status }} - {{ locacao.data_locacao}}
+        </button>
+      </td>
+      <td scope="col"> <button class="btn btn-info btn-lg btn-block" type="button"
+          onclick="location.href='{% url 'devolver_locacao' %}'+'?id_locacao={{ locacao.id }}';">Devolver</button>
+      </td>
+    </table>
+    </p>
+    <div class="collapse" id="ID{{ locacao.id }}">
+      <div class="card card-body">
+        {% for key, traje in locacao.item.items %}
+        {{ traje.id }} - {{ traje.status }} - {{ traje.data_entrega }}<br>
+        {% endfor %}
 
-          </div>
-        </div>
+      </div>
+
     </div>
+  </div>
 </div>
 {% endfor %}
 {% endif %}
@@ -52,36 +61,48 @@
   </thead>
   <tbody>
     {% for traje in trajes_disponiveis %}
-        <tr>
-          <th scope="row">{{ forloop.counter }}</th>
-          <td>{{ traje.codigo }}</td>
-          <td>{{ traje.nome }}</td>
-          <td>{{ traje.modelo }}</td>
-          <td>{{ traje.corte }}</td>
-          <td>{{ traje.valor }}</td>
-          {% if MostraAlocados %}
-          <td>Alocado</td>
-          {% else %}
-          <td>Disponível</td><!-- <button class="btn btn-primary" type="button">Alocar</button>-->
-          {% endif %}
-        </tr>
+    <tr>
+      <th scope="row">{{ forloop.counter }}</th>
+      <td>{{ traje.codigo }}</td>
+      <td>{{ traje.nome }}</td>
+      <td>{{ traje.modelo }}</td>
+      <td>{{ traje.corte }}</td>
+      <td>{{ traje.valor }}</td>
+      {% if MostraAlocados %}
+      <td>Alocado</td>
+      {% else %}
+      <td>Disponível</td><!-- <button class="btn btn-primary" type="button">Alocar</button>-->
+      {% endif %}
+    </tr>
     {% endfor %}
-          <tr class="thead-light">
-            <th>Total:</th>
-            <th>{{ trajes_disponiveis|length }} </th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-          </tr>
+    <tr class="thead-light">
+      <th>Total:</th>
+      <th>{{ trajes_disponiveis|length }} </th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
   </tbody>
 </table>
 {% endif %}
 {% endif %}
 
+<script>
+  function devolver_locacao(id) {
+    const url = '{% url 'devolver_locacao' %}?id_locacao=' + id
+
+    fetch(url).then(response => {
+      return response.json();
+    }).then(resposta => {
+      if (resposta == "deu certo") {
+        alert("deu boa")
+      }
+    });
+
+  }
+</script>
 
 
 {% endblock %}
-
-
