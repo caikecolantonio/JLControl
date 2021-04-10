@@ -158,6 +158,9 @@ def retornaTrajeSelecionado(request):
     else:
         return JsonResponse("CODIGOINVALIDO", safe=False)
 
-    
 
-
+def SalvarLocacao(request):
+    listaTrajes = request.GET.get('listatraje')
+    print(listaTrajes["0"])
+    print(request.GET.get('form')["CPF"])
+    return JsonResponse("deu certo", safe=False)

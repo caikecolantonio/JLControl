@@ -188,12 +188,12 @@
 </script>
 
 {% elif cliente == 0 %}
-
+<!-- Script para mostrar o Toast de cliente não encontrado-->
 <script>
     aToastClienteNaoEncontrado();
 </script>
 {% endif %}
-
+<!-- Script que o botão de + chama pra adicionar o traje na listaTrajes e mostrar na table-->
 <script>
     var listaTrajes = [];
 
@@ -242,7 +242,7 @@
     }
 
 </script>
-
+<!-- Seleciona o Traje na Table (deixando azul)-->
 <script>
     function seleciona(id) {
         if (document.getElementById(id).classList.contains("table-primary")){
@@ -257,7 +257,7 @@
     }
 
 </script>
-
+<!-- Autocomplete da pesquisa de trajes -->
 <script>
     $(function () {
         $(".AutoCompleteTrajePesquisaModelo").autocomplete({
@@ -284,7 +284,7 @@
       });       
     });
 </script>
-
+<!-- Script pra atualizar o valor de todos os trajes da table -->
 <script>
     function AtualizaValor() {
     var totalLista = 0
@@ -297,7 +297,7 @@
     }
     setInterval(AtualizaValor, 300);
   </script>
-
+<!-- Script pra remover o traje da table e da listaTrajes -->
 <script>
     function RemoverTraje() {
         var linhas = document.getElementsByClassName("listaSelecionada");
@@ -319,6 +319,25 @@
         }
     }
 
+</script>
+
+<!-- Script para enviar a locação para o views.py-->
+<script>
+    function Locar() {
+        var listaForm = {};
+        
+        listaForm["CPF"] = document.getElementById("FormNovoCPF").innerHTML
+        const url = '{% url 'SalvarLocacao' %}?listatraje='+listaTrajes+'&form='+listaForm
+
+        fetch(url).then(response =>{
+        return response.json();
+        }).then(resposta =>{
+        var naotem = true
+        if (resposta == "deu certo"){
+            alert("deu boa")
+            }
+        });
+    }
 </script>
 
 <table class="table">
@@ -344,6 +363,6 @@
           </tr>
     </tbody>
   </table>
-
-
+  <button type="button" class="btn btn-dark" style="margin-right: 3%;" onclick="Locar()">Locar</button>
+  
 {% endblock %}

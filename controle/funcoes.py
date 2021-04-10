@@ -1,6 +1,6 @@
 from controle.models import Locacao, Cliente, Traje
 
-#Função que busca se o traje está disponivel ou alocado
+#"""Função que busca se o traje está disponivel ou alocado"""
 #Recebe o objeto traje e o true or false do MostraAlocados.
 def is_traje_disponivel(traje, MostraAlocados):
     mostrar = False
