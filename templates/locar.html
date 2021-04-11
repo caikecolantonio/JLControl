@@ -395,7 +395,7 @@
     function Locar() {
         var listaForm = {};
         passou = false
-
+        
         listaForm["Nome"] = document.getElementById("FormNovoNome").value
         listaForm["Telefone"] = document.getElementById("FormNovoTelefone").value
         listaForm["Endereco"] = document.getElementById("FormNovoEndereco").value
@@ -430,8 +430,10 @@
             }).then(resposta => {
                 var naotem = true
                 if (resposta == "deu certo") {
-                    alert("deu boa")
-                    window.location.replace("http://127.0.0.1:8000/consultar/");
+                    document.getElementById("testeSucess").style.display = "inline"
+                    setTimeout(function(){
+                        window.location.replace("http://127.0.0.1:8000/locar/");
+                    }, 1500); 
                 }
             });
         }
@@ -492,6 +494,16 @@
 <input type="datetime-local" id="dPrevDevolucao" placeholder="" name="dPrevDevolucao">
 <button type="button" class="btn btn-dark" style="margin-right: 3%;" onclick="Locar()">Locar</button>
 
+<div class="teste" id="testeSucess" style="position: absolute; left: 50%; right: 50%; top: 1%; display: none; z-index: 1;">
+    <div class="swal2-icon swal2-success swal2-animate-success-icon" style="display: flex;">
+        <div class="swal2-success-circular-line-left" style="background-color: rgb(255, 255, 255, 0);"></div>
+          <span class="swal2-success-line-tip"></span>
+          <span class="swal2-success-line-long"></span>
+          <div class="swal2-success-ring"></div> 
+          <div class="swal2-success-fix" style="background-color: rgb(255, 255, 255, 0);"></div>
+          <div class="swal2-success-circular-line-right" style="background-color: rgba(255, 255, 255, 0);"></div>
+         </div>
+</div>
 
 
 
