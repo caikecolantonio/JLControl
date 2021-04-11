@@ -49,10 +49,12 @@ def busca_locacao_por_cliente(cliente):
         for locacao in locacaoRelacionados:
             items = locacao.item.all().values()
             #Pega todas as informações dos Trajes.
-            for trajes in items:
+            for traje in items:
                 count += 1
+                traje["traje"] = Traje.objects.get(id=traje["traje_id"])
+                traje["medida"] = Ficha.objects.get(id=traje["medidas_id"])
                 #Adiciona a informação do Traje no dicionario de retorno.
-                locacao_detalhes[QntLocacao]['item'][count] = trajes
+                locacao_detalhes[QntLocacao]['item'][count] = traje
     
     #verifica se tem algo no Dicionario para retornar, se não tiver o return da função será None
     if locacao_detalhes:
@@ -109,7 +111,17 @@ def criar_locacao(cliente, dataPrevisao, listaTrajes, valorTotal):
 def procura_ou_cria_cliente(info, tipo, pesquisa):
     query = Cliente.objects.filter(**{tipo: pesquisa})
     if query:
-        return Cliente.objects.get(**{tipo: pesquisa})
+        cliente = Cliente.objects.get(**{tipo: pesquisa}) 
+        cliente.endereco = info["Endereco"]
+        if info["RG"]:
+            cliente.rg = info["RG"]
+        else:
+            cliente.rg = None        
+        cliente.nome = info["Nome"]
+        cliente.telefone = info["Telefone"]
+        cliente.email = info["Email"]
+        cliente.save()
+        return cliente
     else:
         criar_cliente(info)
         return Cliente.objects.get(**{tipo: pesquisa})

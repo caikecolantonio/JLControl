@@ -161,7 +161,8 @@
         </div>
         <div class="col-sm">
             <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#exampleModalMedidas">
-                Medidas</button>
+                Medidas
+            </button>
         </div>
     </div>
 </div>
@@ -232,6 +233,7 @@
 <script>
     document.getElementById("isEstrangeiro").disabled = true
     document.getElementById("FormNovoCPF").value = "{{cliente.cpf}}"
+    document.getElementById("FormNovoCPF").disabled = true
     document.getElementById("FormNovoRG").value = "{{cliente.rg}}"
     document.getElementById("FormNovoNome").value = "{{cliente.nome}}"
     document.getElementById("FormNovoTelefone").value = "{{cliente.telefone}}"
@@ -242,6 +244,7 @@
     document.getElementById("isEstrangeiro").disabled = true
     Esconde();
     document.getElementById("DocumentoExterno").value = "{{cliente.documento_externo}}"
+    document.getElementById("DocumentoExterno").disabled = true
     {% endif %}
 
 </script>
@@ -250,8 +253,8 @@
 <!-- Script para mostrar o Toast de cliente não encontrado-->
 <script>
     atoastAlertaGenerico("Cliente não encontrado", "Procure de novo ou crie um novo")
-    
 </script>
+
 {% endif %}
 <!-- Script que o botão de + chama pra adicionar o traje na listaTrajes e mostrar na table-->
 <script>
@@ -419,7 +422,7 @@
                 if (document.getElementById("isEstrangeiro").checked) {
                     if (document.getElementById("DocumentoExterno").value != "") { passou = true}
                     else { passou = false } }
-                else { if (document.getElementById("FormNovoCPF").value != "" && document.getElementById("FormNovoRG").value != "") { passou = true }
+                else { if (document.getElementById("FormNovoCPF").value != "") { passou = true }
                     else { passou = false } }
             } else { passou = false }
         } else { passou = false }
@@ -442,7 +445,6 @@
         }
     }
 </script>
-
 <!-- Logica para criação da ficha de medida -->
 <script>
     let id_medida
@@ -494,6 +496,7 @@
 <input type="datetime-local" id="dPrevDevolucao" placeholder="" name="dPrevDevolucao">
 <button type="button" class="btn btn-dark" style="margin-right: 3%;" onclick="Locar()">Locar</button>
 
+<!-- Div da animação de Sucess -->
 <div class="teste" id="testeSucess" style="position: absolute; left: 50%; right: 50%; top: 1%; display: none; z-index: 1;">
     <div class="swal2-icon swal2-success swal2-animate-success-icon" style="display: flex;">
         <div class="swal2-success-circular-line-left" style="background-color: rgb(255, 255, 255, 0);"></div>

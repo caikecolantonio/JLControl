@@ -33,10 +33,22 @@
     </p>
     <div class="collapse" id="ID{{ locacao.id }}">
       <div class="card card-body">
-        {% for key, traje in locacao.item.items %}
-        {{ traje.id }} - {{ traje.status }} - {{ traje.data_entrega }}<br>
+        {% for key, item in locacao.item.items %}
+        <table>
+        <td>{{ item.id }} - {{ item.status }} - {{ item.traje.nome }} - {{ item.data_entrega }}
+          
+          <br>
+          
+        </td>
+        <td>
+        <div style="text-align: right;">
+        <button type="button" class="btn btn-dark" style="margin-left: 5%; align-items: center;"
+        data-toggle="modal" data-target="#ModalMedidasConsultar" 
+        onclick="abriModalConsultar('{{ item.medida.paleto_barra}}', '{{ item.medida.calca_barra }}', '{{ item.medida.costas }}', '{{ item.medida.torax }}')"
+        >Abrir ficha de medidas</button></td>
+        </div>
+        </table>
         {% endfor %}
-
       </div>
 
     </div>
@@ -104,5 +116,66 @@
   }
 </script>
 
+<script>
+  function abriModalConsultar(paleto_barra, calca_barra, costas, torax){
+        document.getElementById("formMedidaPaletoConsultar").value = parseFloat(paleto_barra)
+        document.getElementById("formMedidaCalcaConsultar").value = parseFloat(calca_barra)
+        document.getElementById("formMedidaToraxConsultar").value = parseFloat(costas)
+        document.getElementById("formMedidaCostasConsultar").value = parseFloat(torax)
+  }
+</script>
+
+<!-- Modal Medidas -->
+<div class="modal fade" id="ModalMedidasConsultar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Consulte a ficha de medidas:</h5>
+                <button id="fechaModal" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form name="formMedidas" action="" method="post">
+                    {% csrf_token %}
+                    <div class="form-group row">
+                        <label for="formMedidaPaletoConsultar" class="col-sm-2 col-form-label">Barra paleto </label>
+                        <div class="col-sm-10">
+                            <input id="formMedidaPaletoConsultar" class="form-control" type="number" name="paleto_barra" min="0"
+                                step=".01" placeholder="Barra paleto">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="formMedidaCalcaConsultar" class="col-sm-2 col-form-label">Barra Calça </label>
+                        <div class="col-sm-10">
+                            <input id="formMedidaCalcaConsultar" class="form-control" type="number" name="calca_barra" min="0"
+                                step=".01" placeholder="Barra Calca">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="formMedidaToraxConsultar
+                        " class="col-sm-2 col-form-label">Torax</label>
+                        <div class="col-sm-10">
+                            <input id="formMedidaToraxConsultar" class="form-control" type="number" name="torax" min="0"
+                                step=".01" placeholder="Torax">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="formMedidaCostasConsultar" class="col-sm-2 col-form-label">Costas </label>
+                        <div class="col-sm-10">
+                            <input id="formMedidaCostasConsultar" class="form-control" type="number" name="costas" min="0"
+                                step=".01" placeholder="Costas">
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-primary btn-lg btn-block" data-dismiss="modal">Fechar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
