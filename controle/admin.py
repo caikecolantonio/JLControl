@@ -5,7 +5,7 @@ from .models import Locacao, Item, Ficha, Lancamento, Traje, Cliente
 
 
 class Locacoes(admin.ModelAdmin):
-    list_display= ('data_locacao', 'data_devolucao', 'data_previsao_devolucao', 'status', 'descricao', 'cliente', 'lancamento')
+    list_display= ('cliente', 'data_locacao', 'data_previsao_devolucao', 'data_devolucao', 'status', 'descricao', 'lancamento')
     list_display_links = ('data_locacao', 'data_devolucao', 'data_previsao_devolucao', 'status', 'descricao', 'cliente', 'lancamento')
     search_fields = ('cliente', 'status')
     list_per_page = 20
@@ -13,6 +13,19 @@ class Locacoes(admin.ModelAdmin):
 admin.site.register(Locacao, Locacoes)
 admin.site.register(Item)
 admin.site.register(Ficha)
-admin.site.register(Traje)
-admin.site.register(Lancamento)
+
+class Trajes(admin.ModelAdmin):
+    list_display = ('codigo', 'modelo', 'nome', 'valor', 'ativo')
+    list_display_links = ('codigo', 'modelo', 'nome', 'valor', 'ativo')
+    search_fields = ('codigo', 'modelo', 'nome')
+    list_per_page = 20
+
+admin.site.register(Traje, Trajes)
+
+class Lancamentos(admin.ModelAdmin):
+    list_display = ('id', 'data', 'hora', 'valor')
+    list_display_links = ('id', 'data', 'hora', 'valor')
+    list_per_page = 20
+
+admin.site.register(Lancamento, Lancamentos)
 admin.site.register(Cliente)
