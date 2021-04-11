@@ -256,31 +256,57 @@
   <button id="botaoAlerta" type="button" class="btn btn-primary" data-toggle="modal" data-target="#alertaCPF"
     hidden="true"> </button>
   
-    <div id="toastClienteNaoEncontrado" class="toast fade hide" style="position: absolute; top: 20px; right: 20px;">
-      <div class="toast-header">
-          <svg class="bd-placeholder-img rounded mr-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg"
-              preserveAspectRatio="xMidYMid slice" focusable="false" role="img">
-              <rect fill="#FF0000" width="100%" height="100%"></rect>
-          </svg>
-          <strong class="mr-auto">Cliente não encontrado</strong>
-          <small>11 mins ago</small>
-          <button type="button" class="ml-2 mb-1 close" onclick="fToastClienteNaoEncontrado()" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-          </button>
-      </div>
-      <div class="toast-body">
-          Procure de novo ou crie um novo.
-      </div>
+<!-- toast de Alerta generico-->
+<div aria-live="polite" aria-atomic="true" id = "areaToast" style="position: absolute; top: 20px; right: 20px; z-index: 9999;">
+  <div class="toast" id = "toastAlertaGenerico" style="position: relative; top: 0; right: 0;">
+  <div class="toast-header">
+      <svg class="bd-placeholder-img rounded mr-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="xMidYMid slice" focusable="false" role="img">
+          <rect fill="#FF0000" width="100%" height="100%"></rect>
+      </svg>
+      <strong class="mr-auto" id="toastTitulo"></strong>
+      <small>&times;</small>
+      <button type="button" id="buttonFechaToast" class="ml-2 mb-1 close" onclick="ftoastAlertaGenerico()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+      </button>
   </div>
-  <script>function fToastClienteNaoEncontrado() {
-          document.getElementById("toastClienteNaoEncontrado").className = "toast fade hide"
+  <div class="toast-body" id="toastMensagem">
+      
+  </div>
+</div>
+</div>
+
+<!-- Metodos toastGenerico -->
+<script>function atoastAlertaGenerico(titulo, mensagem) {
+      var numero = parseInt(Math.random() * (2000 - 0) + 0)
+
+      var seuNode = document.getElementById('toastAlertaGenerico'); 
+      var clone   = seuNode.cloneNode(true); 
+      clone.id = "toastAlertaGenerico|"+numero
+      
+      for (childs in clone.childNodes){
+          console.log(clone.childNodes[childs]["childNodes"])
+          
+          if (typeof clone.childNodes[childs]["childNodes"] !== 'undefined' && clone.childNodes[childs]["childNodes"].length > 0){
+              for (dentro in clone.childNodes[childs]["childNodes"]){
+                  clone.childNodes[childs]["childNodes"][dentro].id = clone.childNodes[childs]["childNodes"][dentro].id+"|"+numero
+                  if(typeof clone.childNodes[childs]["childNodes"][dentro].parentNode !== 'undefined'){
+                      clone.childNodes[childs]["childNodes"][dentro].parentNode.id = clone.childNodes[childs]["childNodes"][dentro].parentNode.id+"|"+numero
+                  }
+              }
+          }
       }
-  </script>
-  <script>function aToastClienteNaoEncontrado() {
-    document.getElementById("toastClienteNaoEncontrado").className = "toast fade show"
+      document.getElementById("areaToast").appendChild(clone);
+      document.getElementById("toastAlertaGenerico|"+numero).className = "toast fade show"
+      document.getElementById("toastTitulo|"+numero).innerHTML = titulo
+      document.getElementById("toastMensagem|"+numero).innerHTML = mensagem
+      document.getElementById("buttonFechaToast|"+numero).setAttribute("onClick", "ftoastAlertaGenerico("+numero+")")        
   }
 </script>
-
+<script>function ftoastAlertaGenerico(numero) {
+      document.getElementById("toastAlertaGenerico|"+numero).className = "toast fade hide"
+  }
+</script>
   {% block content %}
   
   {% endblock %}

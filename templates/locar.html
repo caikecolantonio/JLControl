@@ -249,7 +249,8 @@
 {% elif cliente == 0 %}
 <!-- Script para mostrar o Toast de cliente não encontrado-->
 <script>
-    aToastClienteNaoEncontrado();
+    atoastAlertaGenerico("Cliente não encontrado", "Procure de novo ou crie um novo")
+    
 </script>
 {% endif %}
 <!-- Script que o botão de + chama pra adicionar o traje na listaTrajes e mostrar na table-->
@@ -266,16 +267,16 @@
             }).then(resposta => {
                 var naotem = true
                 if (resposta == "CODIGOINVALIDO") {
-                    alert("não achou")
+                    atoastAlertaGenerico("Adiciona Traje", "O código digitado é inválido, não encontrado no banco.")
                 }
                 else if (resposta == "NAODISPONIVEL") {
-                    alert("traje não disponivel")
+                    atoastAlertaGenerico("Adiciona Traje", "O traje selecionado não está disponível.")
                 }
                 else {
                     //logica da lista
                     for (var traje in listaTrajes) {
                         if (listaTrajes[traje]["codigo"] === resposta.codigo) {
-                            alert("traje já adicionado");
+                            atoastAlertaGenerico("Adiciona Traje", "Traje já adicionado.")
                             naotem = false;
                         }
                     }
@@ -305,7 +306,7 @@
             });
         }
         else {
-            alert("Crie a ficha de medida")
+            atoastAlertaGenerico("Ficha de Medida", "Para adicionar, crie uma ficha de medida")
         }
     }
 
@@ -389,7 +390,6 @@
     }
 
 </script>
-
 <!-- Script para enviar a locação para o views.py-->
 <script>
     function Locar() {
@@ -417,29 +417,12 @@
             if (document.getElementById("FormNovoNome").value != "" && document.getElementById("FormNovoTelefone").value != "") {
                 passou = true
                 if (document.getElementById("isEstrangeiro").checked) {
-                    if (document.getElementById("DocumentoExterno").value != "") {
-                        passou = true
-                    }
-                    else {
-                        passou = false
-                    }
-                }
-                else {
-                    if (document.getElementById("FormNovoCPF").value != "" && document.getElementById("FormNovoRG").value != "") {
-                        passou = true
-                    }
-                    else {
-                        passou = false
-                    }
-                }
-            }
-            else {
-                passou = false
-            }
-        }
-        else {
-            passou = false
-        }
+                    if (document.getElementById("DocumentoExterno").value != "") { passou = true}
+                    else { passou = false } }
+                else { if (document.getElementById("FormNovoCPF").value != "" && document.getElementById("FormNovoRG").value != "") { passou = true }
+                    else { passou = false } }
+            } else { passou = false }
+        } else { passou = false }
 
         if (passou) {
             fetch(url).then(response => {
@@ -453,7 +436,7 @@
             });
         }
         else {
-            alert("Confirme que todos os dados estão preenchidos")
+            atoastAlertaGenerico("Tentativa de locação", "Preencha todos os campos obrigatórios.")
         }
     }
 </script>
@@ -468,7 +451,6 @@
         listaForm["calca"] = document.getElementById("formMedidaCalca").value
         listaForm["torax"] = document.getElementById("formMedidaTorax").value
         listaForm["costas"] = document.getElementById("formMedidaCostas").value
-
 
         const url = '{% url 'cria_ficha_medidas' %}?info=' + JSON.stringify(listaForm)
 
@@ -509,6 +491,9 @@
 <label id="labeldPrevDevolucao" for="dPrevDevolucao">Previsão de Devolução</label>
 <input type="datetime-local" id="dPrevDevolucao" placeholder="" name="dPrevDevolucao">
 <button type="button" class="btn btn-dark" style="margin-right: 3%;" onclick="Locar()">Locar</button>
+
+
+
 
 
 {% endblock %}

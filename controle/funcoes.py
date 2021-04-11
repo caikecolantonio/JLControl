@@ -103,8 +103,6 @@ def criar_locacao(cliente, dataPrevisao, listaTrajes, valorTotal):
         traje=Traje.objects.get(codigo=traje['codigo']))
         item.save()
         locacao.item.add(item)
-
-        
             
         
 
