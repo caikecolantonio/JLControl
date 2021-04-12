@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from controle.views import devolver, locar, consultar, cancelar, autocomplete_nome, autocomplete_traje, retornaTrajeSelecionado, SalvarLocacao, cria_ficha_medidas, devolver_locacao
+from controle.views import devolver, locar, consultar, cancelar, autocomplete_nome, autocomplete_traje, retornaTrajeSelecionado, salvar_locacao, cria_ficha_medidas, devolver_locacao, atualizar_ficha, consultar_cliente
 from django.conf.urls.static import static
 from django.conf import settings
 
@@ -29,7 +29,9 @@ urlpatterns = [
     path('autocomplete-nome/', autocomplete_nome, name='autocomplete-nome'),
     path('autocomplete-traje/', autocomplete_traje, name='autocomplete-traje'),
     path('retornatrajeselecionado/', retornaTrajeSelecionado, name='retornaTrajeSelecionado'),
-    path('SalvarLocacao/', SalvarLocacao, name='SalvarLocacao'),
+    path('salvar-locacao/', salvar_locacao, name='SalvarLocacao'),
     path('cria_ficha_medidas/', cria_ficha_medidas, name='cria_ficha_medidas'),
-    path('devolver_locacao/', devolver_locacao, name='devolver_locacao')
+    path('devolver-locacao/', devolver_locacao, name='devolver_locacao'),
+    path('atualiza-ficha/', atualizar_ficha, name='atualizar_ficha'),
+    path('consulta-cliente/', consultar_cliente, name='consultar_cliente'),
 ]+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -444,11 +444,12 @@
                 fetch(url).then(response => {
                     return response.json();
                 }).then(resposta => {
-                    var naotem = true
-                    if (resposta == "deu certo") {
+                    if (resposta["status"] == 200) {
                         document.getElementById("testeSucess").style.display = "inline"
                         setTimeout(function () {
-                            window.location.replace("http://127.0.0.1:8000/locar/");
+                            var url2 = '{% url 'consultar_cliente' %}?id='+resposta["id_cliente"]
+                            document.getElementById("testeSucess").style.display = "none"
+                            window.location.replace(url2);
                         }, 1500);
                     }
                 });
@@ -521,18 +522,8 @@
         <button type="button" class="btn btn-dark btn-block" style="margin-right: 3%;" onclick="Locar()">Locar</button>
         <p></p>
     </div>
-    <!-- Div da animação de Sucess -->
-    <div class="teste" id="testeSucess"
-         style="position: absolute; left: 50%; right: 50%; top: 1%; display: none; z-index: 1;">
-        <div class="swal2-icon swal2-success swal2-animate-success-icon" style="display: flex;">
-            <div class="swal2-success-circular-line-left" style="background-color: rgb(255, 255, 255, 0);"></div>
-            <span class="swal2-success-line-tip"></span>
-            <span class="swal2-success-line-long"></span>
-            <div class="swal2-success-ring"></div>
-            <div class="swal2-success-fix" style="background-color: rgb(255, 255, 255, 0);"></div>
-            <div class="swal2-success-circular-line-right" style="background-color: rgba(255, 255, 255, 0);"></div>
-        </div>
-    </div>
+
+
 
 
 

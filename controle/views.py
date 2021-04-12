@@ -166,11 +166,12 @@ def retornaTrajeSelecionado(request):
         return JsonResponse("CODIGOINVALIDO", safe=False)
 
 
-def SalvarLocacao(request):
+def salvar_locacao(request):
     infoCliente = json.loads(request.GET.get('form'))
     listaTrajes = json.loads(request.GET.get('listatraje'))
     dataPrevisao = request.GET.get('dPrevDevolucao')
     valorTotal = request.GET.get('valorTotal')
+    retorno = {}
 
     if infoCliente['isEstrangeiro'] == False:
         if validate_cpf(infoCliente['CPF']):
@@ -183,22 +184,39 @@ def SalvarLocacao(request):
 
     criar_locacao(cliente, dataPrevisao, listaTrajes, valorTotal)
     
-    return JsonResponse("deu certo", safe=False)
+    retorno["id_cliente"] = cliente.id
+    retorno["status"] = 200
+
+    return JsonResponse(retorno, safe=False)
 
 def devolver_locacao(request):
-    locacao_detalhes = {}
+    try:
+        id_locacao = json.loads(request.GET.get('id_locacao'))
+        locacao = Locacao.objects.get(id=id_locacao)
+        locacao.status = 'Devolvido'
+        locacao.save()
+        return JsonResponse("200", safe=False)
+    except:
+        return JsonResponse("deu ruim", safe=False)
 
-    id_locacao = json.loads(request.GET.get('id_locacao'))
-    locacao = Locacao.objects.get(id=id_locacao)
-    locacao.status = 'Devolvido'
-    locacao.save()
-    cliente = locacao.cliente
-    locacoes = busca_locacao_por_cliente(cliente)
-    if locacoes:
-        locacao_detalhes = locacoes
+def atualizar_ficha(request):
+    try:
+        infoFicha = json.loads(request.GET.get('infoFicha'))
+        ficha = Ficha.objects.get(id = infoFicha["id"])
+        ficha.paleto_barra = infoFicha["paleto_barra"]
+        ficha.calca_barra = infoFicha["calca_barra"]
+        ficha.torax = infoFicha["torax"]
+        ficha.costas = infoFicha["costas"]
+        ficha.save()
+        return JsonResponse("200", safe=False)
+    except:
+        return JsonResponse("deu ruim", safe=False)
 
+def consultar_cliente(request):
+    cliente = Cliente.objects.get(id = request.GET.get('id'))
+    locacao_detalhes = busca_locacao_por_cliente(cliente)
     consultas = {
-        'locacoes': locacao_detalhes,
-        'cliente': cliente
-    }    
+        'cliente': cliente,
+        'locacoes': locacao_detalhes
+    }
     return render(request, 'consultar.html', consultas)
