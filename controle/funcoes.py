@@ -1,5 +1,6 @@
 from controle.models import Locacao, Cliente, Traje, Lancamento, Item, Ficha
 from datetime import date, time, datetime
+import keyword
 
 #"""Função que busca se o traje está disponivel ou alocado"""
 #Recebe o objeto traje e o true or false do MostraAlocados.
@@ -89,22 +90,27 @@ def validate_cpf(cpf):
 def criar_locacao(cliente, dataPrevisao, listaTrajes, valorTotal):
     lanc = Lancamento(data=date.today(), hora=str(datetime.now().hour)+':'+str(datetime.now().minute), valor=valorTotal)
     lanc.save()
-
     locacao = Locacao(data_previsao_devolucao = dataPrevisao, 
     status='Alocado', 
     descricao= '', 
     cliente = cliente, 
     lancamento = lanc)
     locacao.save()
-
     for traje in listaTrajes:
+        for verifica_traje in Traje.objects.filter(codigo=traje['codigo']):
+            traje_retorno = is_traje_disponivel(verifica_traje, False)
+        if not traje_retorno:
+            locacao.delete()
+            lanc.delete()
+            return 400
         item = Item(valor=traje['valor'], 
         status='Pronto' if traje['precisaAjuste']==False else 'Aguardando', 
         data_entrega='' if traje['precisaAjuste']==False else datetime.now(),
         medidas=Ficha.objects.get(id=traje['id_medida']),
-        traje=Traje.objects.get(codigo=traje['codigo']))
+        traje = traje_retorno)
         item.save()
         locacao.item.add(item)
+    return 200
             
         
 
@@ -113,7 +119,7 @@ def procura_ou_cria_cliente(info, tipo, pesquisa):
     if query:
         cliente = Cliente.objects.get(**{tipo: pesquisa}) 
         cliente.endereco = info["Endereco"]
-        if info["RG"]:
+        if "RG" in info:
             cliente.rg = info["RG"]
         else:
             cliente.rg = None        

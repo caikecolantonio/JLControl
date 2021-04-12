@@ -182,12 +182,16 @@ def salvar_locacao(request):
     else:
         cliente = procura_ou_cria_cliente(infoCliente, "documento_externo", infoCliente['DocumentoExterno'])
 
-    criar_locacao(cliente, dataPrevisao, listaTrajes, valorTotal)
-    
-    retorno["id_cliente"] = cliente.id
-    retorno["status"] = 200
+    if criar_locacao(cliente, dataPrevisao, listaTrajes, valorTotal) == 200:         
+        retorno["id_cliente"] = cliente.id
+        retorno["status"] = 200
 
-    return JsonResponse(retorno, safe=False)
+        return JsonResponse(retorno, safe=False)
+    else:
+        retorno["id_cliente"] = cliente.id
+        retorno["status"] = 400
+        return JsonResponse(retorno, safe=False)
+        
 
 def devolver_locacao(request):
     try:

@@ -16,7 +16,7 @@ class Cliente(models.Model):
 class Lancamento(models.Model):
     data = models.DateField(auto_now=False, auto_now_add=False)
     hora = models.TimeField(auto_now=False, auto_now_add=False)
-    valor = models.DecimalField(max_digits=5, decimal_places=2)
+    valor = models.DecimalField(max_digits=7, decimal_places=2)
 
     def __str__(self):
         return str(self.id)
