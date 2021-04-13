@@ -23,7 +23,7 @@
       <td scope="col">
         <button class="btn btn-dark btn-lg btn-block" type="button" data-toggle="collapse"
           data-target="#ID{{ locacao.id }}" aria-expanded="false" aria-controls="collapseExample">
-          {{cliente.nome }} / ID: {{ locacao.id }} - {{ locacao.status }} - {{ locacao.data_locacao}}
+          {{cliente.nome }} / ID: {{ locacao.id }} - {{ locacao.status }} - Data Locação: {{ locacao.data_locacao}}  
         </button>
       </td>
       <td scope="col"> <button class="btn btn-info btn-lg btn-block" type="button" onclick="devolver_locacao({{ locacao.id }})">Devolver</button>
@@ -33,6 +33,7 @@
     </p>
     <div class="collapse" id="ID{{ locacao.id }}">
       <div class="card card-body">
+        {% if locacao.data_devolucao is not None %}<p style="align-items: center; text-align: center;">Locação foi devolvida em {{ locacao.data_devolucao }} </p>{% endif %} 
         {% for key, item in locacao.item.items %}
         <table>
         <td>{{ item.id }} - {{ item.status }} - {{ item.traje.nome }} - {{ item.data_entrega }}
@@ -111,15 +112,19 @@
         if (resposta == "200"){
           document.getElementById("fechaModalMedidas").click()
           document.getElementById("testeSucess").style.display = "inline"
-        }
-        else{
-          atoastAlertaGenerico("Devolver traje", "Aconteceu algum erro de devolver o traje")
-        }    
-      });
-      setTimeout(function () {
+          setTimeout(function () {
             const url2 = '{% url 'consultar_cliente' %}?id='+'{{ cliente.id }}'
             window.location.replace(url2);
         }, 1500);
+        }
+        else if (resposta == "400"){
+          atoastAlertaGenerico("Devolver traje", "Locação já devolvida.")
+        }
+        else{
+          atoastAlertaGenerico("Devolver traje", "Aconteceu algum erro de devolver a locação.")
+        }    
+      });
+
   }
 </script>
 

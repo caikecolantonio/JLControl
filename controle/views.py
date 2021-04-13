@@ -4,6 +4,7 @@ from controle.forms import ConsultarCliente, ConsultarTraje, FormFicha
 from controle.funcoes import is_traje_disponivel, busca_locacao_por_cliente, busca_traje, validate_cpf, criar_cliente, criar_locacao, procura_ou_cria_cliente
 from django.http import JsonResponse
 from django.forms.models import model_to_dict
+from datetime import datetime
 import json
 
 # Create your views here.
@@ -197,9 +198,13 @@ def devolver_locacao(request):
     try:
         id_locacao = json.loads(request.GET.get('id_locacao'))
         locacao = Locacao.objects.get(id=id_locacao)
-        locacao.status = 'Devolvido'
-        locacao.save()
-        return JsonResponse("200", safe=False)
+        if locacao.status == 'Devolvido':
+            locacao.status = 'Devolvido'
+            locacao.data_devolucao = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            locacao.save()
+            return JsonResponse("200", safe=False)
+        else:
+            return JsonResponse("400", safe=False)
     except:
         return JsonResponse("deu ruim", safe=False)
 
