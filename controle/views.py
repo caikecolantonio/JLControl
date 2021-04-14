@@ -198,7 +198,7 @@ def devolver_locacao(request):
     try:
         id_locacao = json.loads(request.GET.get('id_locacao'))
         locacao = Locacao.objects.get(id=id_locacao)
-        if locacao.status == 'Devolvido':
+        if locacao.status != 'Devolvido':
             locacao.status = 'Devolvido'
             locacao.data_devolucao = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             locacao.save()

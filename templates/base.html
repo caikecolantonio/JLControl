@@ -46,6 +46,26 @@
     text-align: center;
   }
 
+  .botaoMedida {
+    position: absolute;
+    z-index: 500;
+    width:0px;
+    opacity: 0;
+    transition: all 1s;
+    margin-left: -3%;
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+  }
+  .botaoMedida.animado {
+    width:80px;
+    opacity: 100;
+    margin-left: 1%;
+    color: #fff;
+    background-color: #138496;
+    border-color: #117a8b;
+}
+ 
   @media screen and (min-width: 768px) {
     .modalx:before {
       display: inline-block;

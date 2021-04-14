@@ -88,30 +88,37 @@ def validate_cpf(cpf):
     return str(d1) == cpf[-2] and str(d2) == cpf[-1]
 
 def criar_locacao(cliente, dataPrevisao, listaTrajes, valorTotal):
-    lanc = Lancamento(data=date.today(), hora=str(datetime.now().hour)+':'+str(datetime.now().minute), valor=valorTotal)
-    lanc.save()
-    locacao = Locacao(data_previsao_devolucao = dataPrevisao, 
-    status='Alocado', 
-    descricao= '', 
-    cliente = cliente, 
-    lancamento = lanc)
-    locacao.save()
-    for traje in listaTrajes:
-        for verifica_traje in Traje.objects.filter(codigo=traje['codigo']):
-            traje_retorno = is_traje_disponivel(verifica_traje, False)
-        if not traje_retorno:
-            locacao.delete()
-            lanc.delete()
-            return 400
-        item = Item(valor=traje['valor'], 
-        status='Pronto' if traje['precisaAjuste']==False else 'Aguardando', 
-        data_entrega='' if traje['precisaAjuste']==False else datetime.now(),
-        medidas=Ficha.objects.get(id=traje['id_medida']),
-        traje = traje_retorno)
-        item.save()
-        locacao.item.add(item)
-    return 200
-            
+    try:
+        lanc = Lancamento(data=date.today(), hora=str(datetime.now().hour)+':'+str(datetime.now().minute), valor=valorTotal)
+        lanc.save()
+        locacao = Locacao(data_previsao_devolucao = dataPrevisao, 
+        status='Alocado', 
+        descricao= '', 
+        cliente = cliente, 
+        lancamento = lanc)
+        locacao.save()
+        for traje in listaTrajes:
+            for verifica_traje in Traje.objects.filter(codigo=traje['codigo']):
+                traje_retorno = is_traje_disponivel(verifica_traje, False)
+            if not traje_retorno:
+                locacao.delete()
+                lanc.delete()
+                return 400
+            item = Item(valor=traje['valor'], 
+            status='Pronto' if traje['precisaAjuste']==False else 'Aguardando', 
+            data_entrega=datetime.now().strftime('%Y-%m-%d %H:%M:%S') if traje['precisaAjuste']==False else None,
+            medidas=Ficha.objects.get(id=traje['id_medida']),
+            traje = traje_retorno)
+            item.save()
+            locacao.item.add(item)
+        return 200
+    except:
+        locacao.delete()
+        lanc.delete()
+        return 400
+
+
+
         
 
 def procura_ou_cria_cliente(info, tipo, pesquisa):
