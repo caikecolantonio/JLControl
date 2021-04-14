@@ -229,3 +229,7 @@ def consultar_cliente(request):
         'locacoes': locacao_detalhes
     }
     return render(request, 'consultar.html', consultas)
+
+def consulta_ficha_medida(request):
+    ficha = Ficha.objects.get(id = request.GET.get('id'))
+    return JsonResponse(model_to_dict(ficha), safe=False)

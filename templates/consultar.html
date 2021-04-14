@@ -42,12 +42,14 @@
           
         </td>
         <td>
-        <div style="text-align: right;">
+        {% if item.medida.id is not None %}
+        <div style="text-align: right;">        
         <button type="button" class="btn btn-dark" style="margin-left: 5%; align-items: center;"
         data-toggle="modal" data-target="#ModalMedidasConsultar" 
         onclick="abrirModalConsultar('{{ item.medida.paleto_barra}}', '{{ item.medida.calca_barra }}', '{{ item.medida.costas }}', '{{ item.medida.torax }}','{{ item.medida.id }}')"
         >Abrir ficha de medidas</button></td>
         </div>
+        {% endif %}
         </table>
         {% endfor %}
       </div>

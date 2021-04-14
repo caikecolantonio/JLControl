@@ -53,7 +53,10 @@ def busca_locacao_por_cliente(cliente):
             for traje in items:
                 count += 1
                 traje["traje"] = Traje.objects.get(id=traje["traje_id"])
-                traje["medida"] = Ficha.objects.get(id=traje["medidas_id"])
+                if traje["medidas_id"] != None and traje["medidas_id"] != "":
+                    traje["medida"] = Ficha.objects.get(id=traje["medidas_id"])
+                else:
+                    traje["medida"] = None
                 #Adiciona a informação do Traje no dicionario de retorno.
                 locacao_detalhes[QntLocacao]['item'][count] = traje
     
@@ -107,7 +110,7 @@ def criar_locacao(cliente, dataPrevisao, listaTrajes, valorTotal):
             item = Item(valor=traje['valor'], 
             status='Pronto' if traje['precisaAjuste']==False else 'Aguardando', 
             data_entrega=datetime.now().strftime('%Y-%m-%d %H:%M:%S') if traje['precisaAjuste']==False else None,
-            medidas=Ficha.objects.get(id=traje['id_medida']),
+            medidas=None if 'id_medida' not in traje else Ficha.objects.get(id=traje['id_medida']),
             traje = traje_retorno)
             item.save()
             locacao.item.add(item)
