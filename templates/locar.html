@@ -112,6 +112,7 @@
             </div>
         </div>
     </div>
+
     <script>function validaCamposLocar() {
         if (formClienteLocar.CPF.value == '' && formClienteLocar.Telefone.value == '' && formClienteLocar.Nome.value == '' && formClienteLocar.DocumentoExterno.value == '') {
             document.getElementById("botaoAlerta").click();
@@ -120,7 +121,7 @@
         }
     }
     </script>
-
+    <!-- Script que mostra ou esconde as infos de cliente estrangeiro-->
     <script type="text/javascript">
         function Esconde(value) {
 
@@ -205,7 +206,7 @@
         </div>
     </form>
 
-
+    <!-- Form Pesquisa traje -->
     <form id="FormTrajePequisa">
         <div class="row" style="margin: 0">
             <div class="col-sm-1" style="margin-left:4.3%">
@@ -254,9 +255,9 @@
 
     {% elif cliente == 0 %}
         <!-- Script para mostrar o Toast de cliente não encontrado-->
-        <script>
-            atoastAlertaGenerico("Cliente não encontrado", "Procure de novo ou crie um novo")
-        </script>
+    <script>
+        atoastAlertaGenerico("Cliente não encontrado", "Procure de novo ou crie um novo")
+    </script>
 
     {% endif %}
     <!-- Script que o botão de + chama pra adicionar o traje na listaTrajes e mostrar na table-->
@@ -349,19 +350,20 @@
             }
         }
     </script>
-        <script>
-            function animaBotaoMedida(id)
-                {
-                    var el = document.getElementById(id);
-                    if (el.classList.contains("animado")){
-                        el.classList.remove("animado")
-                    }
-                    else
-                    {
-                        el.classList.add("animado")
-                    }
+    <!-- Script que coloca classe no botão para anima-lo-->
+    <script>
+        function animaBotaoMedida(id)
+            {
+                var el = document.getElementById(id);
+                if (el.classList.contains("animado")){
+                    el.classList.remove("animado")
                 }
-            </script>
+                else
+                {
+                    el.classList.add("animado")
+                }
+            }
+    </script>
     <!-- Autocomplete da pesquisa de trajes -->
     <script>
         $(function () {
@@ -546,7 +548,7 @@
             $('#exampleModalMedidas').modal('toggle');
         }
     </script>
-
+    <!-- Abre ficha de medida, prepara pra editar ou criar uma nova, se vai editar, busca no banco pra pegar as infos-->
     <script>
         function abreModalFicha(id){
             $('#exampleModalMedidas').modal('toggle');
@@ -578,7 +580,7 @@
     }
 }
     </script>
-
+    
     <div class="container">
         <div class="row justify-content-center">
             <p></p>
