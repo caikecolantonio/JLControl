@@ -58,12 +58,12 @@
         </div>
     </div>
     <!-- Modal Medidas -->
-    <div class="modal fade" id="exampleModalMedidas" tabindex="-1" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="exampleModalMedidas" tabindex="-1" aria-labelledby="modalTitleMedidas"
          aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Crie ficha de medidas: <span id="medidaTrajeSpan"></span></h5>
+                    <h5 class="modal-title" id="modalTitleMedidas">Crie ficha de medidas:</h5><h5 class="modal-title"><span id="medidaTrajeSpan"></span></h5>
                     <button id="fechaModal" type="button" class="close" onclick="$('#exampleModalMedidas').modal('hide');" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -501,28 +501,48 @@
             var listaForm = {};
             
             id_traje = document.getElementById("medidaTrajeSpan").innerHTML
+            listaForm["paleto_barra"] = document.getElementById("formMedidaPaleto").value
+            listaForm["calca_barra"] = document.getElementById("formMedidaCalca").value
+            listaForm["torax"] = document.getElementById("formMedidaTorax").value
+            listaForm["costas"] = document.getElementById("formMedidaCostas").value
             
             for (item in listaTrajes){
                 if (listaTrajes[item]["codigo"] == id_traje){
                     traje = listaTrajes[item]
-                    listaForm["paleto"] = document.getElementById("formMedidaPaleto").value
-                    listaForm["calca"] = document.getElementById("formMedidaCalca").value
-                    listaForm["torax"] = document.getElementById("formMedidaTorax").value
-                    listaForm["costas"] = document.getElementById("formMedidaCostas").value
+                    if (!("id_medida" in traje)){
                     url = '{% url 'cria_ficha_medidas' %}?info=' + JSON.stringify(listaForm);
+                    }
+                    else{
+                    listaForm["id"] = traje["id_medida"]
+
+                    const url = '{% url 'atualizar_ficha' %}?infoFicha=' + JSON.stringify(listaForm)
+
+                    fetch(url).then(response => {
+                        return response.json();
+                    }).then(resposta => {
+                        if (resposta == "200"){
+                        }
+                        else{
+                        atoastAlertaGenerico("Atualiza ficha", "Aconteceu algum erro ao atualizar a ficha")
+                        }});
+                    }
                 }
             }
             if(url != ""){
                 fetch(url).then(response => {
                     return response.json();
                 }).then(resposta => {
-                    traje["id_medida"] = resposta;
-                });}
-            for (item in listaTrajes){
-                if (listaTrajes[item]["codigo"] == traje["codigo"]){
-                    listaTrajes[item] = traje
+                    if (resposta != "status 400"){
+                    traje["id_medida"] = resposta;}
+                else{
+                    atoastAlertaGenerico("Cria ficha medidas", "Foi inserido um valor maior que 999,99")
                 }
-            }
+                });}
+                    for (item in listaTrajes){
+                        if (listaTrajes[item]["codigo"] == traje["codigo"]){
+                            listaTrajes[item] = traje
+                        }
+                    }
             $('#exampleModalMedidas').modal('toggle');
         }
     </script>
@@ -531,11 +551,18 @@
         function abreModalFicha(id){
             $('#exampleModalMedidas').modal('toggle');
             document.getElementById("medidaTrajeSpan").innerHTML = id
+            document.getElementById("modalTitleMedidas").innerHTML = "Crie ficha de medidas:"
+            document.getElementById("botaoCriarFicha").innerHTML = "Criar"
+            document.getElementById("formMedidaPaleto").value = ""
+            document.getElementById("formMedidaCalca").value = ""
+            document.getElementById("formMedidaTorax").value = ""
+            document.getElementById("formMedidaCostas").value = ""
 
             for (item in listaTrajes){
                 if (listaTrajes[item]["codigo"] == id){
                     if ("id_medida" in listaTrajes[item]){
                         document.getElementById("botaoCriarFicha").innerHTML = "Atualizar"
+                        document.getElementById("modalTitleMedidas").innerHTML = "Atualizar ficha de medidas:"
                         const url = '{% url 'consulta_ficha_medida' %}?id=' + listaTrajes[item]["id_medida"]
 
                         fetch(url).then(response => {
