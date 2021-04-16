@@ -57,15 +57,14 @@
             </div>
         </div>
     </div>
-
     <!-- Modal Medidas -->
-    <div class="modal fade" id="exampleModalMedidas" tabindex="-1" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="exampleModalMedidas" tabindex="-1" aria-labelledby="modalTitleMedidas"
          aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Crie ficha de medidas:</h5>
-                    <button id="fechaModal" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <h5 class="modal-title" id="modalTitleMedidas">Crie ficha de medidas:</h5><h5 class="modal-title"><span id="medidaTrajeSpan"></span></h5>
+                    <button id="fechaModal" type="button" class="close" onclick="$('#exampleModalMedidas').modal('hide');" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -106,14 +105,14 @@
                             </div>
                         </div>
 
-                        <button type="button" class="btn btn-info btn-lg btn-block"
-                                onclick="cria_ficha_medidas()">Criar
+                        <button type="button" class="btn btn-info btn-lg btn-block" id="botaoCriarFicha" onclick="cria_ficha_medidas()">Criar
                         </button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
     <script>function validaCamposLocar() {
         if (formClienteLocar.CPF.value == '' && formClienteLocar.Telefone.value == '' && formClienteLocar.Nome.value == '' && formClienteLocar.DocumentoExterno.value == '') {
             document.getElementById("botaoAlerta").click();
@@ -122,7 +121,7 @@
         }
     }
     </script>
-
+    <!-- Script que mostra ou esconde as infos de cliente estrangeiro-->
     <script type="text/javascript">
         function Esconde(value) {
 
@@ -165,7 +164,7 @@
                 </button>
             </div>
             <div class="p-2" style="margin-right: 5%">
-                <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#exampleModalMedidas">
+                <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#exampleModalMedidas" style="display: none;">
                     Medidas
                 </button>
             </div>
@@ -207,7 +206,7 @@
         </div>
     </form>
 
-
+    <!-- Form Pesquisa traje -->
     <form id="FormTrajePequisa">
         <div class="row" style="margin: 0">
             <div class="col-sm-1" style="margin-left:4.3%">
@@ -256,9 +255,9 @@
 
     {% elif cliente == 0 %}
         <!-- Script para mostrar o Toast de cliente não encontrado-->
-        <script>
-            atoastAlertaGenerico("Cliente não encontrado", "Procure de novo ou crie um novo")
-        </script>
+    <script>
+        atoastAlertaGenerico("Cliente não encontrado", "Procure de novo ou crie um novo")
+    </script>
 
     {% endif %}
     <!-- Script que o botão de + chama pra adicionar o traje na listaTrajes e mostrar na table-->
@@ -266,7 +265,7 @@
         var listaTrajes = [];
 
         function AdicionaTraje() {
-            if (id_medida) {
+            if (!id_medida) {
                 const trajeSelecionado = document.getElementById("FormCodigoTraje").value
                 const url = '{% url 'retornaTrajeSelecionado' %}?Traje=' + trajeSelecionado
 
@@ -287,19 +286,22 @@
                             }
                         }
                         if (naotem) {
-                            resposta['id_medida'] = id_medida
-                            resposta['precisaAjuste'] = true
+                            resposta['precisaAjuste'] = false
                             listaTrajes.push(resposta);
-                            console.log(listaTrajes);
-
 
                             var html_corpo =
-                                '<tr onclick="seleciona(this.id)" id= ' + resposta.codigo + '>' +
-                                '<td>' + resposta.codigo + '</td>' +
+                                '<tr onclick="seleciona(this.id)" id=' + resposta.codigo + '>' +
+                                '<td style="padding-left: 50px;">' + resposta.codigo + '</td>' +
                                 '<td>' + resposta.nome + '</td>' +
                                 '<td>' + resposta.modelo + '</td>' +
                                 '<td>' + resposta.corte + '</td>' +
                                 '<td>' + resposta.valor + '</td>' +
+                                '<td style="padding-top: 8px;padding-bottom: 0px;border-top-width: 0px;border-bottom-width: 1px;">'+
+                                '<input type="checkbox" style="width: 109.41px;" class="btn-check" id="btn-check-2-outlined'+resposta.codigo+'" autocomplete="off" onclick="precisa_ajuste('+"'"+resposta.codigo+"'"+')">'+
+                                '<label class="btn btn-outline-secondary botaoPrecisa" style="width: 109.41px;" for="btn-check-2-outlined'+resposta.codigo+'" id="precisaAjuste'+resposta.codigo+'" >Não precisa</label>'+
+                                '<button id="botaoMedida-'+resposta.codigo+'" class="botaoMedida btn btn-info"onclick="abreModalFicha('+"'"+resposta.codigo+"'"+')">Medidas</button>'+                                
+                                '</td>'+
+                                //'<td> <input class="form-check-input" type="radio" > </td>' +
                                 '</tr>' + $(".listaTrajes").html()
                             $(".listaTrajes").html(html_corpo)
 
@@ -314,8 +316,8 @@
                 atoastAlertaGenerico("Ficha de Medida", "Para adicionar, crie uma ficha de medida")
             }
         }
-
     </script>
+
     <!-- Seleciona o Traje na Table (deixando azul)-->
     <script>
         function seleciona(id) {
@@ -326,8 +328,41 @@
                 document.getElementById(id).classList.add("table-primary")
                 document.getElementById(id).classList.add("listaSelecionada")
             }
+        }      
+    </script>
+    <!-- Logica do botão de Precisa ajuste-->
+    <script>
+        function precisa_ajuste(trajeID) {
+            animaBotaoMedida("botaoMedida-"+trajeID)
+            for (var traje in listaTrajes) {
+                if (listaTrajes[traje]["codigo"] == trajeID) {
+                    if (listaTrajes[traje]["precisaAjuste"] == true){
+                        listaTrajes[traje]["precisaAjuste"] = false
+                        document.getElementById("precisaAjuste"+trajeID).innerHTML = "Não precisa"
+                        document.getElementById("btn-check-2-outlined"+trajeID).removeAttribute("checked", null)
+                    }
+                    else {
+                        listaTrajes[traje]["precisaAjuste"] = true
+                        document.getElementById("btn-check-2-outlined"+trajeID).setAttribute("checked", "")
+                        document.getElementById("precisaAjuste"+trajeID).innerHTML = "  Precisa  "
+                    }
+                }
+            }
         }
-
+    </script>
+    <!-- Script que coloca classe no botão para anima-lo-->
+    <script>
+        function animaBotaoMedida(id)
+            {
+                var el = document.getElementById(id);
+                if (el.classList.contains("animado")){
+                    el.classList.remove("animado")
+                }
+                else
+                {
+                    el.classList.add("animado")
+                }
+            }
     </script>
     <!-- Autocomplete da pesquisa de trajes -->
     <script>
@@ -380,7 +415,6 @@
             for (linha in linhas) {
                 if (linhas[linha].id) {
                     for (traje in listaTrajes) {
-                        console.log(listaTrajes[traje]["codigo"])
                         if (listaTrajes[traje]["codigo"] == linhas[linha].id) {
                             listaTrajes.splice(traje, 1);
                             linhasDeletadas.push(linhas[linha].id)
@@ -389,7 +423,6 @@
                 }
             }
             for (id in linhasDeletadas) {
-                console.log(linhasDeletadas[id])
                 $(document.getElementById(linhasDeletadas[id])).remove();
             }
         }
@@ -464,25 +497,90 @@
     <!-- Logica para criação da ficha de medida -->
     <script>
         let id_medida
-
+        
         function cria_ficha_medidas() {
+            var url = ""
             var listaForm = {};
-
-            listaForm["paleto"] = document.getElementById("formMedidaPaleto").value
-            listaForm["calca"] = document.getElementById("formMedidaCalca").value
+            
+            id_traje = document.getElementById("medidaTrajeSpan").innerHTML
+            listaForm["paleto_barra"] = document.getElementById("formMedidaPaleto").value
+            listaForm["calca_barra"] = document.getElementById("formMedidaCalca").value
             listaForm["torax"] = document.getElementById("formMedidaTorax").value
             listaForm["costas"] = document.getElementById("formMedidaCostas").value
+            
+            for (item in listaTrajes){
+                if (listaTrajes[item]["codigo"] == id_traje){
+                    traje = listaTrajes[item]
+                    if (!("id_medida" in traje)){
+                    url = '{% url 'cria_ficha_medidas' %}?info=' + JSON.stringify(listaForm);
+                    }
+                    else{
+                    listaForm["id"] = traje["id_medida"]
 
-            const url = '{% url 'cria_ficha_medidas' %}?info=' + JSON.stringify(listaForm)
+                    const url = '{% url 'atualizar_ficha' %}?infoFicha=' + JSON.stringify(listaForm)
 
-            fetch(url).then(response => {
-                return response.json();
-            }).then(resposta => {
-                id_medida = resposta
-            });
-            document.getElementById("fechaModal").click()
+                    fetch(url).then(response => {
+                        return response.json();
+                    }).then(resposta => {
+                        if (resposta == "200"){
+                        }
+                        else{
+                        atoastAlertaGenerico("Atualiza ficha", "Aconteceu algum erro ao atualizar a ficha")
+                        }});
+                    }
+                }
+            }
+            if(url != ""){
+                fetch(url).then(response => {
+                    return response.json();
+                }).then(resposta => {
+                    if (resposta != "status 400"){
+                    traje["id_medida"] = resposta;}
+                else{
+                    atoastAlertaGenerico("Cria ficha medidas", "Foi inserido um valor maior que 999,99")
+                }
+                });}
+                    for (item in listaTrajes){
+                        if (listaTrajes[item]["codigo"] == traje["codigo"]){
+                            listaTrajes[item] = traje
+                        }
+                    }
+            $('#exampleModalMedidas').modal('toggle');
         }
     </script>
+    <!-- Abre ficha de medida, prepara pra editar ou criar uma nova, se vai editar, busca no banco pra pegar as infos-->
+    <script>
+        function abreModalFicha(id){
+            $('#exampleModalMedidas').modal('toggle');
+            document.getElementById("medidaTrajeSpan").innerHTML = id
+            document.getElementById("modalTitleMedidas").innerHTML = "Crie ficha de medidas:"
+            document.getElementById("botaoCriarFicha").innerHTML = "Criar"
+            document.getElementById("formMedidaPaleto").value = ""
+            document.getElementById("formMedidaCalca").value = ""
+            document.getElementById("formMedidaTorax").value = ""
+            document.getElementById("formMedidaCostas").value = ""
+
+            for (item in listaTrajes){
+                if (listaTrajes[item]["codigo"] == id){
+                    if ("id_medida" in listaTrajes[item]){
+                        document.getElementById("botaoCriarFicha").innerHTML = "Atualizar"
+                        document.getElementById("modalTitleMedidas").innerHTML = "Atualizar ficha de medidas:"
+                        const url = '{% url 'consulta_ficha_medida' %}?id=' + listaTrajes[item]["id_medida"]
+
+                        fetch(url).then(response => {
+                            return response.json();
+                        }).then(resposta => {
+                            document.getElementById("formMedidaPaleto").value = resposta.paleto_barra
+                            document.getElementById("formMedidaCalca").value = resposta.calca_barra
+                            document.getElementById("formMedidaTorax").value = resposta.torax
+                            document.getElementById("formMedidaCostas").value = resposta.costas
+                        });
+                    }
+        }
+    }
+}
+    </script>
+    
     <div class="container">
         <div class="row justify-content-center">
             <p></p>
@@ -500,11 +598,12 @@
     <table class="table">
         <thead class="thead-dark">
         <tr>
-            <th scope="col">Codigo</th>
+            <th scope="col-2" style="padding-left: 50px;">Codigo</th>
             <th scope="col">Nome</th>
             <th scope="col">Modelo</th>
             <th scope="col">Corte</th>
             <th scope="col">Valor</th>
+            <th scope="col">Precisa ajuste?</th>
         </tr>
         </thead>
         <tbody class="listaTrajes">
@@ -517,6 +616,7 @@
             <th></th>
             <th></th>
             <th></th>
+            <th></th>
         </tr>
         </tbody>
     </table>
@@ -525,9 +625,6 @@
         <button type="button" class="btn btn-dark btn-block" style="margin-right: 3%;" onclick="Locar()">Locar</button>
         <p></p>
     </div>
-
-
-
 
 
 

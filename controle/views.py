@@ -149,10 +149,13 @@ def autocomplete_traje(request):
         return JsonResponse(results, safe=False)
 
 def cria_ficha_medidas(request):
-    info = json.loads(request.GET.get('info'))
-    ficha = Ficha(paleto_barra = float(info['paleto']), calca_barra = float(info['calca']), torax = float(info['torax']), costas = float(info['costas']))
-    ficha.save()    
-    return JsonResponse(ficha.id, safe=False)
+    try:
+        info = json.loads(request.GET.get('info'))
+        ficha = Ficha(paleto_barra = float(info['paleto_barra']), calca_barra = float(info['calca_barra']), torax = float(info['torax']), costas = float(info['costas']))
+        ficha.save()
+        return JsonResponse(ficha.id, safe=False)
+    except:
+        return JsonResponse("status 400", safe=False)
 
 
 def retornaTrajeSelecionado(request):
@@ -198,7 +201,7 @@ def devolver_locacao(request):
     try:
         id_locacao = json.loads(request.GET.get('id_locacao'))
         locacao = Locacao.objects.get(id=id_locacao)
-        if locacao.status == 'Devolvido':
+        if locacao.status != 'Devolvido':
             locacao.status = 'Devolvido'
             locacao.data_devolucao = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             locacao.save()
@@ -229,3 +232,7 @@ def consultar_cliente(request):
         'locacoes': locacao_detalhes
     }
     return render(request, 'consultar.html', consultas)
+
+def consulta_ficha_medida(request):
+    ficha = Ficha.objects.get(id = request.GET.get('id'))
+    return JsonResponse(model_to_dict(ficha), safe=False)

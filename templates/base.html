@@ -37,15 +37,49 @@
 
 </head>
 <style>
-  .fade {
+  .show {
     transition: all 1s;
     transition-duration: 0.2s;
   }
+  
 
   .modalx {
     text-align: center;
   }
+  .botaoPrecisa{
+    -webkit-transition: 0.2s ease-in-out;
+    -moz-transition: 0.2s ease-in-out;
+    -o-transition: 0.2s ease-in-out;
+    transition: 0.2s ease-in-out;
+  }
+  .collapsing{
+    transition: all .15s;
 
+  }
+
+  .botaoMedida {
+    position: absolute;
+    height: 38px;
+    width:38px;
+    opacity: 0;
+    transition: all 0.2s;
+    margin-left: -3%;
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+    visibility: hidden;
+  }
+  .botaoMedida.animado {
+    height: 38px;
+    width:80px;
+    opacity: 100;
+    margin-left: 1.2%;
+    color: #fff;
+    visibility: visible;
+    background-color: #138496;
+    border-color: #117a8b;
+}
+ 
   @media screen and (min-width: 768px) {
     .modalx:before {
       display: inline-block;
@@ -1908,7 +1942,7 @@
 
   <!-- toast de Alerta generico-->
   <div aria-live="polite" aria-atomic="true" id="areaToast"
-    style="position: absolute; top: 20px; right: 20px; z-index: 9999;">
+    style="position: fixed; top: 20px; right: 20px; z-index: 9999;">
   </div>
   </div>
 
@@ -1965,7 +1999,7 @@
 
 
   <!-- Modal -->
-  <div class="modal fade modalx" style="color:#ff6666" id="alertaCPF" tabindex="-1" role="dialog"
+  <div class="modal fade modalx" style="color:#ff6666; z-index: 9999;" id="alertaCPF" tabindex="-1" role="dialog"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialogx" role="document">
       <div class="modal-content">

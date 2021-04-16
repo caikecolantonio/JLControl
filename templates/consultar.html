@@ -22,7 +22,7 @@
     <table>
       <td scope="col">
         <button class="btn btn-dark btn-lg btn-block" type="button" data-toggle="collapse"
-          data-target="#ID{{ locacao.id }}" aria-expanded="false" aria-controls="collapseExample">
+          data-target="#ID{{ locacao.id }}" aria-expanded="true" aria-controls="collapseExample">
           {{cliente.nome }} / ID: {{ locacao.id }} - {{ locacao.status }} - Data Locação: {{ locacao.data_locacao}}  
         </button>
       </td>
@@ -42,12 +42,14 @@
           
         </td>
         <td>
-        <div style="text-align: right;">
+        {% if item.medida.id is not None %}
+        <div style="text-align: right;">        
         <button type="button" class="btn btn-dark" style="margin-left: 5%; align-items: center;"
         data-toggle="modal" data-target="#ModalMedidasConsultar" 
-        onclick="abrirModalConsultar('{{ item.medida.paleto_barra}}', '{{ item.medida.calca_barra }}', '{{ item.medida.costas }}', '{{ item.medida.torax }}','{{ item.medida.id }}')"
+        onclick="abrirModalConsultar('{{ item.medida.id }}')"
         >Abrir ficha de medidas</button></td>
         </div>
+        {% endif %}
         </table>
         {% endfor %}
       </div>
@@ -130,12 +132,21 @@
 
 <script>
         var id_ficha = 0
-  function abrirModalConsultar(paleto_barra, calca_barra, costas, torax, id_medida){
-        id_ficha = id_medida
-        document.getElementById("formMedidaPaletoConsultar").value = parseFloat(paleto_barra)
-        document.getElementById("formMedidaCalcaConsultar").value = parseFloat(calca_barra)
-        document.getElementById("formMedidaToraxConsultar").value = parseFloat(costas)
-        document.getElementById("formMedidaCostasConsultar").value = parseFloat(torax)
+  function abrirModalConsultar(id_medida){
+          id_ficha = id_medida
+
+          const url = '{% url 'consulta_ficha_medida' %}?id=' + id_medida
+
+          fetch(url).then(response => {
+              return response.json();
+          }).then(resposta => {
+              document.getElementById("formMedidaPaletoConsultar").value = resposta.paleto_barra
+              document.getElementById("formMedidaCalcaConsultar").value = resposta.calca_barra
+              document.getElementById("formMedidaToraxConsultar").value = resposta.torax
+              document.getElementById("formMedidaCostasConsultar").value = resposta.costas
+          });
+
+
   }
 </script>
 <script>
@@ -163,8 +174,9 @@
         }    
       });
       setTimeout(function () {
-            const url2 = '{% url 'consultar_cliente' %}?id='+'{{ cliente.id }}'
-            window.location.replace(url2);
+            //const url2 = '{% url 'consultar_cliente' %}?id='+'{{ cliente.id }}'
+            //window.location.replace(url2);
+            document.getElementById("testeSucess").style.display = "none"
         }, 1500);
 
     
