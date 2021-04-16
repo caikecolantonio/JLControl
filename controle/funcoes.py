@@ -120,10 +120,7 @@ def criar_locacao(cliente, dataPrevisao, listaTrajes, valorTotal):
         lanc.delete()
         return 400
 
-
-
-        
-
+       
 def procura_ou_cria_cliente(info, tipo, pesquisa):
     query = Cliente.objects.filter(**{tipo: pesquisa})
     if query:
