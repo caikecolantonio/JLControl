@@ -35,7 +35,7 @@ class Traje(models.Model):
 
 
     def __str__(self):
-        return self.nome.capitalize() + ' - ' + self.corte.capitalize() + ' - ' + self.modelo.capitalize() + ' - ' +'R$' + str(self.valor)
+        return self.codigo + ' - ' + self.nome.capitalize() + ' - ' + self.corte.capitalize() + ' - ' + self.modelo.capitalize() + ' - ' +'R$' + str(self.valor)
 
 class Ficha(models.Model):
     paleto_barra = models.DecimalField(max_digits=5, decimal_places=2)

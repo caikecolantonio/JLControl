@@ -315,14 +315,17 @@ def mais_menos_alocados(request):
 
 def busca_por_data(request):
     locacao, loc_atrasada, loc_alocado, loc_devolvido = [], [], [], []
+
+    inicial = request.POST['dPrevInicial'] + ' 00:00:00'
+    final = request.POST['dPrevFinal'] + ' 23:59:59'
     locacoes = Locacao.objects.filter(
-        data_locacao__range=(request.POST['dPrevInicial'], request.POST['dPrevFinal']))
+        data_locacao__range=(inicial, final))
     locacoes_atrasadas = Locacao.objects.filter(status='Atraso', data_locacao__range=(
-    request.POST['dPrevInicial'], request.POST['dPrevFinal']))
+    inicial, final))
     locacoes_alocado = Locacao.objects.filter(status='Alocado', data_locacao__range=(
-    request.POST['dPrevInicial'], request.POST['dPrevFinal']))
+    inicial, final))
     locacoes_devolvido = Locacao.objects.filter(status='Devolvido', data_locacao__range=(
-    request.POST['dPrevInicial'], request.POST['dPrevFinal']))
+    inicial, final))
 
     if locacoes:
         for x in locacoes:
