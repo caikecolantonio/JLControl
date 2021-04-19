@@ -45,6 +45,7 @@ def busca_locacao_por_cliente(cliente):
         #pega os Item(Trajes) relacionados com o ID da locação
         locacaoRelacionados = Locacao.objects.filter(id=locacoes['id']).select_related()
         #Aqui a mesma coisa, pode ter mais de um Item, prepara o Dicionario.
+        locacao_detalhes[QntLocacao]['cliente'] = cliente
         locacao_detalhes[QntLocacao]['item'] = {}
         count = 0
         for locacao in locacaoRelacionados:

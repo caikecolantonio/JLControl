@@ -121,8 +121,51 @@ def consultar(request):
         'paginaConsultar': '/consultar/'
     }
 
+    return render(request, 'consultar.html', consultas)
+
+def consultar_avancado(request):
+          
+    if 'dados' in request.POST:
+        lista = list(request.POST['dados'].split(","))
+        locacoes = Locacao.objects.filter(id__in=lista)
+
+    else:
+        datainicial = request.POST['datainicial']
+        datafinal = request.POST['datafinal']
+        status = request.POST['status']
+        if status == 'todos':
+            locacoes = Locacao.objects.filter(data_locacao__range=(datainicial, datafinal))
+        else:
+            locacoes = Locacao.objects.filter(data_locacao__range=(datainicial, datafinal), status=status)
+
+    locacao_detalhes = {}
+    QntLocacao = 0
+    if locacoes:
+        for locacao in locacoes:
+            QntLocacao += 1
+            locacao_detalhes[QntLocacao] = locacao.__dict__
+            locacao_detalhes[QntLocacao]['cliente'] = Cliente.objects.get(id=locacao.cliente_id)
+            #Aqui a mesma coisa, pode ter mais de um Item, prepara o Dicionario.
+            locacao_detalhes[QntLocacao]['item'] = {}
+            count = 0
+            items = locacao.item.all().values()
+            #Pega todas as informações dos Trajes.
+            for traje in items:
+                count += 1
+                traje["traje"] = Traje.objects.get(id=traje["traje_id"])
+                if traje["medidas_id"] != None and traje["medidas_id"] != "":
+                    traje["medida"] = Ficha.objects.get(id=traje["medidas_id"])
+                else:
+                    traje["medida"] = None
+                #Adiciona a informação do Traje no dicionario de retorno.
+                locacao_detalhes[QntLocacao]['item'][count] = traje
+
+    consultas = {
+        'locacoes': locacao_detalhes
+    }
 
     return render(request, 'consultar.html', consultas)
+
 
 def autocomplete_nome(request):
     if 'term' in request.GET:
@@ -236,3 +279,4 @@ def consultar_cliente(request):
 def consulta_ficha_medida(request):
     ficha = Ficha.objects.get(id = request.GET.get('id'))
     return JsonResponse(model_to_dict(ficha), safe=False)
+
