@@ -285,9 +285,6 @@ def consulta_ficha_medida(request):
     ficha = Ficha.objects.get(id=request.GET.get('id'))
     return JsonResponse(model_to_dict(ficha), safe=False)
 
-<<<<<<< HEAD
-=======
-
 def relatorio(request):
     return render(request, 'relatorio.html')
 
@@ -389,4 +386,3 @@ def busca_financeiro(request):
         'valores': valores
     }
     return JsonResponse(resultados, safe=False)
->>>>>>> master
