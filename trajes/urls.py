@@ -15,9 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from controle.views import devolver, locar, consultar, cancelar, autocomplete_nome, autocomplete_traje, \
-    retornaTrajeSelecionado, salvar_locacao, cria_ficha_medidas, devolver_locacao, atualizar_ficha, consultar_cliente, \
-    consulta_ficha_medida, relatorio, mais_menos_alocados, busca_por_data, busca_por_traje,busca_financeiro
+from controle.views import *
 from django.conf.urls.static import static
 from django.conf import settings
 
@@ -29,6 +27,7 @@ urlpatterns = [
     path('relatorio/', relatorio, name='relatorio'),
     path('', consultar),
     path('consultar/', consultar),
+    path('consultar_avancado/', consultar_avancado),
     path('autocomplete-nome/', autocomplete_nome, name='autocomplete-nome'),
     path('autocomplete-traje/', autocomplete_traje, name='autocomplete-traje'),
     path('retornatrajeselecionado/', retornaTrajeSelecionado, name='retornaTrajeSelecionado'),

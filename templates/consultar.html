@@ -16,20 +16,20 @@
 </div>
 
 {% endif %}
-    <div style="margin-top: 3%"></div>
+
 {% if locacoes is not None %}
 {% for key, locacao in locacoes.items %}
-
+{% csrf_token %}
 <div class="container" style="margin-top: 0.8%">
   <div class="row">
     <table>
       <td scope="col">
         <button class="btn btn-dark btn-lg btn-block" type="button" data-toggle="collapse"
           data-target="#ID{{ locacao.id }}" aria-expanded="true" aria-controls="collapseExample">
-          {{cliente.nome }} / ID: {{ locacao.id }} - {{ locacao.status }} - Data Locação: {{ locacao.data_locacao}}  
+          {{ locacao.cliente.nome }} / ID: {{ locacao.id }} - {{ locacao.status }} - Data Locação: {{ locacao.data_locacao}}  
         </button>
       </td>
-      <td scope="col"> <button class="btn btn-info btn-lg btn-block" type="button" onclick="devolver_locacao({{ locacao.id }})">Devolver</button>
+      <td scope="col"> <button class="btn btn-info btn-lg btn-block" type="button" onclick='devolver_locacao({{ locacao.id }})'>Devolver</button>
       
       </td>
     </table>
@@ -110,7 +110,7 @@
 <script>
   function devolver_locacao(id) {
     const url = '{% url 'devolver_locacao' %}?id_locacao=' + id
-
+    let dados = []
     fetch(url).then(response => {
           return response.json();
       }).then(resposta => {
@@ -118,8 +118,19 @@
           document.getElementById("fechaModalMedidas").click()
           document.getElementById("testeSucess").style.display = "inline"
           setTimeout(function () {
-            const url2 = '{% url 'consultar_cliente' %}?id='+'{{ cliente.id }}'
-            window.location.replace(url2);
+            {% for key, locacao in locacoes.items %}
+            dados.push({{ locacao.id }})
+            console.log("adicionou", {{ locacao.id }})
+            {% endfor %} 
+            document.body.innerHTML += 
+            '<form id="dynForm" action="/consultar_avancado/" method="post">'+
+            '{% csrf_token %}'+
+            '<input type="hidden" name="dados" value='+dados+'>'+ 
+            '</form>';
+            document.getElementById("dynForm").submit();
+
+            //const url2 = '{% url 'consultar_cliente' %}?id='+cliente_id
+            //window.location.replace(url2);
         }, 1500);
         }
         else if (resposta == "400"){
