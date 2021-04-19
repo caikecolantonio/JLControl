@@ -1,0 +1,17 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block content %}
+    <p></p>
+<div class="container">
+<ul class="list-group">
+    {% for traje in trajes %}
+
+  <li class="list-group-item">{{ traje }}</li>
+    {% endfor %}
+    {% for traje in trajes1 %}
+
+  <li class="list-group-item">{{ traje }}</li>
+    {% endfor %}
+</ul>
+</div>
+{% endblock %}

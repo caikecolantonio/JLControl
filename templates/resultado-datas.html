@@ -1,0 +1,25 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block content %}
+<div class="container">
+<p></p>
+    <table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Total de Locações</th>
+      <th scope="col">Locações Atrasadas</th>
+      <th scope="col">Locações Alocadas</th>
+      <th scope="col">Locações Devolvidas</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">{{ locacao }}</th>
+      <td>{{ locacoes_atrasadas }}</td>
+      <td>{{ locacoes_alocado }}</td>
+      <td>{{ locacoes_devolvido }}</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+{% endblock %}
