@@ -274,14 +274,14 @@
                 }).then(resposta => {
                     var naotem = true
                     if (resposta == "CODIGOINVALIDO") {
-                        atoastAlertaGenerico("Adiciona Traje", "O código digitado é inválido, não encontrado no banco.")
+                        atoastAlertaGenerico("Erro ao adicionar o Traje", "O código digitado é inválido, não encontrado no banco.")
                     } else if (resposta == "NAODISPONIVEL") {
-                        atoastAlertaGenerico("Adiciona Traje", "O traje selecionado não está disponível.")
+                        atoastAlertaGenerico("Erro ao adicionar o Traje", "O traje selecionado não está disponível.")
                     } else {
                         //logica da lista
                         for (var traje in listaTrajes) {
                             if (listaTrajes[traje]["codigo"] === resposta.codigo) {
-                                atoastAlertaGenerico("Adiciona Traje", "Traje já adicionado.")
+                                atoastAlertaGenerico("Erro ao adicionar o Traje", "O Traje selecionado já se encontra adicionado")
                                 naotem = false;
                             }
                         }
