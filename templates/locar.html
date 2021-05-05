@@ -2,7 +2,20 @@
 
 {% load static %}
 {% block content %}
+    <style>
 
+        #id-btn {
+            padding: 5px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 12px;
+        } 
+            
+        #id-btn:hover {
+            color: #17a2b8;    
+        } 
+    </style>
     <!-- modal procurar cliente -->
     <div class="modal fade" id="exampleModalLocar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -49,7 +62,7 @@
                         <button type="button" class="btn btn-info btn-lg btn-block"
                                 onclick="validaCamposLocar()">Pesquisar
                         </button>
-                        <button type="button" class="btn btn-info btn-lg btn-block" data-dismiss="modal"
+                        <button type="button" class="btn btn-info btn-lg btn-block" data-dismiss="modal" style = "background-color: #6c757d"
                                 onclick="location.href='{% url 'locar' %}';">Adicionar novo
                         </button>
                     </form>
@@ -159,7 +172,7 @@
 
             </div>
             <div class="p-2">
-                <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#exampleModalLocar">
+                <button type="button" class="btn btn-dark" id="id-btn"data-toggle="modal" data-target="#exampleModalLocar">
                     Encontrar cliente
                 </button>
             </div>
@@ -209,7 +222,7 @@
     <!-- Form Pesquisa traje -->
     <form id="FormTrajePequisa">
         <div class="row" style="margin: 0">
-            <div class="col-sm-1" style="margin-left:4.3%">
+            <div class="col-sm-1" style="margin-left:4.2%">
                 <label for="FormCodigoTraje">Codigo</label>
                 <input type="text" class="form-control AutoCompleteTrajePesquisaCodigo" id="FormCodigoTraje"
                        name="CodigoTraje">
@@ -219,13 +232,12 @@
                 <input type="text" class="form-control AutoCompleteTrajePesquisaModelo" id="FormModeloBusca"
                        name="ModeloTraje">
             </div>
-            <div class="col" style="margin-top: 1.5%; margin-left: 5%">
+            
+            <div class="col" style = "top: 35px">
                 <input style="display: none">
-                <img src='{% static 'img/add.png' %}' width="40" height="40" onclick="AdicionaTraje()">
-            </div>
-            <div class="col" style="margin-top: 1.5%; margin-left: -7%">
+                <button type="button" class="btn btn-dark" id="id-btn" style="width: 70px;" onclick="AdicionaTraje()"> Adicionar </button>
                 <input style="display: none">
-                <img src='{% static 'img/remove.png' %}' width="40" height="40" onclick="RemoverTraje()">
+                <button type="button" class="btn btn-dark" id="id-btn" style="width: 70px;" onclick="RemoverTraje()"> Remover</button>
             </div>
         </div>
     </form>
@@ -299,8 +311,8 @@
                                 '<td style="padding-top: 8px;padding-bottom: 0px;border-top-width: 0px;border-bottom-width: 1px;">'+
                                 '<input type="checkbox" style="width: 109.41px;" class="btn-check" id="btn-check-2-outlined'+resposta.codigo+'" autocomplete="off" onclick="precisa_ajuste('+"'"+resposta.codigo+"'"+')">'+
                                 '<label class="btn btn-outline-secondary botaoPrecisa" style="width: 109.41px;" for="btn-check-2-outlined'+resposta.codigo+'" id="precisaAjuste'+resposta.codigo+'" >Não precisa</label>'+
-                                '<button id="botaoMedida-'+resposta.codigo+'" class="botaoMedida btn btn-info"onclick="abreModalFicha('+"'"+resposta.codigo+"'"+')">Medidas</button>'+                                
-                                '</td>'+
+                                '<button id="botaoMedida-'+resposta.codigo+'" class="botaoMedida btn btn-info" style="text-align:center" onclick="abreModalFicha('+"'"+resposta.codigo+"'"+')">Medidas</button>'+                              
+                                '</td>'+   
                                 //'<td> <input class="form-check-input" type="radio" > </td>' +
                                 '</tr>' + $(".listaTrajes").html()
                             $(".listaTrajes").html(html_corpo)
@@ -597,21 +609,25 @@
     <!-- Cria table dos trajes -->
     <table class="table">
         <thead class="thead-dark">
-        <tr>
-            <th scope="col-2" style="padding-left: 50px;">Codigo</th>
-            <th scope="col">Nome</th>
-            <th scope="col">Modelo</th>
-            <th scope="col">Corte</th>
-            <th scope="col">Valor</th>
-            <th scope="col">Precisa ajuste?</th>
-        </tr>
+            <tr>
+                <th scope="col-2" style="padding-left: 50px;">Codigo</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Modelo</th>
+                <th scope="col">Corte</th>
+                <th scope="col">Valor</th>
+                <th scope="col">Precisa ajuste?</th>]
+                <th></th>
+                <th></th>
+            </tr>
         </thead>
-        <tbody class="listaTrajes">
+        <tbody class="listaTrajes" style="width:100%">
 
         </tbody>
         <tbody class="">
         <tr class="thead-light">
             <th id="trValor"></th>
+            <th></th>
+            <th></th>
             <th></th>
             <th></th>
             <th></th>
