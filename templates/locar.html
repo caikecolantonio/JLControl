@@ -4,7 +4,7 @@
 {% block content %}
     <style>
 
-        #id-btn {
+        .PassaMouseTrocaCor {
             padding: 5px 10px;
             text-align: center;
             text-decoration: none;
@@ -12,7 +12,7 @@
             font-size: 12px;
         } 
             
-        #id-btn:hover {
+        .PassaMouseTrocaCor:hover {
             color: #17a2b8;    
         } 
     </style>
@@ -172,7 +172,7 @@
 
             </div>
             <div class="p-2">
-                <button type="button" class="btn btn-dark" id="id-btn"data-toggle="modal" data-target="#exampleModalLocar">
+                <button type="button" class="btn btn-dark PassaMouseTrocaCor" data-toggle="modal" data-target="#exampleModalLocar">
                     Encontrar cliente
                 </button>
             </div>
@@ -235,9 +235,9 @@
             
             <div class="col" style = "top: 35px">
                 <input style="display: none">
-                <button type="button" class="btn btn-dark" id="id-btn" style="width: 70px;" onclick="AdicionaTraje()"> Adicionar </button>
+                <button type="button" class="btn btn-dark PassaMouseTrocaCor" style="width: 70px;" onclick="AdicionaTraje()"> Adicionar </button>
                 <input style="display: none">
-                <button type="button" class="btn btn-dark" id="id-btn" style="width: 70px;" onclick="RemoverTraje()"> Remover</button>
+                <button type="button" class="btn btn-dark PassaMouseTrocaCor" style="width: 70px;" onclick="RemoverTraje()"> Remover</button>
             </div>
         </div>
     </form>
@@ -615,7 +615,7 @@
                 <th scope="col">Modelo</th>
                 <th scope="col">Corte</th>
                 <th scope="col">Valor</th>
-                <th scope="col">Precisa ajuste?</th>]
+                <th scope="col">Precisa ajuste?</th>
                 <th></th>
                 <th></th>
             </tr>
