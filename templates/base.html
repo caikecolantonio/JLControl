@@ -1848,13 +1848,13 @@
                   maxlength="100" placeholder="Digite o Documento Externo">
               </div>
             </div>
-            <button type="button" class="btn btn-info btn-lg btn-block" onclick="validaCampos()">Pesquisar</button>
+            <button type="button" class="btn btn-info btn-lg btn-block" onclick="validaCamposSimples()">Pesquisar</button>
             <button type="button" class="btn btn-secondary btn-lg btn-block" data-dismiss="modal">Fechar</button>
           </form>
         </div>
 
         <div id="modalConsultaAvancado" style="display: none;">
-        <form name="formClienteAvançado" action="/consultar_avancado/" method="post">
+        <form name="formClienteAvancado" action="/consultar_avancado/" method="post">
           {% csrf_token %}
           <div class="form-group row">
             <label for="Datainicial" class="col-sm-3 col-form-label">Data Inicial:</label>
@@ -1879,7 +1879,7 @@
           </select>
         </div>
 
-          <button type="submit" class="btn btn-info btn-lg btn-block">Pesquisar</button>
+          <button type="button" class="btn btn-info btn-lg btn-block" onclick="validaCamposAvancado()">Pesquisar</button>
           <button type="button" class="btn btn-secondary btn-lg btn-block" data-dismiss="modal">Fechar</button>
         </form>
       </div>
@@ -1899,7 +1899,7 @@
             });
     </script>
 
-    <script>function validaCampos() {
+    <script>function validaCamposSimples() {
         if (formCliente.CPF.value == '' && formCliente.Telefone.value == '' && formCliente.Nome.value == '' && formCliente.DocumentoExterno.value == '') {
           document.getElementById("botaoAlerta").click();
         }
@@ -1908,6 +1908,15 @@
         }
       }
     </script>
+    <script>function validaCamposAvancado() {
+      if (formClienteAvancado.datainicial.value == '' || formClienteAvancado.datafinal.value == '') {
+        atoastAlertaGenerico("Pesquisa Avançada","Coloque as datas para realizar a pesquisa")
+      }
+      else {
+        formClienteAvancado.submit();
+      }
+    }
+  </script>
   </div>
 
   <!-- Modal Trajes -->
