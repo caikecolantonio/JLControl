@@ -59,12 +59,14 @@
               <th style="width:10%">Status</th>
               <th style="width:25%">Nome Do Traje</th>
               <th style="width:25%">Data de Entrega</th>
+
             </tr>
-            <tr style="border-bottom: 1px solid #000;">
+
               <td>{{ item.id }}</td>
               <td>{{ item.status }}</td>  
               <td>{{ item.traje.nome }}</td>  
               <td>{% if item.data_entrega is not None %} {{ item.data_entrega }} {% endif %}</td>
+
               {% if item.medida.id is not None %}
                 <td style = "width: 20%"> <button type="button" class="btn btn-info" style= "align-items: center;"
                     data-toggle="modal" data-target="#ModalMedidasConsultar" 
@@ -77,8 +79,11 @@
             
           </table>  
           {% endif %}
+          
           </table>
-          <br>
+          {% if forloop.counter != locacao.item.items|length %}
+          <hr style="height: 0.07%;">
+          {% endif %}
       </div>
         {% endfor %}
       </div>
