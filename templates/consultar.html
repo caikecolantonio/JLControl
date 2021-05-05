@@ -20,43 +20,75 @@
 {% if locacoes is not None %}
 {% for key, locacao in locacoes.items %}
 {% csrf_token %}
+
 <div class="container" style="margin-top: 0.8%">
   <div class="row">
     <table>
-      <td scope="col">
-        <button class="btn btn-dark btn-lg btn-block" type="button" data-toggle="collapse"
+      <td scope="col" style="width:80%">
+        <button class="btn btn-style btn-lg btn-block" type="button" data-toggle="collapse"
           data-target="#ID{{ locacao.id }}" aria-expanded="true" aria-controls="collapseExample">
-          {{ locacao.cliente.nome }} / ID: {{ locacao.id }} - {{ locacao.status }} - Data Locação: {{ locacao.data_locacao}}  
+          <table style="width:100%">
+            <tr>
+              <th style="width:15%">Nome</th>
+              <th style="width:5%">ID</th>
+              <th style="width:10%">Status</th>
+              <th style="width:20%">Data</th>
+              <th style="width:10%"></th>
+            </tr>
+            <tr>
+              <td>{{ locacao.cliente.nome }}</td>
+              <td>{{ locacao.id }}</td>
+              <td>{{ locacao.status }}</td>
+              <td>{{ locacao.data_locacao }}</td>
+              <td scope="col" style="width:10%; z-index: 100;"><button class="btn btn-info btn-lg btn-block" type="button"
+                  style="width:100%; height:100%;" onclick='devolver_locacao({{ locacao.id }}); event.stopPropagation();'>Devolver</button></td>
+            </tr>
+          </table>
         </button>
       </td>
-      <td scope="col"> <button class="btn btn-info btn-lg btn-block" type="button" onclick='devolver_locacao({{ locacao.id }})'>Devolver</button>
-      
-      </td>
+
     </table>
-    </p>
+
     <div class="collapse" id="ID{{ locacao.id }}">
       <div class="card card-body">
-        {% if locacao.data_devolucao is not None %}<p style="align-items: center; text-align: center;">Locação foi devolvida em {{ locacao.data_devolucao }} </p>{% endif %} 
+        {% if locacao.data_devolucao is not None %}<p
+          style="align-items: center; text-align: center; text-decoration: underline black; font-weight: bold">Locação
+          foi devolvida em {{ locacao.data_devolucao }} </p>{% endif %}
         {% for key, item in locacao.item.items %}
-        <table>
-        <td>{{ item.id }} - {{ item.status }} - {{ item.traje.nome }} - {{ item.data_entrega }}
-          
-          <br>
-          
-        </td>
-        <td>
-        {% if item.medida.id is not None %}
-        <div style="text-align: right;">        
-        <button type="button" class="btn btn-dark" style="margin-left: 5%; align-items: center;"
-        data-toggle="modal" data-target="#ModalMedidasConsultar" 
-        onclick="abrirModalConsultar('{{ item.medida.id }}')"
-        >Abrir ficha de medidas</button></td>
+        <div class="divret" style="width:100%; text-align: center; border: 3px solid #fff;">
+          <table style="width:100%;">
+            <tr>
+              <th style="width:10%">ID</th>
+              <th style="width:10%">Status</th>
+              <th style="width:25%">Nome Do Traje</th>
+              <th style="width:25%">Data de Entrega</th>
+
+            </tr>
+
+            <td>{{ item.id }}</td>
+            <td>{{ item.status }}</td>
+            <td>{{ item.traje.nome }}</td>
+            <td>{% if item.data_entrega is not None %} {{ item.data_entrega }} {% endif %}</td>
+
+            {% if item.medida.id is not None %}
+            <td style="width: 20%"> <button type="button" class="btn btn-info" style="align-items: center;"
+                data-toggle="modal" data-target="#ModalMedidasConsultar"
+                onclick="abrirModalConsultar('{{ item.medida.id }}')">Abrir ficha de medidas</button>
+            </td>
+            {% else %}
+            <td style=width:20%></td>
+            </tr>
+
+          </table>
+          {% endif %}
+
+          </table>
+          {% if forloop.counter != locacao.item.items|length %}
+          <hr style="height: 0.07%;">
+          {% endif %}
         </div>
-        {% endif %}
-        </table>
         {% endfor %}
       </div>
-
     </div>
   </div>
 </div>
@@ -106,148 +138,168 @@
 </table>
 {% endif %}
 {% endif %}
+<style>
+  .btn-dark {
+    background-color: #17a3b865
+  }
 
+  .btn-style {
+    background-color: #17a3b865
+  }
+
+  .card-body {
+    width: 100%;
+    height: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+
+    color: black;
+  }
+</style>
 <script>
   function devolver_locacao(id) {
+
     const url = '{% url 'devolver_locacao' %}?id_locacao=' + id
     let dados = []
     fetch(url).then(response => {
-          return response.json();
-      }).then(resposta => {
-        if (resposta == "200"){
-          document.getElementById("fechaModalMedidas").click()
-          document.getElementById("testeSucess").style.display = "inline"
-          setTimeout(function () {
-            {% for key, locacao in locacoes.items %}
-            dados.push({{ locacao.id }})
-            console.log("adicionou", {{ locacao.id }})
-            {% endfor %} 
-            document.body.innerHTML += 
-            '<form id="dynForm" action="/consultar_avancado/" method="post">'+
-            '{% csrf_token %}'+
-            '<input type="hidden" name="dados" value='+dados+'>'+ 
-            '</form>';
-            document.getElementById("dynForm").submit();
+      return response.json();
+    }).then(resposta => {
+      if (resposta == "200") {
+        document.getElementById("fechaModalMedidas").click()
+        document.getElementById("testeSucess").style.display = "inline"
+        setTimeout(function () {
+          {% for key, locacao in locacoes.items %}
+          dados.push({{ locacao.id }})
+        console.log("adicionou", {{ locacao.id }})
+    {% endfor %}
+    document.body.innerHTML +=
+      '<form id="dynForm" action="/consultar_avancado/" method="post">' +
+      '{% csrf_token %}' +
+      '<input type="hidden" name="dados" value=' + dados + '>' +
+      '</form>';
+    document.getElementById("dynForm").submit();
 
-            //const url2 = '{% url 'consultar_cliente' %}?id='+cliente_id
-            //window.location.replace(url2);
-        }, 1500);
+    //const url2 = '{% url 'consultar_cliente' %}?id='+cliente_id
+    //window.location.replace(url2);
+  }, 1500);
         }
-        else if (resposta == "400"){
-          atoastAlertaGenerico("Devolver traje", "Locação já devolvida.")
-        }
-        else{
-          atoastAlertaGenerico("Devolver traje", "Aconteceu algum erro de devolver a locação.")
-        }    
+        else if (resposta == "400") {
+    atoastAlertaGenerico("Devolver traje", "Locação já devolvida.")
+  }
+  else {
+    atoastAlertaGenerico("Devolver traje", "Aconteceu algum erro de devolver a locação.")
+  }    
       });
 
   }
 </script>
 
 <script>
-        var id_ficha = 0
-  function abrirModalConsultar(id_medida){
-          id_ficha = id_medida
+  var id_ficha = 0
+  function abrirModalConsultar(id_medida) {
+    id_ficha = id_medida
 
-          const url = '{% url 'consulta_ficha_medida' %}?id=' + id_medida
+    const url = '{% url 'consulta_ficha_medida' %}?id=' + id_medida
 
-          fetch(url).then(response => {
-              return response.json();
-          }).then(resposta => {
-              document.getElementById("formMedidaPaletoConsultar").value = resposta.paleto_barra
-              document.getElementById("formMedidaCalcaConsultar").value = resposta.calca_barra
-              document.getElementById("formMedidaToraxConsultar").value = resposta.torax
-              document.getElementById("formMedidaCostasConsultar").value = resposta.costas
-          });
+    fetch(url).then(response => {
+      return response.json();
+    }).then(resposta => {
+      document.getElementById("formMedidaPaletoConsultar").value = resposta.paleto_barra
+      document.getElementById("formMedidaCalcaConsultar").value = resposta.calca_barra
+      document.getElementById("formMedidaToraxConsultar").value = resposta.torax
+      document.getElementById("formMedidaCostasConsultar").value = resposta.costas
+    });
 
 
   }
 </script>
 <script>
-  function AtualizaFicha(){
+  function AtualizaFicha() {
     infoFicha = {}
-    
+
     infoFicha["id"] = id_ficha
 
     infoFicha["paleto_barra"] = document.getElementById("formMedidaPaletoConsultar").value
     infoFicha["calca_barra"] = document.getElementById("formMedidaCalcaConsultar").value
     infoFicha["torax"] = document.getElementById("formMedidaToraxConsultar").value
-    infoFicha["costas"] = document.getElementById("formMedidaCostasConsultar").value 
+    infoFicha["costas"] = document.getElementById("formMedidaCostasConsultar").value
 
     const url = '{% url 'atualizar_ficha' %}?infoFicha=' + JSON.stringify(infoFicha)
 
     fetch(url).then(response => {
-          return response.json();
-      }).then(resposta => {
-        if (resposta == "200"){
-          document.getElementById("fechaModalMedidas").click()
-          document.getElementById("testeSucess").style.display = "inline"
-        }
-        else{
-          atoastAlertaGenerico("Atualiza ficha", "Aconteceu algum erro ao atualizar a ficha")
-        }    
-      });
-      setTimeout(function () {
-            //const url2 = '{% url 'consultar_cliente' %}?id='+'{{ cliente.id }}'
-            //window.location.replace(url2);
-            document.getElementById("testeSucess").style.display = "none"
-        }, 1500);
+      return response.json();
+    }).then(resposta => {
+      if (resposta == "200") {
+        document.getElementById("fechaModalMedidas").click()
+        document.getElementById("testeSucess").style.display = "inline"
+      }
+      else {
+        atoastAlertaGenerico("Atualiza ficha", "Aconteceu algum erro ao atualizar a ficha")
+      }
+    });
+    setTimeout(function () {
+      //const url2 = '{% url 'consultar_cliente' %}?id='+'{{ cliente.id }}'
+      //window.location.replace(url2);
+      document.getElementById("testeSucess").style.display = "none"
+    }, 1500);
 
-    
-    }
+
+  }
 
 </script>
 
 <!-- Modal Medidas -->
 <div class="modal fade" id="ModalMedidasConsultar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Consulte a ficha de medidas:</h5>
-                <button id="fechaModal" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Consulte a ficha de medidas:</h5>
+        <button id="fechaModal" type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form name="formMedidas" action="" method="post">
+          {% csrf_token %}
+          <div class="form-group row">
+            <label for="formMedidaPaletoConsultar" class="col-sm-3 col-form-label">Barra paleto </label>
+            <div class="col-sm-9">
+              <input id="formMedidaPaletoConsultar" class="form-control" type="number" name="paleto_barra" min="0"
+                step=".01" placeholder="Barra paleto">
             </div>
-            <div class="modal-body">
-                <form name="formMedidas" action="" method="post">
-                    {% csrf_token %}
-                    <div class="form-group row">
-                        <label for="formMedidaPaletoConsultar" class="col-sm-3 col-form-label">Barra paleto </label>
-                        <div class="col-sm-9">
-                            <input id="formMedidaPaletoConsultar" class="form-control" type="number" name="paleto_barra" min="0"
-                                step=".01" placeholder="Barra paleto">
-                        </div>
-                    </div>
+          </div>
 
-                    <div class="form-group row">
-                        <label for="formMedidaCalcaConsultar" class="col-sm-3 col-form-label">Barra Calça </label>
-                        <div class="col-sm-9">
-                            <input id="formMedidaCalcaConsultar" class="form-control" type="number" name="calca_barra" min="0"
-                                step=".01" placeholder="Barra Calca">
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label for="formMedidaToraxConsultar" class="col-sm-3 col-form-label">Torax</label>
-                        <div class="col-sm-9">
-                            <input id="formMedidaToraxConsultar" class="form-control" type="number" name="torax" min="0"
-                                step=".01" placeholder="Torax">
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label for="formMedidaCostasConsultar" class="col-sm-3 col-form-label">Costas </label>
-                        <div class="col-sm-9">
-                            <input id="formMedidaCostasConsultar" class="form-control" type="number" name="costas" min="0"
-                                step=".01" placeholder="Costas">
-                        </div>
-                    </div>
-                    <button type="button" class="btn btn-info btn-lg btn-block" data-dismiss="modal" onclick="AtualizaFicha()">Atualizar Ficha</button>
-                    <button type="button" id = "fechaModalMedidas" class="btn btn-secondary btn-lg btn-block" data-dismiss="modal">Fechar</button>
-                </form>
+          <div class="form-group row">
+            <label for="formMedidaCalcaConsultar" class="col-sm-3 col-form-label">Barra Calça </label>
+            <div class="col-sm-9">
+              <input id="formMedidaCalcaConsultar" class="form-control" type="number" name="calca_barra" min="0"
+                step=".01" placeholder="Barra Calca">
             </div>
-        </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="formMedidaToraxConsultar" class="col-sm-3 col-form-label">Torax</label>
+            <div class="col-sm-9">
+              <input id="formMedidaToraxConsultar" class="form-control" type="number" name="torax" min="0" step=".01"
+                placeholder="Torax">
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="formMedidaCostasConsultar" class="col-sm-3 col-form-label">Costas </label>
+            <div class="col-sm-9">
+              <input id="formMedidaCostasConsultar" class="form-control" type="number" name="costas" min="0" step=".01"
+                placeholder="Costas">
+            </div>
+          </div>
+          <button type="button" class="btn btn-info btn-lg btn-block" data-dismiss="modal"
+            onclick="AtualizaFicha()">Atualizar Ficha</button>
+          <button type="button" id="fechaModalMedidas" class="btn btn-secondary btn-lg btn-block"
+            data-dismiss="modal">Fechar</button>
+        </form>
+      </div>
     </div>
+  </div>
 </div>
+
 
 {% endblock %}
