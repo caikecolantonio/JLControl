@@ -1788,6 +1788,12 @@
           <a href="" class="nav-item nav-link active" id="nav-options" data-toggle="modal" data-target="#exampleModal2">Pesquisar
             Trajes</a>
           <a href="{% url 'relatorio' %}" class="nav-item nav-link active" id="nav-options">Relatórios</a>
+          <div class="btn-group dropleft">
+            <a class="nav-link dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-offset="30">Admin</a>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" href="{% url 'admin:index' %}controle/traje">Trajes</a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
