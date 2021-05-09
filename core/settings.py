@@ -26,7 +26,7 @@ SECRET_KEY = 'kuruq!1%qkmip(3)&uzp&5w0@gi!=xv5ncgi$!y0dv0t-7elbw'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['https://jlima-control.herokuapp.com/']
+ALLOWED_HOSTS = ['jlima-control.herokuapp.com']
 
 if DEBUG:
     ALLOWED_HOSTS.append('127.0.0.1')
