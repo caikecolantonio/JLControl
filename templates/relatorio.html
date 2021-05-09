@@ -1,6 +1,9 @@
 {% extends 'base.html'%}
 {% load static %}
 {% block content %}
+<link rel="stylesheet"  href="{%  static  'css/relatorio.css'  %}">
+<script type="text/javascript" src="{% static 'js/relatorio.js' %}"></script>
+
 {% if maximo == None %}
 
 <body>
@@ -89,8 +92,6 @@
               <p></p>
               <label>Data Final:</label>
               <input type="date" class="form-control" id="data-final" name="dFinalFinanc">
-              <label>Hora:</label>
-              <input type="time" class="form-control" id="hora">
               <p></p>
 
             </form>
@@ -110,10 +111,9 @@
     else {
       const data_inicial = document.getElementById("data-inicial").value
       const data_final = document.getElementById("data-final").value
-      const hora = document.getElementById("hora").value
 
 
-      const url = '{% url 'busca-financeiro' %}?data-inicial=' + data_inicial + '&data-final=' + data_final + '&data-hora=' + hora
+      const url = '{% url 'busca-financeiro' %}?data-inicial=' + data_inicial + '&data-final=' + data_final
 
       fetch(url).then(response => {
         return response.json();
@@ -124,60 +124,7 @@
 
     }
   }
-
 </script>
 
-<script>
-  function validaCamposLocData() {
-    if (formLocData.dPrevFinal.value == "" || formLocData.dPrevInicial.value == "") {
-      atoastAlertaGenerico("Relatório Locações por data", "Preencha a data inicial/final para visualizar o relatório.")
-    }
-    else {
-      formLocData.submit()
-    }
-  }
-</script>
-
-<script>
-  function validaCamposRelTraje() {
-    if (formTrajeRel.codigo.value == "" && formTrajeRel.nome.value == "" && formTrajeRel.modelo.value == "" && formTrajeRel.corte.value == "") {
-      atoastAlertaGenerico("Relatório por traje", "Preencha pelo menos um dos campos para pesquisar.")
-    }
-    else {
-      formTrajeRel.submit()
-    }
-  }
-</script>
-
-<style>
-  body,
-  html {
-    height: 100%;
-    background-color: #343a40;
-  }
-
-  .card {
-    box-shadow: 0 8px 16px 0 rgba(139, 139, 139, 0.2);
-    border-radius: 5px;
-    height: 465px;
-  }
-
-  #btn-dark {
-    padding: 5px 10px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 12px;
-  }
-
-
-  .btn-dark:hover {
-    color: #17a2b8;
-
-  }
-</style>
-
-
-</style>
 {% endif %}
 {% endblock %}

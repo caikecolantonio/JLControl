@@ -1,629 +1,262 @@
 {% extends 'base.html' %}
 
 {% load static %}
+
 {% block content %}
-    <style>
+<link rel="stylesheet" href="{%  static  'css/locar.css'  %}">
+<script type="text/javascript" src="{% static 'js/locar.js' %}"></script>
 
-        .PassaMouseTrocaCor {
-            padding: 5px 10px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 12px;
-        } 
-            
-        .PassaMouseTrocaCor:hover {
-            color: #17a2b8;    
-        } 
-    </style>
-    <!-- modal procurar cliente -->
-    <div class="modal fade" id="exampleModalLocar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Pesquise locações com:</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+<!-- modal procurar cliente -->
+<div class="modal fade" id="exampleModalLocar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Pesquise locações com:</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form name="formClienteLocar" action="" method="post">
+                    {% csrf_token %}
+                    <div class="form-group row">
+                        <label for="CPFLocar" class="col-sm-2 col-form-label">CPF: </label>
+                        <div class="col-sm-10">
+                            <input id="formCPFLocar" class="form-control" type="text" name="CPF" maxlength="11"
+                                placeholder="Digite o CPF">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="TelefoneLocar" class="col-sm-2 col-form-label">Telefone: </label>
+                        <div class="col-sm-10">
+                            <input id="TelefoneLocar" class="form-control" type="text" name="Telefone" maxlength="11"
+                                placeholder="Digite o Telefone">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="NomeLocar" class="col-sm-2 col-form-label">Nome: </label>
+                        <div class="col-sm-10">
+                            <input id="formNomeLocar" class="form-control AutoCompleteClienteNome" type="text"
+                                name="Nome" maxlength="100" placeholder="Digite o Nome">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="DocumentoExternoLocar" class="col-sm-2 col-form-label">Documento
+                            Externo: </label>
+                        <div class="col-sm-10">
+                            <input id="formDocumentoExternLocar" class="form-control" type="text"
+                                name="DocumentoExterno" maxlength="100" placeholder="Digite o Documento Externo">
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-info btn-lg btn-block" onclick="validaCamposLocar()">Pesquisar
                     </button>
-                </div>
-                <div class="modal-body">
-                    <form name="formClienteLocar" action="" method="post">
-                        {% csrf_token %}
-                        <div class="form-group row">
-                            <label for="CPFLocar" class="col-sm-2 col-form-label">CPF: </label>
-                            <div class="col-sm-10">
-                                <input id="formCPFLocar" class="form-control" type="text" name="CPF" maxlength="11"
-                                       placeholder="Digite o CPF">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="TelefoneLocar" class="col-sm-2 col-form-label">Telefone: </label>
-                            <div class="col-sm-10">
-                                <input id="TelefoneLocar" class="form-control" type="text" name="Telefone"
-                                       maxlength="11"
-                                       placeholder="Digite o Telefone">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="NomeLocar" class="col-sm-2 col-form-label">Nome: </label>
-                            <div class="col-sm-10">
-                                <input id="formNomeLocar" class="form-control AutoCompleteClienteNome" type="text"
-                                       name="Nome" maxlength="100" placeholder="Digite o Nome">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="DocumentoExternoLocar" class="col-sm-2 col-form-label">Documento
-                                Externo: </label>
-                            <div class="col-sm-10">
-                                <input id="formDocumentoExternLocar" class="form-control" type="text"
-                                       name="DocumentoExterno" maxlength="100" placeholder="Digite o Documento Externo">
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-info btn-lg btn-block"
-                                onclick="validaCamposLocar()">Pesquisar
-                        </button>
-                        <button type="button" class="btn btn-info btn-lg btn-block" data-dismiss="modal" style = "background-color: #6c757d"
-                                onclick="location.href='{% url 'locar' %}';">Adicionar novo
-                        </button>
-                    </form>
-                </div>
+                    <button type="button" class="btn btn-info btn-lg btn-block" data-dismiss="modal"
+                        style="background-color: #6c757d" onclick="location.href='{% url 'locar' %}';">Adicionar novo
+                    </button>
+                </form>
             </div>
         </div>
     </div>
-    <!-- Modal Medidas -->
-    <div class="modal fade" id="exampleModalMedidas" tabindex="-1" aria-labelledby="modalTitleMedidas"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalTitleMedidas">Crie ficha de medidas:</h5><h5 class="modal-title"><span id="medidaTrajeSpan"></span></h5>
-                    <button id="fechaModal" type="button" class="close" onclick="$('#exampleModalMedidas').modal('hide');" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+</div>
+<!-- Modal Medidas -->
+<div class="modal fade" id="exampleModalMedidas" tabindex="-1" aria-labelledby="modalTitleMedidas" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitleMedidas">Crie ficha de medidas:</h5>
+                <h5 class="modal-title"><span id="medidaTrajeSpan"></span></h5>
+                <button id="fechaModal" type="button" class="close" onclick="$('#exampleModalMedidas').modal('hide');"
+                    data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form name="formMedidas" action="" method="post">
+                    {% csrf_token %}
+                    <div class="form-group row">
+                        <label for="formMedidaPaleto" class="col-sm-3 col-form-label">Barra paleto </label>
+                        <div class="col-sm-9">
+                            <input id="formMedidaPaleto" class="form-control" type="number" name="paleto_barra" min="0"
+                                step=".01" placeholder="Barra paleto" style="">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="formMedidaCalca" class="col-sm-3 col-form-label">Barra Calça </label>
+                        <div class="col-sm-9">
+                            <input id="formMedidaCalca" class="form-control" type="number" name="calca_barra" min="0"
+                                step=".01" placeholder="Barra Calca">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="formMedidaTorax" class="col-sm-3 col-form-label">Torax</label>
+                        <div class="col-sm-9">
+                            <input id="formMedidaTorax" class="form-control" type="number" name="torax" min="0"
+                                step=".01" placeholder="Torax">
+                        </div>
+                    </div>
+                    <p></p>
+                    <div class="form-group row">
+                        <label for="formMedidaCostas" class="col-sm-3 col-form-label">Costas </label>
+                        <div class="col-sm-9">
+                            <input id="formMedidaCostas" class="form-control" type="number" name="costas" min="0"
+                                step=".01" placeholder="Costas">
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-info btn-lg btn-block" id="botaoCriarFicha"
+                        onclick="cria_ficha_medidas()">Criar
                     </button>
-                </div>
-                <div class="modal-body">
-                    <form name="formMedidas" action="" method="post">
-                        {% csrf_token %}
-                        <div class="form-group row">
-                            <label for="formMedidaPaleto" class="col-sm-3 col-form-label">Barra paleto </label>
-                            <div class="col-sm-9">
-                                <input id="formMedidaPaleto" class="form-control" type="number" name="paleto_barra"
-                                       min="0"
-                                       step=".01" placeholder="Barra paleto" style="">
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="formMedidaCalca" class="col-sm-3 col-form-label">Barra Calça </label>
-                            <div class="col-sm-9">
-                                <input id="formMedidaCalca" class="form-control" type="number" name="calca_barra"
-                                       min="0"
-                                       step=".01" placeholder="Barra Calca">
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="formMedidaTorax" class="col-sm-3 col-form-label">Torax</label>
-                            <div class="col-sm-9">
-                                <input id="formMedidaTorax" class="form-control" type="number" name="torax" min="0"
-                                       step=".01" placeholder="Torax">
-                            </div>
-                        </div>
-                        <p></p>
-                        <div class="form-group row">
-                            <label for="formMedidaCostas" class="col-sm-3 col-form-label">Costas </label>
-                            <div class="col-sm-9">
-                                <input id="formMedidaCostas" class="form-control" type="number" name="costas" min="0"
-                                       step=".01" placeholder="Costas">
-                            </div>
-                        </div>
-
-                        <button type="button" class="btn btn-info btn-lg btn-block" id="botaoCriarFicha" onclick="cria_ficha_medidas()">Criar
-                        </button>
-                    </form>
-                </div>
+                </form>
             </div>
         </div>
     </div>
+</div>
+<p></p>
+<div class="d-flex">
+    <div class="mr-auto p-2" style="margin-left: 6%;">
+        <input class="form-check-input" type="checkbox" value="" name="isEstrangeiro" id="isEstrangeiro"
+            onclick="Esconde()">
+        <label class="form-check-label" for="isEstrangeiro">
+            Cliente Estrangeiro
+        </label>
 
-    <script>function validaCamposLocar() {
-        if (formClienteLocar.CPF.value == '' && formClienteLocar.Telefone.value == '' && formClienteLocar.Nome.value == '' && formClienteLocar.DocumentoExterno.value == '') {
-            document.getElementById("botaoAlerta").click();
-        } else {
-            formClienteLocar.submit();
-        }
-    }
-    </script>
-    <!-- Script que mostra ou esconde as infos de cliente estrangeiro-->
-    <script type="text/javascript">
-        function Esconde(value) {
+    </div>
+    <div class="p-2">
+        <button type="button" class="btn btn-dark PassaMouseTrocaCor" data-toggle="modal"
+            data-target="#exampleModalLocar">
+            Encontrar cliente
+        </button>
+    </div>
+    <div class="p-2" style="margin-right: 5%">
+        <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#exampleModalMedidas"
+            style="display: none;">
+            Medidas
+        </button>
+    </div>
+</div>
 
-            if (document.getElementById("isEstrangeiro").checked) {
-                document.getElementById("FormNovoCPF").id = "DocumentoExterno"
-                document.getElementById("DocumentoExterno").placeholder = "Documento Externo"
-                document.getElementById("DocumentoExterno").name = "DocumentoExterno"
-                document.getElementById("DocumentoExterno").maxLength = "50"
-                document.getElementById("DocumentoExterno").value = ""
-                document.getElementById("labelNovoCPF").innerHTML = "Documento Externo"
-                document.getElementById("FormNovoRG").style.visibility = "hidden"
-                document.getElementById("labelNovoRG").style.visibility = "hidden"
 
-            } else {
-                document.getElementById("DocumentoExterno").id = "FormNovoCPF"
-                document.getElementById("FormNovoCPF").placeholder = "CPF"
-                document.getElementById("FormNovoCPF").value = ""
-                document.getElementById("FormNovoCPF").name = "CPF"
-                document.getElementById("FormNovoCPF").maxLength = "11"
-                document.getElementById("labelNovoCPF").innerHTML = "CPF"
-                document.getElementById("FormNovoRG").style.visibility = "visible"
-                document.getElementById("labelNovoRG").style.visibility = "visible"
-            }
-        };
-    </script>
-    <p></p>
+<p></p>
+<!-- Form do novo cliente -->
+<form>
+    <div class="form-row" style="margin-left: 5%; margin-right: 5%">
+        <div class="form-group col-md-6">
+            <label id="labelNovoCPF" for="FormNovoCPF">CPF</label>
+            <input type="text" class="form-control" id="FormNovoCPF" placeholder="CPF" name="CPF" maxlength="11">
+        </div>
+        <div class="form-group col-md-6">
+            <label id="labelNovoRG" for="FormNovoRG">RG</label>
+            <input type="number" class="form-control" id="FormNovoRG" placeholder="RG" name="RG">
+        </div>
+    </div>
+    <div class="form-row" style="margin-left: 5%; margin-right: 5%">
+        <div class="form-group col-md-6">
+            <label for="FormNovoNome">Nome</label>
+            <input type="text" class="form-control" id="FormNovoNome" placeholder="Nome" name="Nome">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="FormNovoTelefone">Telefone</label>
+            <input type="tel" class="form-control" id="FormNovoTelefone" name="Telefone">
+        </div>
+    </div>
+    <div class="form-row" style="margin-left: 5%; margin-right: 5%">
+        <div class="form-group col-md-6">
+            <label for="FormNovoEndereco">Endereço</label>
+            <input type="text" class="form-control" id="FormNovoEndereco" name="Endereco">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="FormNovoEmail">Email</label>
+            <input type="text" class="form-control" id="FormNovoEmail" name="Email">
+        </div>
+    </div>
+</form>
 
-        <div class="d-flex">
-            <div class="mr-auto p-2" style="margin-left: 6%;">
-                <input class="form-check-input" type="checkbox" value="" name="isEstrangeiro" id="isEstrangeiro"
-                       onclick="Esconde()">
-                <label class="form-check-label" for="isEstrangeiro">
-                    Cliente Estrangeiro
-                </label>
-
-            </div>
-            <div class="p-2">
-                <button type="button" class="btn btn-dark PassaMouseTrocaCor" data-toggle="modal" data-target="#exampleModalLocar">
-                    Encontrar cliente
-                </button>
-            </div>
-            <div class="p-2" style="margin-right: 5%">
-                <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#exampleModalMedidas" style="display: none;">
-                    Medidas
-                </button>
-            </div>
+<!-- Form Pesquisa traje -->
+<form id="FormTrajePequisa">
+    <div class="row" style="margin: 0">
+        <div class="col-sm-1" style="margin-left:4.2%">
+            <label for="FormCodigoTraje">Codigo</label>
+            <input type="text" class="form-control AutoCompleteTrajePesquisaCodigo" id="FormCodigoTraje"
+                name="CodigoTraje">
+        </div>
+        <div class="col-8">
+            <label for="FormModeloBusca">Modelo</label>
+            <input type="text" class="form-control AutoCompleteTrajePesquisaModelo" id="FormModeloBusca"
+                name="ModeloTraje">
         </div>
 
-
-    <p></p>
-    <!-- Form do novo cliente -->
-    <form>
-        <div class="form-row" style="margin-left: 5%; margin-right: 5%">
-            <div class="form-group col-md-6">
-                <label id="labelNovoCPF" for="FormNovoCPF">CPF</label>
-                <input type="text" class="form-control" id="FormNovoCPF" placeholder="CPF" name="CPF" maxlength="11">
-            </div>
-            <div class="form-group col-md-6">
-                <label id="labelNovoRG" for="FormNovoRG">RG</label>
-                <input type="number" class="form-control" id="FormNovoRG" placeholder="RG" name="RG">
-            </div>
+        <div class="col" style="top: 35px">
+            <input style="display: none">
+            <button type="button" class="btn btn-dark PassaMouseTrocaCor" style="width: 70px;"
+                onclick="AdicionaTraje()"> Adicionar </button>
+            <input style="display: none">
+            <button type="button" class="btn btn-dark PassaMouseTrocaCor" style="width: 70px;" onclick="RemoverTraje()">
+                Remover</button>
         </div>
-        <div class="form-row" style="margin-left: 5%; margin-right: 5%">
-            <div class="form-group col-md-6">
-                <label for="FormNovoNome">Nome</label>
-                <input type="text" class="form-control" id="FormNovoNome" placeholder="Nome" name="Nome">
-            </div>
-            <div class="form-group col-md-6">
-                <label for="FormNovoTelefone">Telefone</label>
-                <input type="tel" class="form-control" id="FormNovoTelefone" name="Telefone">
-            </div>
-        </div>
-        <div class="form-row" style="margin-left: 5%; margin-right: 5%">
-            <div class="form-group col-md-6">
-                <label for="FormNovoEndereco">Endereço</label>
-                <input type="text" class="form-control" id="FormNovoEndereco" name="Endereco">
-            </div>
-            <div class="form-group col-md-6">
-                <label for="FormNovoEmail">Email</label>
-                <input type="text" class="form-control" id="FormNovoEmail" name="Email">
-            </div>
-        </div>
-    </form>
+    </div>
+</form>
 
-    <!-- Form Pesquisa traje -->
-    <form id="FormTrajePequisa">
-        <div class="row" style="margin: 0">
-            <div class="col-sm-1" style="margin-left:4.2%">
-                <label for="FormCodigoTraje">Codigo</label>
-                <input type="text" class="form-control AutoCompleteTrajePesquisaCodigo" id="FormCodigoTraje"
-                       name="CodigoTraje">
-            </div>
-            <div class="col-8">
-                <label for="FormModeloBusca">Modelo</label>
-                <input type="text" class="form-control AutoCompleteTrajePesquisaModelo" id="FormModeloBusca"
-                       name="ModeloTraje">
-            </div>
-            
-            <div class="col" style = "top: 35px">
-                <input style="display: none">
-                <button type="button" class="btn btn-dark PassaMouseTrocaCor" style="width: 70px;" onclick="AdicionaTraje()"> Adicionar </button>
-                <input style="display: none">
-                <button type="button" class="btn btn-dark PassaMouseTrocaCor" style="width: 70px;" onclick="RemoverTraje()"> Remover</button>
-            </div>
-        </div>
-    </form>
+<p></p>
 
-    <p></p>
-
-    {% if cliente is not None and cliente != 0 %}
-        <!-- Popula o form de novo cliente -->
-        <script>
-            document.getElementById("isEstrangeiro").disabled = true
-            document.getElementById("FormNovoCPF").value = "{{cliente.cpf}}"
-            document.getElementById("FormNovoCPF").disabled = true
-            document.getElementById("FormNovoRG").value = "{{cliente.rg}}"
-            document.getElementById("FormNovoNome").value = "{{cliente.nome}}"
-            document.getElementById("FormNovoTelefone").value = "{{cliente.telefone}}"
-            document.getElementById("FormNovoEndereco").value = "{{cliente.endereco}}"
-            document.getElementById("FormNovoEmail").value = "{{cliente.email}}"
-            {% if cliente.documento_externo is not None %}
-                document.getElementById("isEstrangeiro").checked = true
-                document.getElementById("isEstrangeiro").disabled = true
-                Esconde();
-                document.getElementById("DocumentoExterno").value = "{{cliente.documento_externo}}"
-                document.getElementById("DocumentoExterno").disabled = true
-            {% endif %}
-
-        </script>
-
-    {% elif cliente == 0 %}
-        <!-- Script para mostrar o Toast de cliente não encontrado-->
-    <script>
-        atoastAlertaGenerico("Cliente não encontrado", "Procure de novo ou crie um novo")
-    </script>
-
+{% if cliente is not None and cliente != 0 %}
+<!-- Popula o form de novo cliente -->
+<script>
+    document.getElementById("isEstrangeiro").disabled = true
+    document.getElementById("FormNovoCPF").value = "{{cliente.cpf}}"
+    document.getElementById("FormNovoCPF").disabled = true
+    document.getElementById("FormNovoRG").value = "{{cliente.rg}}"
+    document.getElementById("FormNovoNome").value = "{{cliente.nome}}"
+    document.getElementById("FormNovoTelefone").value = "{{cliente.telefone}}"
+    document.getElementById("FormNovoEndereco").value = "{{cliente.endereco}}"
+    document.getElementById("FormNovoEmail").value = "{{cliente.email}}"
+    {% if cliente.documento_externo is not None %}
+    document.getElementById("isEstrangeiro").checked = true
+    document.getElementById("isEstrangeiro").disabled = true
+    Esconde();
+    document.getElementById("DocumentoExterno").value = "{{cliente.documento_externo}}"
+    document.getElementById("DocumentoExterno").disabled = true
     {% endif %}
-    <!-- Script que o botão de + chama pra adicionar o traje na listaTrajes e mostrar na table-->
-    <script>
-        var listaTrajes = [];
+</script>
+{% elif cliente == 0 %}
+<!-- Script para mostrar o Toast de cliente não encontrado-->
+<script>
+    atoastAlertaGenerico("Cliente não encontrado", "Procure de novo ou crie um novo")
+</script>
+{% endif %}
 
-        function AdicionaTraje() {
-            if (!id_medida) {
-                const trajeSelecionado = document.getElementById("FormCodigoTraje").value
-                const url = '{% url 'retornaTrajeSelecionado' %}?Traje=' + trajeSelecionado
-
-                fetch(url).then(response => {
-                    return response.json();
-                }).then(resposta => {
-                    var naotem = true
-                    if (resposta == "CODIGOINVALIDO") {
-                        atoastAlertaGenerico("Erro ao adicionar o Traje", "O código digitado é inválido, não encontrado no banco.")
-                    } else if (resposta == "NAODISPONIVEL") {
-                        atoastAlertaGenerico("Erro ao adicionar o Traje", "O traje selecionado não está disponível.")
-                    } else {
-                        //logica da lista
-                        for (var traje in listaTrajes) {
-                            if (listaTrajes[traje]["codigo"] === resposta.codigo) {
-                                atoastAlertaGenerico("Erro ao adicionar o Traje", "O Traje selecionado já se encontra adicionado")
-                                naotem = false;
-                            }
-                        }
-                        if (naotem) {
-                            resposta['precisaAjuste'] = false
-                            listaTrajes.push(resposta);
-
-                            var html_corpo =
-                                '<tr onclick="seleciona(this.id)" id=' + resposta.codigo + '>' +
-                                '<td style="padding-left: 50px;">' + resposta.codigo + '</td>' +
-                                '<td>' + resposta.nome + '</td>' +
-                                '<td>' + resposta.modelo + '</td>' +
-                                '<td>' + resposta.corte + '</td>' +
-                                '<td>' + resposta.valor + '</td>' +
-                                '<td style="padding-top: 8px;padding-bottom: 0px;border-top-width: 0px;border-bottom-width: 1px;">'+
-                                '<input type="checkbox" style="width: 109.41px;" class="btn-check" id="btn-check-2-outlined'+resposta.codigo+'" autocomplete="off" onclick="precisa_ajuste('+"'"+resposta.codigo+"'"+')">'+
-                                '<label class="btn btn-outline-secondary botaoPrecisa" style="width: 109.41px;" for="btn-check-2-outlined'+resposta.codigo+'" id="precisaAjuste'+resposta.codigo+'" >Não precisa</label>'+
-                                '<button id="botaoMedida-'+resposta.codigo+'" class="botaoMedida btn btn-info" style="text-align:center" onclick="abreModalFicha('+"'"+resposta.codigo+"'"+')">Medidas</button>'+                              
-                                '</td>'+   
-                                //'<td> <input class="form-check-input" type="radio" > </td>' +
-                                '</tr>' + $(".listaTrajes").html()
-                            $(".listaTrajes").html(html_corpo)
-
-                        }
-                    }
-                    //fim logica da lista
-                    document.getElementById("FormCodigoTraje").value = "";
-                    document.getElementById("FormModeloBusca").value = "";
-
-                });
-            } else {
-                atoastAlertaGenerico("Ficha de Medida", "Para adicionar, crie uma ficha de medida")
-            }
-        }
-    </script>
-
-    <!-- Seleciona o Traje na Table (deixando azul)-->
-    <script>
-        function seleciona(id) {
-            if (document.getElementById(id).classList.contains("table-primary")) {
-                document.getElementById(id).classList.remove("table-primary")
-                document.getElementById(id).classList.remove("listaSelecionada")
-            } else {
-                document.getElementById(id).classList.add("table-primary")
-                document.getElementById(id).classList.add("listaSelecionada")
-            }
-        }      
-    </script>
-    <!-- Logica do botão de Precisa ajuste-->
-    <script>
-        function precisa_ajuste(trajeID) {
-            animaBotaoMedida("botaoMedida-"+trajeID)
-            for (var traje in listaTrajes) {
-                if (listaTrajes[traje]["codigo"] == trajeID) {
-                    if (listaTrajes[traje]["precisaAjuste"] == true){
-                        listaTrajes[traje]["precisaAjuste"] = false
-                        document.getElementById("precisaAjuste"+trajeID).innerHTML = "Não precisa"
-                        document.getElementById("btn-check-2-outlined"+trajeID).removeAttribute("checked", null)
-                    }
-                    else {
-                        listaTrajes[traje]["precisaAjuste"] = true
-                        document.getElementById("btn-check-2-outlined"+trajeID).setAttribute("checked", "")
-                        document.getElementById("precisaAjuste"+trajeID).innerHTML = "  Precisa  "
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- Script que coloca classe no botão para anima-lo-->
-    <script>
-        function animaBotaoMedida(id)
-            {
-                var el = document.getElementById(id);
-                if (el.classList.contains("animado")){
-                    el.classList.remove("animado")
-                }
-                else
-                {
-                    el.classList.add("animado")
-                }
-            }
-    </script>
-    <!-- Autocomplete da pesquisa de trajes -->
-    <script>
-        $(function () {
-            $(".AutoCompleteTrajePesquisaModelo").autocomplete({
-                source: '{% url 'autocomplete-traje' %}?Unifica=False&tipo=modelo',
-                minLength: 3,
-                max: 5,
-                select: function (e, ui) {
-                    document.getElementById("FormCodigoTraje").value = ui.item.value.slice(7, ui.item.value.indexOf(" ", 7));
-                    document.getElementById("FormModeloBusca").value = (ui.item.value.slice(ui.item.value.indexOf("Modelo: ", 7), ui.item.value.length)).replace("Modelo: ", "");
-                    return false
-                }
-            });
-        });
-        $(function () {
-            $(".AutoCompleteTrajePesquisaCodigo").autocomplete({
-                source: '{% url 'autocomplete-traje' %}?Unifica=False&tipo=codigo',
-                minLength: 3,
-                max: 5,
-                select: function (e, ui) {
-                    document.getElementById("FormCodigoTraje").value = ui.item.value.slice(7, ui.item.value.indexOf(" ", 7));
-                    document.getElementById("FormModeloBusca").value = (ui.item.value.slice(ui.item.value.indexOf("Modelo: ", 7), ui.item.value.length)).replace("Modelo: ", "");
-                    return false
-                }
-            });
-        });
-    </script>
-    <!-- Script pra atualizar o valor de todos os trajes da table -->
-    <script>
-        var totalLista = 0
-
-        function AtualizaValor() {
-            totalLista = 0
-            //Atualiza valor
-            for (var traje in listaTrajes) {
-                totalLista = totalLista + parseInt(listaTrajes[traje]["valor"])
-            }
-            document.getElementById("trValor").innerHTML = "Valor Total: R$" + totalLista
-            //fim Atualiza valor}
-        }
-
-        setInterval(AtualizaValor, 300);
-    </script>
-    <!-- Script pra remover o traje da table e da listaTrajes -->
-    <script>
-        function RemoverTraje() {
-            var linhas = document.getElementsByClassName("listaSelecionada");
-            var linhasDeletadas = []
-            for (linha in linhas) {
-                if (linhas[linha].id) {
-                    for (traje in listaTrajes) {
-                        if (listaTrajes[traje]["codigo"] == linhas[linha].id) {
-                            listaTrajes.splice(traje, 1);
-                            linhasDeletadas.push(linhas[linha].id)
-                        }
-                    }
-                }
-            }
-            for (id in linhasDeletadas) {
-                $(document.getElementById(linhasDeletadas[id])).remove();
-            }
-        }
-
-    </script>
-    <!-- Script para enviar a locação para o views.py-->
-    <script>
-        function Locar() {
-            var listaForm = {};
-            passou = false
-
-            listaForm["Nome"] = document.getElementById("FormNovoNome").value
-            listaForm["Telefone"] = document.getElementById("FormNovoTelefone").value
-            listaForm["Endereco"] = document.getElementById("FormNovoEndereco").value
-            listaForm["Email"] = document.getElementById("FormNovoEmail").value
-
-            if (document.getElementById("isEstrangeiro").checked) {
-                listaForm["DocumentoExterno"] = document.getElementById("DocumentoExterno").value
-            } else {
-                listaForm["CPF"] = document.getElementById("FormNovoCPF").value
-                listaForm["RG"] = document.getElementById("FormNovoRG").value
-            }
-            listaForm["isEstrangeiro"] = document.getElementById("isEstrangeiro").checked
-
-            const url = '{% url 'SalvarLocacao' %}?listatraje=' + JSON.stringify(listaTrajes) + '&form=' + JSON.stringify(listaForm) + '&dPrevDevolucao=' + document.getElementById("dPrevDevolucao").value + '&valorTotal=' + totalLista
-
-            if (document.getElementById("dPrevDevolucao").value != "") {
-                passou = true
-                if (document.getElementById("FormNovoNome").value != "" && document.getElementById("FormNovoTelefone").value != "") {
-                    passou = true
-                    if (document.getElementById("isEstrangeiro").checked) {
-                        if (document.getElementById("DocumentoExterno").value != "") {
-                            passou = true
-                        } else {
-                            passou = false
-                        }
-                    } else {
-                        if (document.getElementById("FormNovoCPF").value != "") {
-                            passou = true
-                        } else {
-                            passou = false
-                        }
-                    }
-                } else {
-                    passou = false
-                }
-            } else {
-                passou = false
-            }
-
-            if (passou) {
-                fetch(url).then(response => {
-                    return response.json();
-                }).then(resposta => {
-                    if (resposta["status"] == 200) {
-                        document.getElementById("testeSucess").style.display = "inline"
-                        setTimeout(function () {
-                            var url2 = '{% url 'consultar_cliente' %}?id='+resposta["id_cliente"]
-                            document.getElementById("testeSucess").style.display = "none"
-                            window.location.replace(url2);
-                        }, 1500);
-                    }
-                    else{
-                        atoastAlertaGenerico("Criacao de locação", "Aconteceu algum erro na locação.")
-                    }
-                });
-            } else {
-                atoastAlertaGenerico("Tentativa de locação", "Preencha todos os campos obrigatórios.")
-            }
-        }
-    </script>
-    <!-- Logica para criação da ficha de medida -->
-    <script>
-        let id_medida
-        
-        function cria_ficha_medidas() {
-            var url = ""
-            var listaForm = {};
-            
-            id_traje = document.getElementById("medidaTrajeSpan").innerHTML
-            listaForm["paleto_barra"] = document.getElementById("formMedidaPaleto").value
-            listaForm["calca_barra"] = document.getElementById("formMedidaCalca").value
-            listaForm["torax"] = document.getElementById("formMedidaTorax").value
-            listaForm["costas"] = document.getElementById("formMedidaCostas").value
-            
-            for (item in listaTrajes){
-                if (listaTrajes[item]["codigo"] == id_traje){
-                    traje = listaTrajes[item]
-                    if (!("id_medida" in traje)){
-                    url = '{% url 'cria_ficha_medidas' %}?info=' + JSON.stringify(listaForm);
-                    }
-                    else{
-                    listaForm["id"] = traje["id_medida"]
-
-                    const url = '{% url 'atualizar_ficha' %}?infoFicha=' + JSON.stringify(listaForm)
-
-                    fetch(url).then(response => {
-                        return response.json();
-                    }).then(resposta => {
-                        if (resposta == "200"){
-                        }
-                        else{
-                        atoastAlertaGenerico("Atualiza ficha", "Aconteceu algum erro ao atualizar a ficha")
-                        }});
-                    }
-                }
-            }
-            if(url != ""){
-                fetch(url).then(response => {
-                    return response.json();
-                }).then(resposta => {
-                    if (resposta != "status 400"){
-                    traje["id_medida"] = resposta;}
-                else{
-                    atoastAlertaGenerico("Cria ficha medidas", "Foi inserido um valor maior que 999,99")
-                }
-                });}
-                    for (item in listaTrajes){
-                        if (listaTrajes[item]["codigo"] == traje["codigo"]){
-                            listaTrajes[item] = traje
-                        }
-                    }
-            $('#exampleModalMedidas').modal('toggle');
-        }
-    </script>
-    <!-- Abre ficha de medida, prepara pra editar ou criar uma nova, se vai editar, busca no banco pra pegar as infos-->
-    <script>
-        function abreModalFicha(id){
-            $('#exampleModalMedidas').modal('toggle');
-            document.getElementById("medidaTrajeSpan").innerHTML = id
-            document.getElementById("modalTitleMedidas").innerHTML = "Crie ficha de medidas:"
-            document.getElementById("botaoCriarFicha").innerHTML = "Criar"
-            document.getElementById("formMedidaPaleto").value = ""
-            document.getElementById("formMedidaCalca").value = ""
-            document.getElementById("formMedidaTorax").value = ""
-            document.getElementById("formMedidaCostas").value = ""
-
-            for (item in listaTrajes){
-                if (listaTrajes[item]["codigo"] == id){
-                    if ("id_medida" in listaTrajes[item]){
-                        document.getElementById("botaoCriarFicha").innerHTML = "Atualizar"
-                        document.getElementById("modalTitleMedidas").innerHTML = "Atualizar ficha de medidas:"
-                        const url = '{% url 'consulta_ficha_medida' %}?id=' + listaTrajes[item]["id_medida"]
-
-                        fetch(url).then(response => {
-                            return response.json();
-                        }).then(resposta => {
-                            document.getElementById("formMedidaPaleto").value = resposta.paleto_barra
-                            document.getElementById("formMedidaCalca").value = resposta.calca_barra
-                            document.getElementById("formMedidaTorax").value = resposta.torax
-                            document.getElementById("formMedidaCostas").value = resposta.costas
-                        });
-                    }
-        }
-    }
-}
-    </script>
-    
-    <div class="container">
-        <div class="row justify-content-center">
-            <p></p>
-            <div class="col-sm-2" style="margin-top: 0.8%">
-                <label id="labeldPrevDevolucao" for="dPrevDevolucao" class="">Previsão de Devolução</label>
-            </div>
-            <div class="col-sm-3">
-                <input type="datetime-local" id="dPrevDevolucao" class="form-control" name="dPrevDevolucao">
-            </div>
-            <p></p>
-
+<div class="container">
+    <div class="row justify-content-center">
+        <p></p>
+        <div class="col-sm-2" style="margin-top: 0.8%">
+            <label id="labeldPrevDevolucao" for="dPrevDevolucao" class="">Previsão de Devolução</label>
         </div>
-    </div>
-    <!-- Cria table dos trajes -->
-    <table class="table">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col-2" style="padding-left: 50px;">Codigo</th>
-                <th scope="col">Nome</th>
-                <th scope="col">Modelo</th>
-                <th scope="col">Corte</th>
-                <th scope="col">Valor</th>
-                <th scope="col">Precisa ajuste?</th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody class="listaTrajes" style="width:100%">
+        <div class="col-sm-3">
+            <input type="datetime-local" id="dPrevDevolucao" class="form-control" name="dPrevDevolucao">
+        </div>
+        <p></p>
 
-        </tbody>
-        <tbody class="">
+    </div>
+</div>
+<!-- Cria table dos trajes -->
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col-2" style="padding-left: 50px;">Codigo</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Modelo</th>
+            <th scope="col">Corte</th>
+            <th scope="col">Valor</th>
+            <th scope="col">Precisa ajuste?</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody class="listaTrajes" style="width:100%">
+
+    </tbody>
+    <tbody class="">
         <tr class="thead-light">
             <th id="trValor"></th>
             <th></th>
@@ -634,13 +267,260 @@
             <th></th>
             <th></th>
         </tr>
-        </tbody>
-    </table>
-    <div class="container" style="align-items: center; text-align: center;position: center">
-        <p></p>
-        <button type="button" class="btn btn-dark btn-block" style="margin-right: 3%;" onclick="Locar()">Locar</button>
-        <p></p>
-    </div>
+    </tbody>
+</table>
+<div class="container" style="align-items: center; text-align: center;position: center">
+    <p></p>
+    <button type="button" class="btn btn-dark btn-block" style="margin-right: 3%;" onclick="Locar()">Locar</button>
+    <p></p>
+</div>
+
+<!-- Inicio Script com jinja2 -->
+<!-- Script que o botão de + chama pra adicionar o traje na listaTrajes e mostrar na table-->
+<script>
+    var listaTrajes = [];
+
+    function AdicionaTraje() {
+        if (!id_medida) {
+            const trajeSelecionado = document.getElementById("FormCodigoTraje").value
+            const url = '{% url 'retornaTrajeSelecionado' %}?Traje=' + trajeSelecionado
+
+            fetch(url).then(response => {
+                return response.json();
+            }).then(resposta => {
+                var naotem = true
+                if (resposta == "CODIGOINVALIDO") {
+                    atoastAlertaGenerico("Erro ao adicionar o Traje", "O código digitado é inválido, não encontrado no banco.")
+                } else if (resposta == "NAODISPONIVEL") {
+                    atoastAlertaGenerico("Erro ao adicionar o Traje", "O traje selecionado não está disponível.")
+                } else {
+                    //logica da lista
+                    for (var traje in listaTrajes) {
+                        if (listaTrajes[traje]["codigo"] === resposta.codigo) {
+                            atoastAlertaGenerico("Erro ao adicionar o Traje", "O Traje selecionado já se encontra adicionado")
+                            naotem = false;
+                        }
+                    }
+                    if (naotem) {
+                        resposta['precisaAjuste'] = false
+                        listaTrajes.push(resposta);
+
+                        var html_corpo =
+                            '<tr onclick="seleciona(this.id)" id=' + resposta.codigo + '>' +
+                            '<td style="padding-left: 50px;">' + resposta.codigo + '</td>' +
+                            '<td>' + resposta.nome + '</td>' +
+                            '<td>' + resposta.modelo + '</td>' +
+                            '<td>' + resposta.corte + '</td>' +
+                            '<td>' + resposta.valor + '</td>' +
+                            '<td style="padding-top: 8px;padding-bottom: 0px;border-top-width: 0px;border-bottom-width: 1px;">' +
+                            '<input type="checkbox" style="width: 109.41px;" class="btn-check" id="btn-check-2-outlined' + resposta.codigo + '" autocomplete="off" onclick="precisa_ajuste(' + "'" + resposta.codigo + "'" + ')">' +
+                            '<label class="btn btn-outline-secondary botaoPrecisa" style="width: 109.41px;" for="btn-check-2-outlined' + resposta.codigo + '" id="precisaAjuste' + resposta.codigo + '" >Não precisa</label>' +
+                            '<button id="botaoMedida-' + resposta.codigo + '" class="botaoMedida btn btn-info" style="text-align:center" onclick="abreModalFicha(' + "'" + resposta.codigo + "'" + ')">Medidas</button>' +
+                            '</td>' +
+                            //'<td> <input class="form-check-input" type="radio" > </td>' +
+                            '</tr>' + $(".listaTrajes").html()
+                        $(".listaTrajes").html(html_corpo)
+
+                    }
+                }
+                //fim logica da lista
+                document.getElementById("FormCodigoTraje").value = "";
+                document.getElementById("FormModeloBusca").value = "";
+
+            });
+        } else {
+            atoastAlertaGenerico("Ficha de Medida", "Para adicionar, crie uma ficha de medida")
+        }
+    }
+</script>
+
+<!-- Autocomplete da pesquisa de trajes -->
+<script>
+    $(function () {
+        $(".AutoCompleteTrajePesquisaModelo").autocomplete({
+            source: '{% url 'autocomplete-traje' %}?Unifica=False&tipo=modelo',
+            minLength: 3,
+            max: 5,
+            select: function (e, ui) {
+                document.getElementById("FormCodigoTraje").value = ui.item.value.slice(7, ui.item.value.indexOf(" ", 7));
+                document.getElementById("FormModeloBusca").value = (ui.item.value.slice(ui.item.value.indexOf("Modelo: ", 7), ui.item.value.length)).replace("Modelo: ", "");
+                return false
+            }
+            });
+        });
+    $(function () {
+        $(".AutoCompleteTrajePesquisaCodigo").autocomplete({
+            source: '{% url 'autocomplete-traje' %}?Unifica=False&tipo=codigo',
+            minLength: 3,
+            max: 5,
+            select: function (e, ui) {
+                document.getElementById("FormCodigoTraje").value = ui.item.value.slice(7, ui.item.value.indexOf(" ", 7));
+                document.getElementById("FormModeloBusca").value = (ui.item.value.slice(ui.item.value.indexOf("Modelo: ", 7), ui.item.value.length)).replace("Modelo: ", "");
+                return false
+            }
+            });
+        });
+</script>
+
+<!-- Script para enviar a locação para o views.py-->
+<script>
+    function Locar() {
+        var listaForm = {};
+        passou = false
+
+        listaForm["Nome"] = document.getElementById("FormNovoNome").value
+        listaForm["Telefone"] = document.getElementById("FormNovoTelefone").value
+        listaForm["Endereco"] = document.getElementById("FormNovoEndereco").value
+        listaForm["Email"] = document.getElementById("FormNovoEmail").value
+
+        if (document.getElementById("isEstrangeiro").checked) {
+            listaForm["DocumentoExterno"] = document.getElementById("DocumentoExterno").value
+        } else {
+            listaForm["CPF"] = document.getElementById("FormNovoCPF").value
+            listaForm["RG"] = document.getElementById("FormNovoRG").value
+        }
+        listaForm["isEstrangeiro"] = document.getElementById("isEstrangeiro").checked
+
+        const url = '{% url 'SalvarLocacao' %}?listatraje=' + JSON.stringify(listaTrajes) + '&form=' + JSON.stringify(listaForm) + '&dPrevDevolucao=' + document.getElementById("dPrevDevolucao").value + '&valorTotal=' + totalLista
+
+        if (document.getElementById("dPrevDevolucao").value != "") {
+            passou = true
+            if (document.getElementById("FormNovoNome").value != "" && document.getElementById("FormNovoTelefone").value != "") {
+                passou = true
+                if (document.getElementById("isEstrangeiro").checked) {
+                    if (document.getElementById("DocumentoExterno").value != "") {
+                        passou = true
+                    } else {
+                        passou = false
+                    }
+                } else {
+                    if (document.getElementById("FormNovoCPF").value != "") {
+                        passou = true
+                    } else {
+                        passou = false
+                    }
+                }
+            } else {
+                passou = false
+            }
+        } else {
+            passou = false
+        }
+
+        if (passou) {
+            fetch(url).then(response => {
+                return response.json();
+            }).then(resposta => {
+                if (resposta["status"] == 200) {
+                    document.getElementById("testeSucess").style.display = "inline"
+                    setTimeout(function () {
+                        var url2 = '{% url 'consultar_cliente' %}?id=' + resposta["id_cliente"]
+                        document.getElementById("testeSucess").style.display = "none"
+                        window.location.replace(url2);
+                    }, 1500);
+                }
+                else {
+                    atoastAlertaGenerico("Criacao de locação", "Aconteceu algum erro na locação.")
+                }
+            });
+        } else {
+            atoastAlertaGenerico("Tentativa de locação", "Preencha todos os campos obrigatórios.")
+        }
+    }
+</script>
+
+<!-- Logica para criação da ficha de medida -->
+<script>
+    let id_medida
+
+    function cria_ficha_medidas() {
+        var url = ""
+        var listaForm = {};
+
+        id_traje = document.getElementById("medidaTrajeSpan").innerHTML
+        listaForm["paleto_barra"] = document.getElementById("formMedidaPaleto").value
+        listaForm["calca_barra"] = document.getElementById("formMedidaCalca").value
+        listaForm["torax"] = document.getElementById("formMedidaTorax").value
+        listaForm["costas"] = document.getElementById("formMedidaCostas").value
+
+        for (item in listaTrajes) {
+            if (listaTrajes[item]["codigo"] == id_traje) {
+                traje = listaTrajes[item]
+                if (!("id_medida" in traje)) {
+                    url = '{% url 'cria_ficha_medidas' %}?info=' + JSON.stringify(listaForm);
+                }
+                else {
+                    listaForm["id"] = traje["id_medida"]
+
+                    const url = '{% url 'atualizar_ficha' %}?infoFicha=' + JSON.stringify(listaForm)
+
+                    fetch(url).then(response => {
+                        return response.json();
+                    }).then(resposta => {
+                        if (resposta == "200") {
+                        }
+                        else {
+                            atoastAlertaGenerico("Atualiza ficha", "Aconteceu algum erro ao atualizar a ficha")
+                        }
+                    });
+                }
+            }
+        }
+        if (url != "") {
+            fetch(url).then(response => {
+                return response.json();
+            }).then(resposta => {
+                if (resposta != "status 400") {
+                    traje["id_medida"] = resposta;
+                }
+                else {
+                    atoastAlertaGenerico("Cria ficha medidas", "Foi inserido um valor maior que 999,99")
+                }
+            });
+        }
+        for (item in listaTrajes) {
+            if (listaTrajes[item]["codigo"] == traje["codigo"]) {
+                listaTrajes[item] = traje
+            }
+        }
+        $('#exampleModalMedidas').modal('toggle');
+    }
+</script>
+
+<!-- Abre ficha de medida, prepara pra editar ou criar uma nova, se vai editar, busca no banco pra pegar as infos-->
+<script>
+    function abreModalFicha(id) {
+        $('#exampleModalMedidas').modal('toggle');
+        document.getElementById("medidaTrajeSpan").innerHTML = id
+        document.getElementById("modalTitleMedidas").innerHTML = "Crie ficha de medidas:"
+        document.getElementById("botaoCriarFicha").innerHTML = "Criar"
+        document.getElementById("formMedidaPaleto").value = ""
+        document.getElementById("formMedidaCalca").value = ""
+        document.getElementById("formMedidaTorax").value = ""
+        document.getElementById("formMedidaCostas").value = ""
+
+        for (item in listaTrajes) {
+            if (listaTrajes[item]["codigo"] == id) {
+                if ("id_medida" in listaTrajes[item]) {
+                    document.getElementById("botaoCriarFicha").innerHTML = "Atualizar"
+                    document.getElementById("modalTitleMedidas").innerHTML = "Atualizar ficha de medidas:"
+                    const url = '{% url 'consulta_ficha_medida' %}?id=' + listaTrajes[item]["id_medida"]
+
+                    fetch(url).then(response => {
+                        return response.json();
+                    }).then(resposta => {
+                        document.getElementById("formMedidaPaleto").value = resposta.paleto_barra
+                        document.getElementById("formMedidaCalca").value = resposta.calca_barra
+                        document.getElementById("formMedidaTorax").value = resposta.torax
+                        document.getElementById("formMedidaCostas").value = resposta.costas
+                    });
+                }
+            }
+        }
+    }
+</script>
+<!-- Fim Script com jinja2 -->
+
 
 
 

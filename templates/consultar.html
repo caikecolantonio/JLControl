@@ -4,6 +4,10 @@
 {% load controle_comandos %}
 
 {% block content %}
+
+<link rel="stylesheet" href="{%  static  'css/consultar.css'  %}">
+<script type="text/javascript" src="{% static 'js/consultar.js' %}"></script>
+
 {% if cliente == '#ERRO001' %}
 
 <div class="alert alert-danger" role="alert">
@@ -40,8 +44,16 @@
               <td>{{ locacao.id }}</td>
               <td>{{ locacao.status }}</td>
               <td>{{ locacao.data_locacao }}</td>
-              <td scope="col" style="width:10%; z-index: 100;"><button class="btn btn-info btn-lg btn-block" type="button"
-                  style="width:100%; height:100%;" onclick='devolver_locacao({{ locacao.id }}); event.stopPropagation();'>Devolver</button></td>
+              <td>
+              <div class="btn-group dropright">
+                <a class="nav-link dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-offset="30">Opções</a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" onclick='abreModalConfirma({{ locacao.id }}, 1, event)'>Devolver</a>
+                  <a class="dropdown-item" onclick='abreModalConfirma({{ locacao.id }}, 2, event)'>Cancelar</a>
+                </div>
+              </div>
+            </td>
+             
             </tr>
           </table>
         </button>
@@ -138,33 +150,39 @@
 </table>
 {% endif %}
 {% endif %}
-<style>
-  .btn-dark {
-    background-color: #17a3b865
-  }
 
-  .btn-style {
-    background-color: #17a3b865
-  }
+<div id="confirmacao" class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmaTitulo">Modal title</h5>
+        <button type="button" onclick="fechaModalConfirma()" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" onclick="fechaModalConfirma()" class="btn btn-secondary" data-dismiss="modal">Não</button>
+        <button id ="botaoSimConfirma" type="button" class="btn btn-danger">Sim</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-  .card-body {
-    width: 100%;
-    height: 100%;
-    font-family: Arial, Helvetica, sans-serif;
-
-    color: black;
-  }
-</style>
 <script>
-  function devolver_locacao(id) {
-
-    const url = '{% url 'devolver_locacao' %}?id_locacao=' + id
+  function devolver_ou_cancelar_locacao(id, acao) {
+    fechaModalConfirma()
+    let url = ''
+    if (acao == 1){
+      url = '{% url 'devolver_locacao' %}?id_locacao=' + id}
+    else if (acao == 2){
+      url = '{% url 'cancelar_locacao' %}?id_locacao=' + id}
+      
     let dados = []
     fetch(url).then(response => {
       return response.json();
     }).then(resposta => {
       if (resposta == "200") {
-        document.getElementById("fechaModalMedidas").click()
+        
         document.getElementById("testeSucess").style.display = "inline"
         setTimeout(function () {
           {% for key, locacao in locacoes.items %}
@@ -183,7 +201,7 @@
   }, 1500);
         }
         else if (resposta == "400") {
-    atoastAlertaGenerico("Devolver traje", "Locação já devolvida.")
+    atoastAlertaGenerico("Devolver traje", "Locação já devolvida ou cancelada.")
   }
   else {
     atoastAlertaGenerico("Devolver traje", "Aconteceu algum erro de devolver a locação.")
@@ -241,10 +259,7 @@
       //window.location.replace(url2);
       document.getElementById("testeSucess").style.display = "none"
     }, 1500);
-
-
   }
-
 </script>
 
 <!-- Modal Medidas -->

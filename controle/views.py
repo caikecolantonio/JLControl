@@ -246,9 +246,22 @@ def devolver_locacao(request):
     try:
         id_locacao = json.loads(request.GET.get('id_locacao'))
         locacao = Locacao.objects.get(id=id_locacao)
-        if locacao.status != 'Devolvido':
+        if locacao.status not in ('Devolvido','Cancelado'):
             locacao.status = 'Devolvido'
             locacao.data_devolucao = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            locacao.save()
+            return JsonResponse("200", safe=False)
+        else:
+            return JsonResponse("400", safe=False)
+    except:
+        return JsonResponse("deu ruim", safe=False)
+
+def cancelar_locacao(request):
+    try:
+        id_locacao = json.loads(request.GET.get('id_locacao'))
+        locacao = Locacao.objects.get(id=id_locacao)
+        if locacao.status not in ('Devolvido','Cancelado'):
+            locacao.status = 'Cancelado'
             locacao.save()
             return JsonResponse("200", safe=False)
         else:
@@ -314,7 +327,7 @@ def mais_menos_alocados(request):
 
 
 def busca_por_data(request):
-    locacao, loc_atrasada, loc_alocado, loc_devolvido = [], [], [], []
+    locacao, loc_atrasada, loc_alocado, loc_devolvido, loc_cancelado = [], [], [], [], []
 
     inicial = request.POST['dPrevInicial'] + ' 00:00:00'
     final = request.POST['dPrevFinal'] + ' 23:59:59'
@@ -326,7 +339,9 @@ def busca_por_data(request):
     inicial, final))
     locacoes_devolvido = Locacao.objects.filter(status='Devolvido', data_locacao__range=(
     inicial, final))
-
+    locacoes_cancelado = Locacao.objects.filter(status='Cancelado', data_locacao__range=(
+    inicial, final))
+    
     if locacoes:
         for x in locacoes:
             locacao.append(x)
@@ -342,12 +357,18 @@ def busca_por_data(request):
     if locacoes_devolvido:
         for x in locacoes_devolvido:
             loc_devolvido.append(x)
+    
+    if locacoes_cancelado:
+        for x in locacoes_cancelado:
+            loc_cancelado.append(x)
 
     resultados = {
         'locacao': len(locacao),
         'locacoes_atrasadas': len(loc_atrasada),
         'locacoes_alocado': len(loc_alocado),
         'locacoes_devolvido': len(loc_devolvido),
+        'locacoes_cancelado': len(loc_cancelado),
+        
     }
     return render(request, 'resultado-datas.html', resultados)
 
@@ -378,8 +399,6 @@ def busca_financeiro(request):
         data_inicial = request.GET.get('data-inicial')
     if request.GET.get('data-final') != '':
         data_final = request.GET.get('data-final')
-    if request.GET.get('hora') != '':
-        hora = request.GET.get('hora')
     lancamentos = Lancamento.objects.filter(data__range=(
     data_inicial, data_final))
     for lanc in lancamentos:

@@ -1,0 +1,11 @@
+.PassaMouseTrocaCor {
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+} 
+    
+.PassaMouseTrocaCor:hover {
+    color: #17a2b8;    
+} 

@@ -1,0 +1,24 @@
+body,
+html {
+  height: 100%;
+  background-color: #343a40;
+}
+
+.card {
+  box-shadow: 0 8px 16px 0 rgba(139, 139, 139, 0.2);
+  border-radius: 5px;
+  height: 465px;
+}
+
+#btn-dark {
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+}
+
+
+.btn-dark:hover {
+  color: #17a2b8;
+}

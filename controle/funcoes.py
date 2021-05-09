@@ -21,9 +21,9 @@ def is_traje_disponivel(traje, MostraAlocados):
                     mostrar = True
                     break                
             else:
-                if location.status not in ('Alocado', 'Atraso') and traje.ativo == 'sim':
+                if location.status not in ('Alocado', 'Atraso', 'Cancelado') and traje.ativo == 'sim':
                     mostrar = True
-                elif location.status in ('Alocado', 'Atraso') and traje.ativo == 'sim':
+                elif location.status in ('Alocado', 'Atraso', 'Cancelado') and traje.ativo == 'sim':
                     mostrar = False
                     break               
     if mostrar:

@@ -67,6 +67,7 @@ class Locacao(models.Model):
         ('Alocado', 'Alocado'),
         ('Devolvido', 'Devolvido'),
         ('Atraso', 'Em Atraso'),
+        ('Cancelado', 'Cancelado'),
     ]
     status = models.CharField(choices=STATUS_CHOISE, max_length=100)
     descricao = models.CharField(max_length=3000, null=True, blank=True)

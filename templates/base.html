@@ -30,13 +30,21 @@
   <link rel="stylesheet" href="/resources/demos/style.css">
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  <script type="text/javascript" src="{% static 'javaScript/scripts_base.js' %}"></script>
+  
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script src=""
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  
+  <script type="text/javascript" src="{% static 'js/base.js' %}"></script>
+  <link rel="stylesheet"  href="{%  static  'css/base.css'  %}">
 
+ 
 
 </head>
+
+<style>  
+  .ui-autocomplete {
+  z-index: 1050 !important;
+}</style>
 
 <body>
   <!-- MENU -->
@@ -150,6 +158,7 @@
             <option value="Alocado">Alocado</option>
             <option value="Devolvido">Devolvido</option>
             <option value="Atraso">Atraso</option>
+            <option value="Cancelado">Cancelado</option>
           </select>
         </div>
 
@@ -260,21 +269,7 @@
     </div>
   </div>
 
-  <script>
-    function AtualizaTrajeBase() {
-      try {
-        focus = document.getElementById(document.activeElement.id).name
-      } catch (error) { }
 
-      $(function () {
-        $(".AutoCompleteTraje").autocomplete({
-          source: '{% url 'autocomplete-traje' %}?Unifica=True&tipo=' + focus,
-          minLength: 3,
-          max: 5
-      });
-    });}
-    setInterval(AtualizaTrajeBase, 300);
-  </script>
   <!-- Button trigger modal -->
   <button id="botaoAlerta" type="button" class="btn btn-primary" data-toggle="modal" data-target="#alertaCPF"
     hidden="true"> </button>
@@ -285,59 +280,8 @@
   </div>
   </div>
 
-  <!-- Metodos toastGenerico -->
-  <script>function atoastAlertaGenerico(titulo, mensagem) {
-      var numero = parseInt(Math.random() * (2000 - 0) + 0)
 
-      var seuNode = document.getElementById('toastAlertaGenerico');
-      var clone = seuNode.cloneNode(true);
-      clone.id = "toastAlertaGenerico-" + numero
-
-      for (childs in clone.childNodes) {
-        if (typeof clone.childNodes[childs]["childNodes"] !== 'undefined' && clone.childNodes[childs]["childNodes"].length > 0) {
-          for (dentro in clone.childNodes[childs]["childNodes"]) {
-            clone.childNodes[childs]["childNodes"][dentro].id = clone.childNodes[childs]["childNodes"][dentro].id + "-" + numero
-            if (typeof clone.childNodes[childs]["childNodes"][dentro].parentNode !== 'undefined') {
-              clone.childNodes[childs]["childNodes"][dentro].parentNode.id = clone.childNodes[childs]["childNodes"][dentro].parentNode.id + "-" + numero
-            }
-          }
-        }
-      }
-      document.getElementById("areaToast").appendChild(clone);
-      var fadeToast = new bootstrap.Toast(document.getElementById("toastAlertaGenerico-" + numero));
-      fadeToast.show();
-      document.getElementById("toastTitulo-" + numero).innerHTML = titulo
-      document.getElementById("toastMensagem-" + numero).innerHTML = mensagem
-      document.getElementById("buttonFechaToast-" + numero).setAttribute("onClick", "ftoastAlertaGenerico(" + numero + ")")
-      document.getElementById("timer-" + numero).classList.add("timer")
-      document.getElementById("timer-" + numero).setAttribute("name", Date.now())
-
-      clone.addEventListener('hidden.bs.toast', function () {
-        setTimeout(function () {
-          clone.parentNode.removeChild(clone)
-        }, 200);
-      })
-    }
-  </script>
-  <script>function ftoastAlertaGenerico(numero) {
-      $("#toastAlertaGenerico-" + numero).toast('hide')
-    }
-  </script>
-  <script>
-    function AtualizaDataToast() {
-      var toastTimers = document.getElementsByClassName("timer");
-      for (timer in toastTimers) {
-        if (typeof toastTimers[timer] == "object") {
-          toastTimers[timer].innerHTML = parseInt((Date.now() - toastTimers[timer].getAttribute("name")) / 1000) + " seg atrás"
-        }
-      }
-    }
-    setInterval(AtualizaDataToast, 100);
-  </script>
-
-
-
-  <!-- Modal -->
+ <!-- Modal -->
   <div class="modal fade modalx" style="color:#ff6666; z-index: 9999;" id="alertaCPF" tabindex="-1" role="dialog"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialogx" role="document">
@@ -405,11 +349,29 @@
   </div>
 </div>
 
-  {% block content %}
+<!-- Scritps que utilizam jinja-->
+<script>
+  //Atualiza o autocomplete do form traje
+  function AtualizaTrajeBase() {
+    try {
+      focus = document.getElementById(document.activeElement.id).name
+    } catch (error) { }
+    
+    $(function () { 
+      $(".AutoCompleteTraje").autocomplete({
+        source: '{% url 'autocomplete-traje' %}?Unifica=True&tipo=' + focus,
+        minLength: 3,
+        max: 5
+    });
+  });}
+  setInterval(AtualizaTrajeBase, 300);
+</script>
+<!-- Scritps que utilizam jinja-->  
 
+
+  {% block content %}
   {% endblock %}
 
-  </script>
 </body>
 
 </html>

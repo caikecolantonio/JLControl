@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from controle.views import devolver, locar, consultar, cancelar, autocomplete_nome, autocomplete_traje, \
-    retornaTrajeSelecionado, salvar_locacao, cria_ficha_medidas, devolver_locacao, atualizar_ficha, consultar_cliente, \
+    retornaTrajeSelecionado, salvar_locacao, cria_ficha_medidas, devolver_locacao, cancelar_locacao, atualizar_ficha, consultar_cliente, \
     consulta_ficha_medida, relatorio, mais_menos_alocados, busca_por_data, busca_por_traje,busca_financeiro, consultar_avancado
 from django.conf.urls.static import static
 from django.conf import settings
@@ -36,6 +36,7 @@ urlpatterns = [
     path('salvar-locacao/', salvar_locacao, name='SalvarLocacao'),
     path('cria_ficha_medidas/', cria_ficha_medidas, name='cria_ficha_medidas'),
     path('devolver-locacao/', devolver_locacao, name='devolver_locacao'),
+    path('cancelar_locacao/', cancelar_locacao, name='cancelar_locacao'),
     path('atualiza-ficha/', atualizar_ficha, name='atualizar_ficha'),
     path('consulta-cliente/', consultar_cliente, name='consultar_cliente'),
     path('consulta-ficha-medida/', consulta_ficha_medida, name='consulta_ficha_medida'),
