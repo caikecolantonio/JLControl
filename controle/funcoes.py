@@ -1,6 +1,7 @@
 from controle.models import Locacao, Cliente, Traje, Lancamento, Item, Ficha
 from datetime import date, time, datetime
 import keyword
+import re
 
 #"""Função que busca se o traje está disponivel ou alocado"""
 #Recebe o objeto traje e o true or false do MostraAlocados.
@@ -21,9 +22,9 @@ def is_traje_disponivel(traje, MostraAlocados):
                     mostrar = True
                     break                
             else:
-                if location.status not in ('Alocado', 'Atraso', 'Cancelado') and traje.ativo == 'sim':
+                if location.status not in ('Alocado', 'Atraso') and traje.ativo == 'sim':
                     mostrar = True
-                elif location.status in ('Alocado', 'Atraso', 'Cancelado') and traje.ativo == 'sim':
+                elif location.status in ('Alocado', 'Atraso') and traje.ativo == 'sim':
                     mostrar = False
                     break               
     if mostrar:
@@ -146,4 +147,8 @@ def criar_cliente(info):
     else:
         cliente = Cliente(nome=info["Nome"], email=info["Email"], endereco=info["Endereco"], telefone=info["Telefone"], rg=info["RG"], cpf=info["CPF"])
     cliente.save()
-    
+
+def remover_caracteres(recebe):
+    characters_to_remove = "().-"
+    pattern = "[" + characters_to_remove + "]"
+    return re.sub(pattern, "", str(recebe))

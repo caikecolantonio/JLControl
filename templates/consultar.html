@@ -14,6 +14,11 @@
   Telefone duplicado ou não encontrado
 </div>
 {% endif %}
+{% if cliente == '#ERRO003' %}
+<script>
+atoastAlertaGenerico("Busca por Nome","Erro mais de um cliente encontrado")
+</script>
+{% endif %}
 {% if cliente == '#ERRO2' %}
 <div class="alert alert-danger" role="alert">
   Por favor digite o CPF.

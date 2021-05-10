@@ -1,8 +1,8 @@
 from django import forms
 
 class ConsultarCliente(forms.Form):
-    CPF = forms.IntegerField(label='CPF', required=False)
-    Telefone = forms.IntegerField(label='Telefone', required=False)
+    CPF = forms.CharField(label='CPF', required=False)
+    Telefone = forms.CharField(label='Telefone', required=False)
     Nome = forms.CharField(label='Nome', required=False)
     DocumentoExterno = forms.CharField(label='Documento Externo', required=False)
 
@@ -15,9 +15,9 @@ class ConsultarTraje(forms.Form):
     alocados = forms.BooleanField(label='Consultar os alocados', required=False)
 
 class ConsultarClienteNovo(forms.Form):
-    CPF = forms.IntegerField(label='CPF', required=False)
-    RG = forms.IntegerField(label='RG', required=False)
-    Telefone = forms.IntegerField(label='Telefone', required=False)
+    CPF = forms.CharField(label='CPF', required=False)
+    RG = forms.CharField(label='RG', required=False)
+    Telefone = forms.CharField(label='Telefone', required=False)
     Nome = forms.CharField(label='Nome', required=False)
     Endereco = forms.CharField(label='Endereco', required=False)
     Email = forms.EmailField(label='email', required=False)

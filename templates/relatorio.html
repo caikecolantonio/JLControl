@@ -13,7 +13,7 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Menos/Mais Alocados</h5>
-            <p class="card-text">Está busca retorna os trajes menos alocados de TODAS as locações.</p>
+            <p class="card-text">Esse relatório retorna a quantidade que cada traje foi alocado.</p>
             <a href="{% url 'mais-menos-alocados' %}" class="btn btn-dark">Mostrar</a>
           </div>
         </div>
@@ -21,8 +21,8 @@
       <div class="col-sm-3">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Relatório por Locações feitas no Data:</h5>
-            <p class="card-text">Escreva o Dia que deseja buscar.</p>
+            <h5 class="card-title">Relatório de locações feitas no intervalo de datas:</h5>
+            <p class="card-text">Informe o intervalo de datas que deseja realizar a busca.</p>
             <form action="/busca-por-data/" name="formLocData" method="post">
               {% csrf_token %}
               <label>Data Inicial:</label>
@@ -39,7 +39,7 @@
       <div class="col-sm-3">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Relatório por Traje</h5>
+            <h5 class="card-title">Relatório por pesquisa de traje</h5>
             <form name="formTrajeRel" action="/busca-por-traje/" method="post">
               {% csrf_token %}
               <div class="form-group row">
@@ -83,8 +83,8 @@
       <div class="col-sm-3">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Relatório Financeiro nas Datas:</h5>
-            <p class="card-text">Entre a data ou a Hora para pesquisar.</p>
+            <h5 class="card-title">Relatório financeiro nos intervalos de datas:</h5>
+            <p class="card-text">Insira a data inicial e a final para pesquisar.</p>
             <form name="FormFinancData" action="" method="post">
               {% csrf_token %}
               <label>Data Inicial:</label>

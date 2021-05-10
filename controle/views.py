@@ -2,7 +2,7 @@ from django.shortcuts import render
 from controle.models import Locacao, Cliente, Traje, Ficha, Lancamento
 from controle.forms import ConsultarCliente, ConsultarTraje, FormFicha
 from controle.funcoes import is_traje_disponivel, busca_locacao_por_cliente, busca_traje, validate_cpf, criar_cliente, \
-    criar_locacao, procura_ou_cria_cliente
+    criar_locacao, procura_ou_cria_cliente, remover_caracteres
 from django.http import JsonResponse
 from django.forms.models import model_to_dict
 from datetime import datetime
@@ -23,16 +23,20 @@ def locar(request):
         if ConsultarClienteForm.is_valid():
             campos = ConsultarClienteForm.cleaned_data
             if campos['CPF']:
+                campos['CPF'] = remover_caracteres(campos['CPF'])
                 if Cliente.objects.filter(cpf=campos['CPF']):
                     cliente = Cliente.objects.get(cpf=campos['CPF'])
             if campos['Telefone']:
+                campos['Telefone'] = remover_caracteres(campos['Telefone'])
                 if len(Cliente.objects.filter(telefone=campos['Telefone'])) == 1:
                     cliente = Cliente.objects.get(telefone=campos['Telefone'])
                 else:
-                    cliente = '#ERRO001'
+                    cliente = "#ERRO003"
             if campos['Nome']:
-                if Cliente.objects.filter(nome=campos['Nome']):
+                if len(Cliente.objects.filter(nome=campos['Nome'])) == 1:
                     cliente = Cliente.objects.get(nome=campos['Nome'])
+                else:
+                    cliente = "#ERRO004"
 
             if cliente == None:
                 cliente = 0
@@ -54,6 +58,7 @@ def consultar(request):
     if ConsultarClienteForm.is_valid():
         campos = ConsultarClienteForm.cleaned_data
         if campos['CPF']:
+            campos['CPF'] = remover_caracteres(campos['CPF'])
             if Cliente.objects.filter(cpf=campos['CPF']):
                 cliente = Cliente.objects.get(cpf=campos['CPF'])
                 # Verifica se encontrou o cliente pelo o cpf
@@ -61,21 +66,67 @@ def consultar(request):
                 if locacoes:
                     locacao_detalhes = locacoes
         if campos['Telefone']:
-            if len(Cliente.objects.filter(telefone=campos['Telefone'])) == 1:
+            campos['Telefone'] = remover_caracteres(campos['Telefone'])
+            filtroCliente = Cliente.objects.filter(telefone=campos['Telefone'])
+            if len(filtroCliente) == 1:
                 cliente = Cliente.objects.get(telefone=campos['Telefone'])
                 # Verifica se encontrou o cliente pelo o telefone
                 locacoes = busca_locacao_por_cliente(cliente)
                 if locacoes:
                     locacao_detalhes = locacoes
+            elif len(filtroCliente) > 1:
+                listaLocacoes = []
+                for clienteDoFiltro in filtroCliente:
+                    locacoes = busca_locacao_por_cliente(clienteDoFiltro)
+                    for locacao in locacoes:
+                        listaLocacoes.append(str(locacoes[locacao]['id']))
+
+                # remember old state
+                _mutable = request.POST._mutable
+                # set to mutable
+                request.POST._mutable = True
+                # сhange the values you want
+                request.POST['dados'] = ",".join(listaLocacoes)
+                request.POST['bypass'] = 1
+                # set mutable flag back
+                request.POST._mutable = _mutable        
+                consultas = {
+                'locacoes': consultar_avancado(request)
+                }
+                return render(request, 'consultar.html', consultas)
             else:
                 cliente = '#ERRO001'
         if campos['Nome']:
-            if Cliente.objects.filter(nome=campos['Nome']):
+            filtroCliente = Cliente.objects.filter(nome=campos['Nome'])
+            if len(filtroCliente) == 1:
                 cliente = Cliente.objects.get(nome=campos['Nome'])
                 # Verifica se encontrou o cliente pelo o nome
                 locacoes = busca_locacao_por_cliente(cliente)
                 if locacoes:
                     locacao_detalhes = locacoes
+            elif len(filtroCliente) > 1:
+                listaLocacoes = []
+                for clienteDoFiltro in filtroCliente:
+                    locacoes = busca_locacao_por_cliente(clienteDoFiltro)
+                    for locacao in locacoes:
+                        listaLocacoes.append(str(locacoes[locacao]['id']))
+
+                # remember old state
+                _mutable = request.POST._mutable
+                # set to mutable
+                request.POST._mutable = True
+                # сhange the values you want
+                request.POST['dados'] = ",".join(listaLocacoes)
+                request.POST['bypass'] = 1
+                # set mutable flag back
+                request.POST._mutable = _mutable        
+                consultas = {
+                'locacoes': consultar_avancado(request)
+                }
+                return render(request, 'consultar.html', consultas)
+
+            else:
+                cliente = '#ERRO003'
 
     # FORMULARIO CONSULTAR TRAJE
     ConsultarTrajeForm = ConsultarTraje(request.POST)
@@ -162,6 +213,8 @@ def consultar_avancado(request):
     consultas = {
         'locacoes': locacao_detalhes
     }
+    if 'bypass' in request.POST:
+        return locacao_detalhes
 
     return render(request, 'consultar.html', consultas)
 
@@ -220,14 +273,17 @@ def salvar_locacao(request):
     listaTrajes = json.loads(request.GET.get('listatraje'))
     dataPrevisao = request.GET.get('dPrevDevolucao')
     valorTotal = request.GET.get('valorTotal')
+    infoCliente["Telefone"] = remover_caracteres(infoCliente["Telefone"])
+    infoCliente["RG"] = remover_caracteres(infoCliente["RG"])
+    infoCliente["CPF"] = remover_caracteres(infoCliente["CPF"])
     retorno = {}
 
     if infoCliente['isEstrangeiro'] == False:
         if validate_cpf(infoCliente['CPF']):
             cliente = procura_ou_cria_cliente(infoCliente, "cpf", infoCliente['CPF'])
         else:
-            cliente = procura_ou_cria_cliente(infoCliente, "cpf", infoCliente['CPF'])
-            # return JsonResponse("CPF digitado invalido", safe=False)
+            retorno["status"] = 401
+            return JsonResponse(retorno, safe=False)
     else:
         cliente = procura_ou_cria_cliente(infoCliente, "documento_externo", infoCliente['DocumentoExterno'])
 
