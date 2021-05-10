@@ -20,6 +20,9 @@ class Trajes(admin.ModelAdmin):
     search_fields = ('codigo', 'modelo', 'nome')
     list_per_page = 20
 
+    def has_delete_permission(self, request, obj=None):
+        return False
+
 admin.site.register(Traje, Trajes)
 
 class Lancamentos(admin.ModelAdmin):
