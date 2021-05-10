@@ -7,7 +7,7 @@ class Cliente(models.Model):
     cpf = models.BigIntegerField(null=True, blank=True)
     email = models.EmailField(null=True)
     endereco = models.CharField(max_length=255, null=True, blank=True)
-    telefone = models.IntegerField()
+    telefone = models.BigIntegerField()
     documento_externo = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self):
