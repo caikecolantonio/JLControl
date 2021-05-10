@@ -42,3 +42,5 @@ static3==0.7.0
 urllib3==1.25.11
 Werkzeug==1.0.1
 whitenoise==5.2.0
+Faker==8.1.2
+validate-docbr==1.8.2

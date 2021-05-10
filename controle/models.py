@@ -3,8 +3,8 @@ from django.db import models
 
 class Cliente(models.Model):
     nome = models.CharField(max_length=100, null=False)
-    rg = models.IntegerField(null=True, blank=True)
-    cpf = models.IntegerField(null=True, blank=True)
+    rg = models.CharField(null=True, blank=True, max_length=10)
+    cpf = models.BigIntegerField(null=True, blank=True)
     email = models.EmailField(null=True)
     endereco = models.CharField(max_length=255, null=True, blank=True)
     telefone = models.IntegerField()
