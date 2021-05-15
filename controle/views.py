@@ -188,6 +188,8 @@ def costura(request):
             umitem["cliente"] = model_to_dict(cliente)
             umitem["locacao"] = model_to_dict(locacao)
 
+        if locacao.status in ("Cancelado", "Devolvido"):
+            continue
         retorno_items[count] = umitem
         count += 1
 
