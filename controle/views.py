@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from controle.models import Locacao, Cliente, Traje, Ficha, Lancamento
+from controle.models import Locacao, Cliente, Traje, Ficha, Lancamento, Item
 from controle.forms import ConsultarCliente, ConsultarTraje, FormFicha
 from controle.funcoes import is_traje_disponivel, busca_locacao_por_cliente, busca_traje, validate_cpf, criar_cliente, \
     criar_locacao, procura_ou_cria_cliente, remover_caracteres
@@ -10,10 +10,6 @@ import json
 
 
 # Create your views here.
-
-def devolver(request):
-    pass
-
 
 def locar(request):
     cliente = None
@@ -89,9 +85,9 @@ def consultar(request):
                 request.POST['dados'] = ",".join(listaLocacoes)
                 request.POST['bypass'] = 1
                 # set mutable flag back
-                request.POST._mutable = _mutable        
+                request.POST._mutable = _mutable
                 consultas = {
-                'locacoes': consultar_avancado(request)
+                    'locacoes': consultar_avancado(request)
                 }
                 return render(request, 'consultar.html', consultas)
             else:
@@ -119,9 +115,9 @@ def consultar(request):
                 request.POST['dados'] = ",".join(listaLocacoes)
                 request.POST['bypass'] = 1
                 # set mutable flag back
-                request.POST._mutable = _mutable        
+                request.POST._mutable = _mutable
                 consultas = {
-                'locacoes': consultar_avancado(request)
+                    'locacoes': consultar_avancado(request)
                 }
                 return render(request, 'consultar.html', consultas)
 
@@ -138,19 +134,23 @@ def consultar(request):
         campos_trajes = ConsultarTrajeForm.cleaned_data
         MostraAlocados = (True if campos_trajes['alocados'] else False)
         if campos_trajes['codigo']:
-            trajes_disponiveis = busca_traje('codigo', campos_trajes['codigo'], MostraAlocados)
+            trajes_disponiveis = busca_traje(
+                'codigo', campos_trajes['codigo'], MostraAlocados)
             entrou = True
 
         if campos_trajes['nome']:
-            trajes_disponiveis = busca_traje('nome', campos_trajes['nome'], MostraAlocados)
+            trajes_disponiveis = busca_traje(
+                'nome', campos_trajes['nome'], MostraAlocados)
             entrou = True
 
         if campos_trajes['modelo']:
-            trajes_disponiveis = busca_traje('modelo', campos_trajes['modelo'], MostraAlocados)
+            trajes_disponiveis = busca_traje(
+                'modelo', campos_trajes['modelo'], MostraAlocados)
             entrou = True
 
         if campos_trajes['corte']:
-            trajes_disponiveis = busca_traje('corte', campos_trajes['corte'], MostraAlocados)
+            trajes_disponiveis = busca_traje(
+                'corte', campos_trajes['corte'], MostraAlocados)
             entrou = True
 
         if not entrou:
@@ -173,8 +173,32 @@ def consultar(request):
 
     return render(request, 'consultar.html', consultas)
 
+
+def costura(request):
+    retorno_items = {}
+    items = Item.objects.filter(data_entrega__isnull=True)
+    count = 0
+    for umitem in items:
+        traje = Traje.objects.get(id=umitem.traje_id)
+        relacao = umitem.locacao_set.all()
+        umitem = model_to_dict(umitem)
+        umitem["traje"] = model_to_dict(traje)
+        for locacao in relacao:
+            cliente = Cliente.objects.get(id=locacao.cliente.id)
+            umitem["cliente"] = model_to_dict(cliente)
+            umitem["locacao"] = model_to_dict(locacao)
+
+        retorno_items[count] = umitem
+        count += 1
+
+    consultas = {
+        'items': retorno_items,
+    }
+    return render(request, 'costura.html', consultas)
+
+
 def consultar_avancado(request):
-          
+
     if 'dados' in request.POST:
         lista = list(request.POST['dados'].split(","))
         locacoes = Locacao.objects.filter(id__in=lista)
@@ -184,9 +208,11 @@ def consultar_avancado(request):
         datafinal = request.POST['datafinal']
         status = request.POST['status']
         if status == 'todos':
-            locacoes = Locacao.objects.filter(data_locacao__range=(datainicial, datafinal))
+            locacoes = Locacao.objects.filter(
+                data_locacao__range=(datainicial, datafinal))
         else:
-            locacoes = Locacao.objects.filter(data_locacao__range=(datainicial, datafinal), status=status)
+            locacoes = Locacao.objects.filter(
+                data_locacao__range=(datainicial, datafinal), status=status)
 
     locacao_detalhes = {}
     QntLocacao = 0
@@ -194,12 +220,13 @@ def consultar_avancado(request):
         for locacao in locacoes:
             QntLocacao += 1
             locacao_detalhes[QntLocacao] = locacao.__dict__
-            locacao_detalhes[QntLocacao]['cliente'] = Cliente.objects.get(id=locacao.cliente_id)
-            #Aqui a mesma coisa, pode ter mais de um Item, prepara o Dicionario.
+            locacao_detalhes[QntLocacao]['cliente'] = Cliente.objects.get(
+                id=locacao.cliente_id)
+            # Aqui a mesma coisa, pode ter mais de um Item, prepara o Dicionario.
             locacao_detalhes[QntLocacao]['item'] = {}
             count = 0
             items = locacao.item.all().values()
-            #Pega todas as informações dos Trajes.
+            # Pega todas as informações dos Trajes.
             for traje in items:
                 count += 1
                 traje["traje"] = Traje.objects.get(id=traje["traje_id"])
@@ -207,7 +234,7 @@ def consultar_avancado(request):
                     traje["medida"] = Ficha.objects.get(id=traje["medidas_id"])
                 else:
                     traje["medida"] = None
-                #Adiciona a informação do Traje no dicionario de retorno.
+                # Adiciona a informação do Traje no dicionario de retorno.
                 locacao_detalhes[QntLocacao]['item'][count] = traje
 
     consultas = {
@@ -231,7 +258,8 @@ def autocomplete_nome(request):
 def autocomplete_traje(request):
     if 'term' in request.GET:
         #                               Pega o "Tipo" que é qual atributo que ele vai buscar
-        query = Traje.objects.filter(**{request.GET.get('tipo') + "__contains": request.GET.get('term')})
+        query = Traje.objects.filter(
+            **{request.GET.get('tipo') + "__contains": request.GET.get('term')})
         results = list()
         for trajes in query:
             # Verifica se já não adicionou, não faz sentido aparecer varias vezes
@@ -241,7 +269,8 @@ def autocomplete_traje(request):
             else:
                 trajeDisponivel = is_traje_disponivel(trajes, False)
                 if trajeDisponivel != None:
-                    results.append("Codigo:" + trajeDisponivel.codigo + " Modelo: " + trajeDisponivel.modelo)
+                    results.append("Codigo:" + trajeDisponivel.codigo +
+                                   " Modelo: " + trajeDisponivel.modelo)
         return JsonResponse(results, safe=False)
 
 
@@ -280,12 +309,14 @@ def salvar_locacao(request):
 
     if infoCliente['isEstrangeiro'] == False:
         if validate_cpf(infoCliente['CPF']):
-            cliente = procura_ou_cria_cliente(infoCliente, "cpf", infoCliente['CPF'])
+            cliente = procura_ou_cria_cliente(
+                infoCliente, "cpf", infoCliente['CPF'])
         else:
             retorno["status"] = 401
             return JsonResponse(retorno, safe=False)
     else:
-        cliente = procura_ou_cria_cliente(infoCliente, "documento_externo", infoCliente['DocumentoExterno'])
+        cliente = procura_ou_cria_cliente(
+            infoCliente, "documento_externo", infoCliente['DocumentoExterno'])
 
     if criar_locacao(cliente, dataPrevisao, listaTrajes, valorTotal) == 200:
         retorno["id_cliente"] = cliente.id
@@ -302,7 +333,7 @@ def devolver_locacao(request):
     try:
         id_locacao = json.loads(request.GET.get('id_locacao'))
         locacao = Locacao.objects.get(id=id_locacao)
-        if locacao.status not in ('Devolvido','Cancelado'):
+        if locacao.status not in ('Devolvido', 'Cancelado'):
             locacao.status = 'Devolvido'
             locacao.data_devolucao = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             locacao.save()
@@ -312,11 +343,12 @@ def devolver_locacao(request):
     except:
         return JsonResponse("deu ruim", safe=False)
 
+
 def cancelar_locacao(request):
     try:
         id_locacao = json.loads(request.GET.get('id_locacao'))
         locacao = Locacao.objects.get(id=id_locacao)
-        if locacao.status not in ('Devolvido','Cancelado'):
+        if locacao.status not in ('Devolvido', 'Cancelado'):
             locacao.status = 'Cancelado'
             locacao.save()
             return JsonResponse("200", safe=False)
@@ -354,6 +386,7 @@ def consulta_ficha_medida(request):
     ficha = Ficha.objects.get(id=request.GET.get('id'))
     return JsonResponse(model_to_dict(ficha), safe=False)
 
+
 def relatorio(request):
     return render(request, 'relatorio.html')
 
@@ -372,7 +405,8 @@ def mais_menos_alocados(request):
 
     maximo = max(trajes, key=trajes.get)
     minimo = min(trajes, key=trajes.get)
-    trajes = {k: v for k, v in sorted(trajes.items(), key=lambda item: item[1], reverse=True)}
+    trajes = {k: v for k, v in sorted(
+        trajes.items(), key=lambda item: item[1], reverse=True)}
     relatorio = {
         'maximo': [maximo, trajes[maximo]],
         'minimo': [minimo, trajes[minimo]],
@@ -390,14 +424,14 @@ def busca_por_data(request):
     locacoes = Locacao.objects.filter(
         data_locacao__range=(inicial, final))
     locacoes_atrasadas = Locacao.objects.filter(status='Atraso', data_locacao__range=(
-    inicial, final))
+        inicial, final))
     locacoes_alocado = Locacao.objects.filter(status='Alocado', data_locacao__range=(
-    inicial, final))
+        inicial, final))
     locacoes_devolvido = Locacao.objects.filter(status='Devolvido', data_locacao__range=(
-    inicial, final))
+        inicial, final))
     locacoes_cancelado = Locacao.objects.filter(status='Cancelado', data_locacao__range=(
-    inicial, final))
-    
+        inicial, final))
+
     if locacoes:
         for x in locacoes:
             locacao.append(x)
@@ -413,7 +447,7 @@ def busca_por_data(request):
     if locacoes_devolvido:
         for x in locacoes_devolvido:
             loc_devolvido.append(x)
-    
+
     if locacoes_cancelado:
         for x in locacoes_cancelado:
             loc_cancelado.append(x)
@@ -424,9 +458,10 @@ def busca_por_data(request):
         'locacoes_alocado': len(loc_alocado),
         'locacoes_devolvido': len(loc_devolvido),
         'locacoes_cancelado': len(loc_cancelado),
-        
+
     }
     return render(request, 'resultado-datas.html', resultados)
+
 
 def busca_por_traje(request):
     trajes = []
@@ -444,10 +479,11 @@ def busca_por_traje(request):
         tipo = 'codigo'
     trajes = busca_traje(tipo, pesquisa, True)
     trajes += busca_traje(tipo, pesquisa, False)
-    resultados= {
-        'trajes' : trajes
+    resultados = {
+        'trajes': trajes
     }
     return render(request, 'busca-por-traje.html', resultados)
+
 
 def busca_financeiro(request):
     valores = 0
@@ -456,7 +492,7 @@ def busca_financeiro(request):
     if request.GET.get('data-final') != '':
         data_final = request.GET.get('data-final')
     lancamentos = Lancamento.objects.filter(data__range=(
-    data_inicial, data_final))
+        data_inicial, data_final))
     for lanc in lancamentos:
         valores += lanc.valor
     resultados = {
@@ -464,3 +500,6 @@ def busca_financeiro(request):
         'valores': valores
     }
     return JsonResponse(resultados, safe=False)
+
+def finaliza_ajustes(request):
+    pass

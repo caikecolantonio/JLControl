@@ -15,20 +15,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from controle.views import devolver, locar, consultar, cancelar, autocomplete_nome, autocomplete_traje, \
+from controle.views import costura, locar, consultar, cancelar, autocomplete_nome, autocomplete_traje, \
     retornaTrajeSelecionado, salvar_locacao, cria_ficha_medidas, devolver_locacao, cancelar_locacao, atualizar_ficha, consultar_cliente, \
-    consulta_ficha_medida, relatorio, mais_menos_alocados, busca_por_data, busca_por_traje,busca_financeiro, consultar_avancado
+    consulta_ficha_medida, relatorio, mais_menos_alocados, busca_por_data, busca_por_traje,busca_financeiro, consultar_avancado, finaliza_ajustes
 from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('devolver/', devolver),
     path('locar/', locar, name= 'locar'),
     path('cancelar/', cancelar),
     path('relatorio/', relatorio, name='relatorio'),
     path('', consultar),
     path('consultar/', consultar),
+    path('costura/', costura, name= 'costura'),
     path('consultar_avancado/', consultar_avancado),
     path('autocomplete-nome/', autocomplete_nome, name='autocomplete-nome'),
     path('autocomplete-traje/', autocomplete_traje, name='autocomplete-traje'),
@@ -43,5 +43,6 @@ urlpatterns = [
     path('mais-menos-alocados', mais_menos_alocados, name='mais-menos-alocados'),
     path('busca-por-data/', busca_por_data, name="busca-por-data"),
     path('busca-por-traje/', busca_por_traje, name="busca_por_traje"),
+    path('finaliza-ajustes/', finaliza_ajustes, name="finaliza_ajustes"),
     path('busca-financeiro/', busca_financeiro, name="busca-financeiro")
 ]+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
