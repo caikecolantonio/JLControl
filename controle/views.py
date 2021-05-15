@@ -176,7 +176,7 @@ def consultar(request):
 
 def costura(request):
     retorno_items = {}
-    items = Item.objects.filter(data_entrega__isnull=True)
+    items = Item.objects.filter(status='Aguardando')
     count = 0
     for umitem in items:
         traje = Traje.objects.get(id=umitem.traje_id)
@@ -502,4 +502,15 @@ def busca_financeiro(request):
     return JsonResponse(resultados, safe=False)
 
 def finaliza_ajustes(request):
-    pass
+    #try:
+    id_item = request.GET.get('id')
+    item = Item.objects.get(id=id_item)
+    if item.status not in ('Pronto'):
+        item.status = 'Pronto'
+        item.data_entrega = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        item.save()
+        return JsonResponse("200", safe=False)
+    else:
+        return JsonResponse("400", safe=False)
+    #except:
+    #    return JsonResponse("deu ruim", safe=False)
