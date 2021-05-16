@@ -24,9 +24,9 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('locar/', locar, name= 'locar'),
+    path('', locar, name= 'locar'),
     path('cancelar/', cancelar),
     path('relatorio/', relatorio, name='relatorio'),
-    path('', consultar),
     path('consultar/', consultar),
     path('costura/', costura, name= 'costura'),
     path('consultar_avancado/', consultar_avancado),
