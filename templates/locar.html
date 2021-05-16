@@ -189,13 +189,13 @@ atoastAlertaGenerico("Busca por Nome","Mais de um cliente encontrado, busque por
 
 <!-- Form Pesquisa traje -->
 <form id="FormTrajePequisa">
-    <div class="row" style="margin: 0">
-        <div class="col-sm-1" style="margin-left:4.2%">
+    <div class="form-row" style="margin-left: 5%; margin-right: 5%">
+        <div class="col-sm-1">
             <label for="FormCodigoTraje">Codigo</label>
             <input type="text" class="form-control AutoCompleteTrajePesquisaCodigo" id="FormCodigoTraje"
                 name="CodigoTraje">
         </div>
-        <div class="col-8">
+        <div class="col-9">
             <label for="FormModeloBusca">Modelo</label>
             <input type="text" class="form-control AutoCompleteTrajePesquisaModelo" id="FormModeloBusca"
                 name="ModeloTraje">
@@ -203,10 +203,10 @@ atoastAlertaGenerico("Busca por Nome","Mais de um cliente encontrado, busque por
 
         <div class="col" style="top: 35px">
             <input style="display: none">
-            <button type="button" class="btn btn-dark PassaMouseTrocaCor" style="width: 70px;"
+            <button type="button" class="btn btn-dark PassaMouseTrocaCor" style="width: 70px; margin: 1%;"
                 onclick="AdicionaTraje()"> Adicionar </button>
             <input style="display: none">
-            <button type="button" class="btn btn-dark PassaMouseTrocaCor" style="width: 70px;" onclick="RemoverTraje()">
+            <button type="button" class="btn btn-dark PassaMouseTrocaCor" style="width: 70px; margin: 1%;" onclick="RemoverTraje()">
                 Remover</button>
         </div>
     </div>
@@ -263,53 +263,41 @@ atoastAlertaGenerico("Busca por Nome","Mais de um cliente encontrado, busque por
 {% endif %}
 
 
-<div class="container">
-    <div class="row justify-content-center">
-        <p></p>
-        <div class="col-sm-2" style="margin-top: 0.8%">
-            <label id="labeldPrevDevolucao" for="dPrevDevolucao" class="">Previsão de Devolução</label>
-        </div>
-        <div class="col-sm-3">
-            <input type="datetime-local" id="dPrevDevolucao" class="form-control" name="dPrevDevolucao">
-        </div>
-        <p></p>
-
-    </div>
-</div>
 <!-- Cria table dos trajes -->
-<table class="table">
+<div class="table-responsive-sm tabelaTrajes" style="margin-left: 5%; margin-right: 5%;">
+<table class="table" id = "tabelaTrajes" style="display: none;">
     <thead class="thead-dark">
         <tr>
-            <th scope="col-2" style="padding-left: 50px;">Codigo</th>
-            <th scope="col">Nome</th>
-            <th scope="col">Modelo</th>
-            <th scope="col">Corte</th>
-            <th scope="col">Valor</th>
-            <th scope="col">Precisa ajuste?</th>
-            <th></th>
-            <th></th>
+            <th scope="col" style="width: 7%">Codigo</th>
+            <th scope="col" style="width: 15%">Nome</th>
+            <th scope="col" style="width: 20%"> Modelo</th>
+            <th scope="col" style="width: 15%">Corte</th>
+            <th scope="col" style="width: 7%">Valor</th>
+            <th scope="col" style="width: 8%">Precisa ajuste?</th>
+            <th scope="col" style="width: 28%"></th>
         </tr>
     </thead>
-    <tbody class="listaTrajes" style="width:100%">
+    <tbody class="listaTrajes">
 
-    </tbody>
-    <tbody class="">
         <tr class="thead-light">
-            <th id="trValor"></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
+            <th id="trValor" colspan="7"></th>
         </tr>
     </tbody>
+
 </table>
-<div class="container" style="align-items: center; text-align: center;position: center">
-    <p></p>
-    <button type="button" class="btn btn-dark btn-block" style="margin-right: 3%;" onclick="Locar()">Locar</button>
-    <p></p>
+</div>
+<div style="margin-left: 5%; margin-right: 5%;">
+<div class="row">
+    <div class="col-sm-2 celular">
+        <label id="labeldPrevDevolucao" for="dPrevDevolucao" class="">Previsão de Devolução</label>
+        <input type="datetime-local" id="dPrevDevolucao" class="form-control" name="dPrevDevolucao">
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-2 celular">
+        <button type="button" class="btn btn-dark btn-block PassaMouseTrocaCor" onclick="Locar()">Locar</button>
+    </div>
+</div>
 </div>
 
 <!-- Inicio Script com jinja2 -->
@@ -344,16 +332,16 @@ atoastAlertaGenerico("Busca por Nome","Mais de um cliente encontrado, busque por
 
                         var html_corpo =
                             '<tr onclick="seleciona(this.id)" id=' + resposta.codigo + '>' +
-                            '<td style="padding-left: 50px;">' + resposta.codigo + '</td>' +
+                            '<td>' + resposta.codigo + '</td>' +
                             '<td>' + resposta.nome + '</td>' +
                             '<td>' + resposta.modelo + '</td>' +
                             '<td>' + resposta.corte + '</td>' +
                             '<td>' + resposta.valor + '</td>' +
-                            '<td style="padding-top: 8px;padding-bottom: 0px;border-top-width: 0px;border-bottom-width: 1px;">' +
-                            '<input type="checkbox" style="width: 109.41px;" class="btn-check" id="btn-check-2-outlined' + resposta.codigo + '" autocomplete="off" onclick="precisa_ajuste(' + "'" + resposta.codigo + "'" + ')">' +
-                            '<label class="btn btn-outline-secondary botaoPrecisa" style="width: 109.41px;" for="btn-check-2-outlined' + resposta.codigo + '" id="precisaAjuste' + resposta.codigo + '" >Não precisa</label>' +
-                            '<button id="botaoMedida-' + resposta.codigo + '" class="botaoMedida btn btn-info" style="text-align:center" onclick="abreModalFicha(' + "'" + resposta.codigo + "'" + ')">Medidas</button>' +
+                            '<td>' +
+                            '<input type="checkbox" class="btn-check" id="btn-check-2-outlined' + resposta.codigo + '" autocomplete="off" onclick="precisa_ajuste(' + "'" + resposta.codigo + "'" + ')">' +
+                            '<label class="btn btn-outline-secondary botaoPrecisa" for="btn-check-2-outlined' + resposta.codigo + '" id="precisaAjuste' + resposta.codigo + '" >Não precisa</label>' +
                             '</td>' +
+                            '<td>'+'<button id="botaoMedida-' + resposta.codigo + '" class="botaoMedida btn btn-info" style="text-align:center; visibility: hidden;" onclick="abreModalFicha(' + "'" + resposta.codigo + "'" + ')">Medidas</button>' + '</td>'+
                             //'<td> <input class="form-check-input" type="radio" > </td>' +
                             '</tr>' + $(".listaTrajes").html()
                         $(".listaTrajes").html(html_corpo)

@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+{% if cliente == '#ERRO003' %}
+<script>
+atoastAlertaGenerico("Busca por Telefone","Mais de um cliente encontrado, busque por CPF.")
+</script>
+{% endif %}
+
+{% if cliente == '#ERRO004' %}
+<script>
+atoastAlertaGenerico("Busca por Nome","Mais de um cliente encontrado, busque por CPF.")
+</script>
+{% endif %}
+
+<link rel="stylesheet" href="{%  static  'css/costura.css'  %}">
+<script type="text/javascript" src="{% static 'js/costura.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/mascara.js' %}"></script>
+
+{% if items is not None and items %}
+<table class="table table-hover">
+  <thead class="thead-dark">
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Status</th>
+        <th scope="col">Codigo</th>
+        <th scope="col">Modelo</th>
+        <th scope="col">Cliente</th>
+        <th scope="col">Ações</th>
+    </tr>
+  </thead>
+<tbody>
+{% for key, item in items.items %}
+
+    <tr>
+    <th scope="row">{{ forloop.counter }}</th>
+    <td>{{ item.status }}</td>
+    <td>{{ item.traje.codigo }}</td>
+    <td>{{ item.traje.modelo }}</td>
+    <td>{{ item.cliente.nome }}</td>    
+
+    {% if item.medidas is not None %}
+    <td style="width: 20%"> <button type="button" class="btn btn-info" style="align-items: center;"
+        data-toggle="modal" data-target="#ModalMedidasConsultar"
+        onclick="abrirModalConsultar('{{ item.medidas }}')">Abrir ficha de medidas</button>
+        <button type="button" class="btn btn-info" style="align-items: center;"
+        onclick="finalizaAjustes('{{ item.id }}', '{% url 'finaliza_ajustes' %}')">Finalizar ajustes</button>
+    </td>
+    {% else %}
+    <td style=width:20%></td>
+    
+  {% endif %}
+    </tr>
+
+{% endfor %}
+<tr class= "thead-light">
+  <th>Total:</th>
+  <th>{{ items|length }} </th>
+  <th></th>
+  <th></th>
+  <th></th>
+  <th></th>
+</tr>
+</tbody>
+</table>
+{% else %}
+<script>
+  atoastAlertaGenerico("Trajes na costura", "Não existe nenhum traje para realizar costura.")
+</script>
+{% endif %}
+
+<script>
+    var id_ficha = 0
+    function abrirModalConsultar(id_medida) {
+      id_ficha = id_medida
+  
+      const url = '{% url 'consulta_ficha_medida' %}?id=' + id_medida
+  
+      fetch(url).then(response => {
+        return response.json();
+      }).then(resposta => {
+        document.getElementById("formMedidaPaletoConsultar").value = resposta.paleto_barra
+        document.getElementById("formMedidaCalcaConsultar").value = resposta.calca_barra
+        document.getElementById("formMedidaToraxConsultar").value = resposta.torax
+        document.getElementById("formMedidaCostasConsultar").value = resposta.costas
+      });
+  
+  
+    }
+  </script>
+  <script>
+    function AtualizaFicha() {
+      infoFicha = {}
+  
+      infoFicha["id"] = id_ficha
+  
+      infoFicha["paleto_barra"] = document.getElementById("formMedidaPaletoConsultar").value
+      infoFicha["calca_barra"] = document.getElementById("formMedidaCalcaConsultar").value
+      infoFicha["torax"] = document.getElementById("formMedidaToraxConsultar").value
+      infoFicha["costas"] = document.getElementById("formMedidaCostasConsultar").value
+  
+      const url = '{% url 'atualizar_ficha' %}?infoFicha=' + JSON.stringify(infoFicha)
+  
+      fetch(url).then(response => {
+        return response.json();
+      }).then(resposta => {
+        if (resposta == "200") {
+          document.getElementById("fechaModalMedidas").click()
+          document.getElementById("testeSucess").style.display = "inline"
+        }
+        else {
+          atoastAlertaGenerico("Atualiza ficha", "Aconteceu algum erro ao atualizar a ficha")
+        }
+      });
+      setTimeout(function () {
+        //const url2 = '{% url 'consultar_cliente' %}?id='+'{{ cliente.id }}'
+        //window.location.replace(url2);
+        document.getElementById("testeSucess").style.display = "none"
+      }, 1500);
+    }
+  </script>
+  
+  <!-- Modal Medidas -->
+  <div class="modal fade" id="ModalMedidasConsultar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Consulte a ficha de medidas:</h5>
+          <button id="fechaModal" type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form name="formMedidas" action="" method="post">
+            {% csrf_token %}
+            <div class="form-group row">
+              <label for="formMedidaPaletoConsultar" class="col-sm-3 col-form-label">Barra paleto </label>
+              <div class="col-sm-9">
+                <input id="formMedidaPaletoConsultar" class="form-control" type="number" name="paleto_barra" min="0"
+                  step=".01" placeholder="Barra paleto">
+              </div>
+            </div>
+  
+            <div class="form-group row">
+              <label for="formMedidaCalcaConsultar" class="col-sm-3 col-form-label">Barra Calça </label>
+              <div class="col-sm-9">
+                <input id="formMedidaCalcaConsultar" class="form-control" type="number" name="calca_barra" min="0"
+                  step=".01" placeholder="Barra Calca">
+              </div>
+            </div>
+  
+            <div class="form-group row">
+              <label for="formMedidaToraxConsultar" class="col-sm-3 col-form-label">Torax</label>
+              <div class="col-sm-9">
+                <input id="formMedidaToraxConsultar" class="form-control" type="number" name="torax" min="0" step=".01"
+                  placeholder="Torax">
+              </div>
+            </div>
+  
+            <div class="form-group row">
+              <label for="formMedidaCostasConsultar" class="col-sm-3 col-form-label">Costas </label>
+              <div class="col-sm-9">
+                <input id="formMedidaCostasConsultar" class="form-control" type="number" name="costas" min="0" step=".01"
+                  placeholder="Costas">
+              </div>
+            </div>
+            <button type="button" class="btn btn-info btn-lg btn-block" data-dismiss="modal"
+              onclick="AtualizaFicha()">Atualizar Ficha</button>
+            <button type="button" id="fechaModalMedidas" class="btn btn-secondary btn-lg btn-block"
+              data-dismiss="modal">Fechar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+{% endblock %}

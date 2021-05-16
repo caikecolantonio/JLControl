@@ -66,25 +66,30 @@ function precisa_ajuste(trajeID) {
 function animaBotaoMedida(id)
 {
     var el = document.getElementById(id);
-    if (el.classList.contains("animado")){
-        el.classList.remove("animado")
+    
+    if (el.style.visibility == "visible"){
+        el.style.visibility = "hidden"
     }
     else
     {
-        el.classList.add("animado")
+        el.style.visibility = "visible"
     }
+
 }
 
 //Script pra atualizar o valor de todos os trajes da table
 var totalLista = 0
 
 function AtualizaValor() {
+    if (listaTrajes.length > 0){
+        document.getElementById("tabelaTrajes").style.display = "table"
+    }
     totalLista = 0
     //Atualiza valor
     for (var traje in listaTrajes) {
         totalLista = totalLista + parseInt(listaTrajes[traje]["valor"])
     }
-    document.getElementById("trValor").innerHTML = "Valor Total: R$" + totalLista
+    document.getElementById("trValor").innerHTML = "Total: R$" + totalLista
     //fim Atualiza valor}
 }
 setInterval(AtualizaValor, 300);

@@ -29,29 +29,6 @@
 
   }
 
-  .botaoMedida {
-    position: absolute;
-    height: 38px;
-    width:38px;
-    opacity: 0;
-    transition: all 0.2s;
-    margin-left: -3%;
-    color: #fff;
-    background-color: #6c757d;
-    border-color: #6c757d;
-    visibility: hidden;
-  }
-  .botaoMedida.animado {
-    height: 38px;
-    width:80px;
-    opacity: 100;
-    margin-left: 1.2%;
-    color: #fff;
-    visibility: visible;
-    background-color: #138496;
-    border-color: #117a8b;
-}
-
   @media screen and (min-width: 768px) {
     .modalx:before {
       display: inline-block;

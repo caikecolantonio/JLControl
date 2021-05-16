@@ -88,16 +88,22 @@ atoastAlertaGenerico("Busca por Nome","Erro mais de um cliente encontrado")
             <td>{% if item.data_entrega is not None %} {{ item.data_entrega }} {% endif %}</td>
 
             {% if item.medida.id is not None %}
-            <td style="width: 20%"> <button type="button" class="btn btn-info" style="align-items: center;"
+            <td style="width: 20%; background-color: white;"> 
+              <button type="button" class="btn btn-info" style="align-items: center; margin: .5%; width: 100%;"
                 data-toggle="modal" data-target="#ModalMedidasConsultar"
                 onclick="abrirModalConsultar('{{ item.medida.id }}')">Abrir ficha de medidas</button>
+                {% else %}
+                <td style=width:20%></td>
+                </tr>
+    
+              </table>
+              {% endif %}
+              {% if item.status != "Pronto" %}
+              <button type="button" class="btn btn-info" style="align-items: center;  margin: .5%; width: 100%;"
+                onclick="finalizaAjustes('{{ item.id }}')">Finalizar ajustes</button>
+              {% endif%}
             </td>
-            {% else %}
-            <td style=width:20%></td>
-            </tr>
 
-          </table>
-          {% endif %}
 
           </table>
           {% if forloop.counter != locacao.item.items|length %}
@@ -192,30 +198,54 @@ atoastAlertaGenerico("Busca por Nome","Erro mais de um cliente encontrado")
         setTimeout(function () {
           {% for key, locacao in locacoes.items %}
           dados.push({{ locacao.id }})
-        console.log("adicionou", {{ locacao.id }})
-    {% endfor %}
-    document.body.innerHTML +=
-      '<form id="dynForm" action="/consultar_avancado/" method="post">' +
-      '{% csrf_token %}' +
-      '<input type="hidden" name="dados" value=' + dados + '>' +
-      '</form>';
-    document.getElementById("dynForm").submit();
-
-    //const url2 = '{% url 'consultar_cliente' %}?id='+cliente_id
-    //window.location.replace(url2);
-  }, 1500);
+          console.log("adicionou", {{ locacao.id }})
+          {% endfor %}
+          document.body.innerHTML +=
+            '<form id="dynForm" action="/consultar_avancado/" method="post">' +
+            '{% csrf_token %}' +
+            '<input type="hidden" name="dados" value=' + dados + '>' +
+            '</form>';
+          document.getElementById("dynForm").submit();}, 1500);
+        } else if (resposta == "400") {
+            atoastAlertaGenerico("Devolver locação", "Locação já devolvida ou cancelada.")
         }
-        else if (resposta == "400") {
-    atoastAlertaGenerico("Devolver traje", "Locação já devolvida ou cancelada.")
-  }
-  else {
-    atoastAlertaGenerico("Devolver traje", "Aconteceu algum erro de devolver a locação.")
-  }    
-      });
-
+        else {
+            atoastAlertaGenerico("Devolver locação", "Aconteceu algum erro de devolver a locação.")
+        }});
   }
 </script>
+<script>
+  function finalizaAjustes(id){
+    
+    const url =  '{% url 'finaliza_ajustes' %}?id=' + id
+    let dados = []
 
+    fetch(url).then(response => {
+        return response.json();
+    }).then(resposta => {
+        if (resposta == "200") {
+        
+        document.getElementById("testeSucess").style.display = "inline"
+        setTimeout(function () {
+          {% for key, locacao in locacoes.items %}
+          dados.push({{ locacao.id }})
+          console.log("adicionou", {{ locacao.id }})
+          {% endfor %}
+          document.body.innerHTML +=
+            '<form id="dynForm" action="/consultar_avancado/" method="post">' +
+            '{% csrf_token %}' +
+            '<input type="hidden" name="dados" value=' + dados + '>' +
+            '</form>';
+          document.getElementById("dynForm").submit();}, 1500);
+        }
+        else if (resposta == "400"){
+            atoastAlertaGenerico("Erro ao finalizar ajustes", "Traje com o ajuste já finalizado")
+        }else {
+        atoastAlertaGenerico("Finaliza ajustes", "Aconteceu algum erro ao finalizar o ajustes")
+        }
+    });
+}
+</script>
 <script>
   var id_ficha = 0
   function abrirModalConsultar(id_medida) {
