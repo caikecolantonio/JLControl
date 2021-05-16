@@ -5,6 +5,7 @@ from controle.funcoes import is_traje_disponivel, busca_locacao_por_cliente, bus
     criar_locacao, procura_ou_cria_cliente, remover_caracteres
 from django.http import JsonResponse
 from django.forms.models import model_to_dict
+from django.db.models.functions import Upper
 from datetime import datetime
 import json
 
@@ -250,7 +251,7 @@ def consultar_avancado(request):
 
 def autocomplete_nome(request):
     if 'term' in request.GET:
-        query = Cliente.objects.filter(nome__contains=request.GET.get('term'))
+        query = Cliente.objects.filter(nome__icontains=request.GET.get('term'))
         results = list()
         for clientes in query:
             results.append(clientes.nome)
@@ -261,7 +262,7 @@ def autocomplete_traje(request):
     if 'term' in request.GET:
         #                               Pega o "Tipo" que é qual atributo que ele vai buscar
         query = Traje.objects.filter(
-            **{request.GET.get('tipo') + "__contains": request.GET.get('term')})
+            **{request.GET.get('tipo') + "__icontains": request.GET.get('term')})
         results = list()
         for trajes in query:
             # Verifica se já não adicionou, não faz sentido aparecer varias vezes
