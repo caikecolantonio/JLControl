@@ -10,4 +10,17 @@
     color: #17a2b8;    
 } 
 
+@media only screen and (max-width: 1063px) {
+    .tabelaTrajes{
+        margin-top: 5%;
+    }
+
+}
+@media only screen and (max-width: 599px) {
+    .tabelaTrajes{
+        margin-top: 8%;
+    }
+
+}
+
 
