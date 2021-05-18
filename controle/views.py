@@ -564,12 +564,11 @@ def trajes(request):
 
 
 @csrf_exempt
-def login(request):
-    try:
-        dados = json.loads(request.body.decode('utf-8'))
-        if dados["login"] == "aluno" and dados["senha"] == "impacta":
-            return JsonResponse("1", safe=False)
-        else:
-            return JsonResponse("2", safe=False)
-    except:
-        return JsonResponse("2", safe=False)
+def login_mobile(request):
+    dados = request.body.decode('utf-8')
+    login = dados[6:dados.find("&")]
+    senha = dados[dados.find("&")+7:len(dados)]
+    if  login == "aluno" and senha == "impacta":
+        return JsonResponse(1, safe=False)
+    else:
+        return JsonResponse(2, safe=False)
