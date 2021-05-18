@@ -6,7 +6,7 @@ from controle.funcoes import is_traje_disponivel, busca_locacao_por_cliente, bus
     criar_locacao, procura_ou_cria_cliente, remover_caracteres
 from django.http import JsonResponse
 from django.forms.models import model_to_dict
-from django.db.models.functions import Upper
+from django.core import serializers
 from datetime import datetime
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -529,7 +529,10 @@ def trajes(request):
         trajes = Traje.objects.all()
         count = 0
         for traje in trajes:
-            retorno.append(str(model_to_dict(traje)))
+            data = serializers.serialize('json', [traje,])
+            struct = json.loads(data)
+            data = json.dumps(struct[0]["fields"])
+            retorno.append(data)
         return HttpResponse(json.dumps(retorno), content_type="application/json")
 
     elif request.method == 'POST':
