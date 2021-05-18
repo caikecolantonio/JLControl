@@ -1,3 +1,4 @@
+import re
 from django.shortcuts import render
 from controle.models import Locacao, Cliente, Traje, Ficha, Lancamento, Item
 from controle.forms import ConsultarCliente, ConsultarTraje, FormFicha
@@ -7,6 +8,7 @@ from django.http import JsonResponse
 from django.forms.models import model_to_dict
 from django.db.models.functions import Upper
 from datetime import datetime
+from django.views.decorators.csrf import csrf_exempt
 import json
 
 
@@ -517,3 +519,48 @@ def finaliza_ajustes(request):
         return JsonResponse("400", safe=False)
     #except:
     #    return JsonResponse("deu ruim", safe=False)
+
+#para o app de mobile
+@csrf_exempt
+def trajes(request):
+    retorno = {}
+    if request.method == 'GET':
+        trajes = Traje.objects.all()
+        count = 0
+        for traje in trajes:
+            retorno[count] = model_to_dict(traje)
+            count += 1        
+        return JsonResponse(retorno, safe=False)
+
+    elif request.method == 'POST':
+        try:
+            veio = json.loads(request.body.decode('utf-8'))
+            traje = Traje(**veio)
+            traje.save()        
+            trajesalvo = Traje.objects.get(**veio)
+            return JsonResponse("200", safe=False)
+        except:
+            return JsonResponse("400", safe=False)
+    elif request.method == 'DELETE':
+        try:
+            traje = Traje.objects.get(id=request.body.decode('utf-8'))
+            traje.delete()
+            return JsonResponse("200", safe=False)
+        except:
+            return JsonResponse("400", safe=False)
+@csrf_exempt
+def login(request):
+    try:
+        dados = json.loads(request.body.decode('utf-8'))
+        if dados["login"] == "aluno" and dados["senha"] == "impacta":
+            return JsonResponse("1", safe=False)
+        else:
+            return JsonResponse("2", safe=False)
+    except:
+        return JsonResponse("2", safe=False)
+
+
+
+        
+        
+
