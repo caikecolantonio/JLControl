@@ -29,7 +29,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['jlima-control.herokuapp.com']
 
 if DEBUG:
-    ALLOWED_HOSTS.append('127.0.0.1')
+    ALLOWED_HOSTS.append('*')
 
 
 # Application definition

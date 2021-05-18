@@ -548,19 +548,21 @@ def trajes(request):
     elif request.method == 'POST':
         try:
             veio = json.loads(request.body.decode('utf-8'))
+            veio.pop("id", None)
+            veio.pop("foto", None)
             traje = Traje(**veio)
             traje.save()
             trajesalvo = Traje.objects.get(**veio)
-            return JsonResponse("200", safe=False)
+            return HttpResponse(json.dumps({"status": 200}), content_type="application/json")
         except:
-            return JsonResponse("400", safe=False)
+            return HttpResponse(json.dumps({"status": 400}), content_type="application/json")
     elif request.method == 'DELETE':
         try:
-            traje = Traje.objects.get(id=request.body.decode('utf-8'))
+            traje = Traje.objects.get(codigo=request.body.decode('utf-8'))
             traje.delete()
-            return JsonResponse("200", safe=False)
+            return HttpResponse(json.dumps({"status": 200}), content_type="application/json")
         except:
-            return JsonResponse("400", safe=False)
+            return HttpResponse(json.dumps({"status": 400}), content_type="application/json")
 
 
 @csrf_exempt
