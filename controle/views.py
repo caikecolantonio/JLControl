@@ -531,8 +531,7 @@ def trajes(request):
         for traje in trajes:
             data = serializers.serialize('json', [traje,])
             struct = json.loads(data)
-            data = json.dumps(struct[0]["fields"])
-            retorno.append(data)
+            retorno.append(struct[0]["fields"])
         return HttpResponse(json.dumps(retorno), content_type="application/json")
 
     elif request.method == 'POST':
