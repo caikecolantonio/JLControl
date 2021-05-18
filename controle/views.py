@@ -10,6 +10,7 @@ from django.core import serializers
 from datetime import datetime
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from random import randrange
 import json
 
 
@@ -507,8 +508,9 @@ def busca_financeiro(request):
     }
     return JsonResponse(resultados, safe=False)
 
+
 def finaliza_ajustes(request):
-    #try:
+    # try:
     id_item = request.GET.get('id')
     item = Item.objects.get(id=id_item)
     if item.status not in ('Pronto'):
@@ -518,19 +520,25 @@ def finaliza_ajustes(request):
         return JsonResponse("200", safe=False)
     else:
         return JsonResponse("400", safe=False)
-    #except:
+    # except:
     #    return JsonResponse("deu ruim", safe=False)
 
-#para o app de mobile
+# para o app de mobile
+
+
 @csrf_exempt
 def trajes(request):
     retorno = []
+    lista_img = ("https://grottoferreira.com.br/wp-content/uploads/2020/07/terno-GF333500481-f3.jpg",
+                 "https://img.elo7.com.br/product/zoom/2DD2C8F/terno-slim-preto-oxford-original-lavancco-loja-da-fabrica-casual-esporte-fino.jpg",
+                 "https://i0.wp.com/www.canalmasculino.com.br/wp-content/uploads/2018/04/destaque-video-comprar-primeiro-terno.jpg?resize=570%2C568",
+                 "https://carmimmodas.vteximg.com.br/arquivos/ids/161135-1000-1500/terno.jpg?v=636886886410570000")
     if request.method == 'GET':
         trajes = Traje.objects.all()
-        count = 0
         for traje in trajes:
-            data = serializers.serialize('json', [traje,])
+            data = serializers.serialize('json', [traje, ])
             struct = json.loads(data)
+            struct[0]["fields"]["foto"] = lista_img[randrange(0,4)]
             retorno.append(struct[0]["fields"])
         return HttpResponse(json.dumps(retorno), content_type="application/json")
 
@@ -538,7 +546,7 @@ def trajes(request):
         try:
             veio = json.loads(request.body.decode('utf-8'))
             traje = Traje(**veio)
-            traje.save()        
+            traje.save()
             trajesalvo = Traje.objects.get(**veio)
             return JsonResponse("200", safe=False)
         except:
@@ -550,6 +558,8 @@ def trajes(request):
             return JsonResponse("200", safe=False)
         except:
             return JsonResponse("400", safe=False)
+
+
 @csrf_exempt
 def login(request):
     try:
@@ -560,9 +570,3 @@ def login(request):
             return JsonResponse("2", safe=False)
     except:
         return JsonResponse("2", safe=False)
-
-
-
-        
-        
-
