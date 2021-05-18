@@ -8,6 +8,7 @@ from django.http import JsonResponse
 from django.forms.models import model_to_dict
 from django.db.models.functions import Upper
 from datetime import datetime
+from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 
@@ -523,14 +524,13 @@ def finaliza_ajustes(request):
 #para o app de mobile
 @csrf_exempt
 def trajes(request):
-    retorno = {}
+    retorno = []
     if request.method == 'GET':
         trajes = Traje.objects.all()
         count = 0
         for traje in trajes:
-            retorno[count] = model_to_dict(traje)
-            count += 1        
-        return JsonResponse(retorno, safe=False)
+            retorno.append(str(model_to_dict(traje)))
+        return HttpResponse(json.dumps(retorno), content_type="application/json")
 
     elif request.method == 'POST':
         try:
