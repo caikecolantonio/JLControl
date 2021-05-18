@@ -532,13 +532,16 @@ def trajes(request):
     lista_img = ("https://grottoferreira.com.br/wp-content/uploads/2020/07/terno-GF333500481-f3.jpg",
                  "https://img.elo7.com.br/product/zoom/2DD2C8F/terno-slim-preto-oxford-original-lavancco-loja-da-fabrica-casual-esporte-fino.jpg",
                  "https://i0.wp.com/www.canalmasculino.com.br/wp-content/uploads/2018/04/destaque-video-comprar-primeiro-terno.jpg?resize=570%2C568",
-                 "https://carmimmodas.vteximg.com.br/arquivos/ids/161135-1000-1500/terno.jpg?v=636886886410570000")
+                 "https://carmimmodas.vteximg.com.br/arquivos/ids/161135-1000-1500/terno.jpg?v=636886886410570000",
+                 "https://images-na.ssl-images-amazon.com/images/I/41UlrOllEzL._AC_.jpg",
+                 "https://a-static.mlcdn.com.br/618x463/terno-gabardine-slim-glace-ternos-tarento/ternostarento/8009750221/b01e4ae62472886cbcd30996a24f7e28.jpg")
+    
     if request.method == 'GET':
         trajes = Traje.objects.all()
         for traje in trajes:
             data = serializers.serialize('json', [traje, ])
             struct = json.loads(data)
-            struct[0]["fields"]["foto"] = lista_img[randrange(0,4)]
+            struct[0]["fields"]["foto"] = lista_img[randrange(0,len(lista_img)-1)]
             retorno.append(struct[0]["fields"])
         return HttpResponse(json.dumps(retorno), content_type="application/json")
 
