@@ -15,7 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from controle.views import costura, locar, consultar, cancelar, autocomplete_nome, autocomplete_traje, login_mobile, \
+from django.urls.conf import include
+from controle.views import costura, locar, consultar, autocomplete_nome, autocomplete_traje, login_mobile, \
     retornaTrajeSelecionado, salvar_locacao, cria_ficha_medidas, devolver_locacao, cancelar_locacao, atualizar_ficha, consultar_cliente, \
     consulta_ficha_medida, relatorio, mais_menos_alocados, busca_por_data, busca_por_traje,busca_financeiro, consultar_avancado, finaliza_ajustes, \
     trajes
@@ -26,7 +27,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('locar/', locar, name= 'locar'),
     path('', locar, name= 'locar'),
-    path('cancelar/', cancelar),
     path('relatorio/', relatorio, name='relatorio'),
     path('consultar/', consultar),
     path('costura/', costura, name= 'costura'),
@@ -47,5 +47,6 @@ urlpatterns = [
     path('finaliza-ajustes/', finaliza_ajustes, name="finaliza_ajustes"),
     path('busca-financeiro/', busca_financeiro, name="busca-financeiro"),
     path('trajes/', trajes, name="trajes"),
-    path('login-mobile/', login_mobile, name="login_mobile")
+    path('login-mobile/', login_mobile, name="login_mobile"),
+    path('accounts/', include('django.contrib.auth.urls'))
 ]+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

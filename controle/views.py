@@ -12,10 +12,11 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from random import randrange
 import json
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
-
+@login_required
 def locar(request):
     cliente = None
     if request.method == 'POST':
@@ -47,11 +48,7 @@ def locar(request):
     }
     return render(request, 'locar.html', consultas)
 
-
-def cancelar(request):
-    pass
-
-
+@login_required
 def consultar(request):
     ConsultarClienteForm = ConsultarCliente(request.POST)
     cliente = None
@@ -178,7 +175,7 @@ def consultar(request):
 
     return render(request, 'consultar.html', consultas)
 
-
+@login_required
 def costura(request):
     retorno_items = {}
     items = Item.objects.filter(status='Aguardando')
@@ -203,7 +200,7 @@ def costura(request):
     }
     return render(request, 'costura.html', consultas)
 
-
+@login_required
 def consultar_avancado(request):
 
     if 'dados' in request.POST:
@@ -378,7 +375,7 @@ def atualizar_ficha(request):
     except:
         return JsonResponse("deu ruim", safe=False)
 
-
+@login_required
 def consultar_cliente(request):
     cliente = Cliente.objects.get(id=request.GET.get('id'))
     locacao_detalhes = busca_locacao_por_cliente(cliente)
@@ -393,11 +390,11 @@ def consulta_ficha_medida(request):
     ficha = Ficha.objects.get(id=request.GET.get('id'))
     return JsonResponse(model_to_dict(ficha), safe=False)
 
-
+@login_required
 def relatorio(request):
     return render(request, 'relatorio.html')
 
-
+@login_required
 def mais_menos_alocados(request):
     locacoes = Locacao.objects.all()
     trajes = {}
@@ -422,7 +419,7 @@ def mais_menos_alocados(request):
 
     return render(request, 'resultado-max-min.html', relatorio)
 
-
+@login_required
 def busca_por_data(request):
     locacao, loc_atrasada, loc_alocado, loc_devolvido, loc_cancelado = [], [], [], [], []
 
@@ -469,7 +466,7 @@ def busca_por_data(request):
     }
     return render(request, 'resultado-datas.html', resultados)
 
-
+@login_required
 def busca_por_traje(request):
     trajes = []
     if request.POST['nome'] != '':
