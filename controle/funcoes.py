@@ -143,7 +143,7 @@ def procura_ou_cria_cliente(info, tipo, pesquisa):
 
 def criar_cliente(info):
     if info['isEstrangeiro'] == True:
-        cliente = Cliente(nome=info["Nome"], email=info["Email"], endereco=info["Endereco"], telefone=info["Telefone"], documento_externo=info["DocumentoExterno"])
+        cliente = Cliente(nome=info["Nome"].strip(), email=info["Email"], endereco=info["Endereco"], telefone=info["Telefone"], documento_externo=info["DocumentoExterno"])
     else:
         cliente = Cliente(nome=info["Nome"], email=info["Email"], endereco=info["Endereco"], telefone=info["Telefone"], rg=info["RG"], cpf=info["CPF"])
     cliente.save()
