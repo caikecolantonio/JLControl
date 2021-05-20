@@ -1,5 +1,5 @@
 import re
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from controle.models import Locacao, Cliente, Traje, Ficha, Lancamento, Item
 from controle.forms import ConsultarCliente, ConsultarTraje, FormFicha
 from controle.funcoes import is_traje_disponivel, busca_locacao_por_cliente, busca_traje, validate_cpf, criar_cliente, \
@@ -13,6 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 from random import randrange
 import json
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 
 
 # Create your views here.
@@ -507,7 +508,6 @@ def busca_financeiro(request):
 
 
 def finaliza_ajustes(request):
-    # try:
     id_item = request.GET.get('id')
     item = Item.objects.get(id=id_item)
     if item.status not in ('Pronto'):
@@ -517,12 +517,8 @@ def finaliza_ajustes(request):
         return JsonResponse("200", safe=False)
     else:
         return JsonResponse("400", safe=False)
-    # except:
-    #    return JsonResponse("deu ruim", safe=False)
 
 # para o app de mobile
-
-
 @csrf_exempt
 def trajes(request):
     retorno = []
@@ -571,3 +567,10 @@ def login_mobile(request):
         return JsonResponse(1, safe=False)
     else:
         return JsonResponse(2, safe=False)
+
+def logout_view(request):
+    logout(request)
+    return redirect("login")
+
+def login(request):
+    return redirect("login")

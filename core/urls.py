@@ -19,7 +19,7 @@ from django.urls.conf import include
 from controle.views import costura, locar, consultar, autocomplete_nome, autocomplete_traje, login_mobile, \
     retornaTrajeSelecionado, salvar_locacao, cria_ficha_medidas, devolver_locacao, cancelar_locacao, atualizar_ficha, consultar_cliente, \
     consulta_ficha_medida, relatorio, mais_menos_alocados, busca_por_data, busca_por_traje,busca_financeiro, consultar_avancado, finaliza_ajustes, \
-    trajes
+    trajes, logout_view, login
 from django.conf.urls.static import static
 from django.conf import settings
 
@@ -48,5 +48,8 @@ urlpatterns = [
     path('busca-financeiro/', busca_financeiro, name="busca-financeiro"),
     path('trajes/', trajes, name="trajes"),
     path('login-mobile/', login_mobile, name="login_mobile"),
-    path('accounts/', include('django.contrib.auth.urls'))
+    path('sair/', logout_view, name="sair"),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('login/', login)
 ]+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+

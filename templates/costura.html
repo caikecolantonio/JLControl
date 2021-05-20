@@ -4,18 +4,6 @@
 
 {% block content %}
 
-{% if cliente == '#ERRO003' %}
-<script>
-atoastAlertaGenerico("Busca por Telefone","Mais de um cliente encontrado, busque por CPF.")
-</script>
-{% endif %}
-
-{% if cliente == '#ERRO004' %}
-<script>
-atoastAlertaGenerico("Busca por Nome","Mais de um cliente encontrado, busque por CPF.")
-</script>
-{% endif %}
-
 <link rel="stylesheet" href="{%  static  'css/costura.css'  %}">
 <script type="text/javascript" src="{% static 'js/costura.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/mascara.js' %}"></script>
@@ -68,10 +56,12 @@ atoastAlertaGenerico("Busca por Nome","Mais de um cliente encontrado, busque por
 </tbody>
 </table>
 </div>
+
 {% else %}
 <script>
   atoastAlertaGenerico("Trajes na costura", "Não existe nenhum traje para realizar costura.")
 </script>
+
 {% endif %}
 
 <script>
