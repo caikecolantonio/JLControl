@@ -75,5 +75,15 @@ class Locacao(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     lancamento = models.ForeignKey(Lancamento, on_delete=models.CASCADE)
     def __str__(self):
-
         return str(self.id) + ' - ' + self.cliente.nome
+
+class LogEmail(models.Model):
+    data_envio = models.DateTimeField(auto_now_add=True)
+    titulo = models.CharField(max_length=3000)
+    mensagem = models.CharField(max_length=3000)
+    destinatario = models.CharField(max_length=3000)
+    def __str__(self):
+        return str(self.data_envio.strftime('%d/%m/%Y %H:%M')) + ' - ' + self.titulo + ' - ' + self.destinatario
+
+    
+    

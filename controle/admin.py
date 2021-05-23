@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Locacao, Item, Ficha, Lancamento, Traje, Cliente
+from .models import Locacao, Item, Ficha, Lancamento, Traje, Cliente, LogEmail
 
 # Register your models here.
 
@@ -32,3 +32,9 @@ class Lancamentos(admin.ModelAdmin):
 
 admin.site.register(Lancamento, Lancamentos)
 admin.site.register(Cliente)
+
+class LogEmails(admin.ModelAdmin):
+    list_display = ('data_envio', 'titulo', 'destinatario')
+    list_display_links = ('data_envio', 'titulo', 'destinatario')
+    list_per_page = 20
+admin.site.register(LogEmail, LogEmails)

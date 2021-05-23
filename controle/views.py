@@ -593,8 +593,8 @@ def nova_senha(request):
             usuario.set_password(senha)
             nome = usuario.first_name
             if envia_senha(nome if nome != "" else usuario.username, usuario.email, senha) == 200:
-               usuario.save()
-               return JsonResponse("200", safe=False)
+                usuario.save()
+                return JsonResponse("200", safe=False)
             else:
                 return JsonResponse("402", safe=False)
         else:
