@@ -77,7 +77,7 @@ async function esqueci(url) {
 			else if (resposta == 402){
 				alert("Erro no envio do email")
 			}
-			else if (resposta == 402){
+			else if (resposta == 401){
 				alert("Usuario sem e-mail, por favor contatar o administrador.")
 			}
 		});
