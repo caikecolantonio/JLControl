@@ -579,17 +579,19 @@ def login(request):
 
 @csrf_exempt
 def nova_senha(request):
-    usuario = User.objects.get(username=request.GET.get('user'))
-    if usuario.email:
-        senha = randomiza_senha()
-        usuario.set_password(senha)
-        nome = usuario.first_name
-        if envia_senha(nome if nome != "" else usuario.username, usuario.email, senha) == 200:
-            usuario.save()
-            return JsonResponse("200", safe=False)
+    try:
+        usuario = User.objects.get(username=request.GET.get('user'))
+        if usuario.email:
+            senha = randomiza_senha()
+            usuario.set_password(senha)
+            nome = usuario.first_name
+            if envia_senha(nome if nome != "" else usuario.username, usuario.email, senha) == 200:
+               usuario.save()
+               return JsonResponse("200", safe=False)
+            else:
+                return JsonResponse("402", safe=False)
         else:
-            return JsonResponse("402", safe=False)
-    else:
-        return JsonResponse("401", safe=False)
-
+            return JsonResponse("401", safe=False)
+    except:
+        return JsonResponse("400", safe=False)
 
