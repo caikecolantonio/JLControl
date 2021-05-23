@@ -7,9 +7,10 @@ from datetime import datetime, timezone, timedelta
 from controle.models import LogEmail
 
 # create message object instance 
-msg = MIMEMultipart()
+
 
 def envia_senha(nome, dest, senha):
+    msg = MIMEMultipart()
     msg['Subject'] = "JLima Control - Nova senha"
     message = f"Olá {nome}!\n Aqui está sua nova senha: {senha}"
     msg['To'] = dest
@@ -18,6 +19,7 @@ def envia_senha(nome, dest, senha):
 
 
 def avisa_trajes(locacao, cliente, lista):
+    msg = MIMEMultipart()
     msg['Subject'] = "JLima Control - Avisos"
     message = f"Olá {cliente.nome}!\n"
     message = message + f"Os seguintes trajes estão disponíveis para retirar:\n"
