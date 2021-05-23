@@ -86,3 +86,22 @@ async function esqueci(url) {
 	}
 	
 }
+function Cria(){
+	user = document.getElementById("id_username")
+	user.classList.add("form-control")
+	user.classList.add("input-lg")
+	user.placeholder = "Usuário"
+
+	document.getElementById("rowLogin").appendChild(user)
+
+	senha = document.getElementById("id_password")
+	senha.classList.add("form-control")
+	senha.classList.add("input-lg")
+	senha.placeholder = "Senha"
+
+	document.getElementById("rowPass").appendChild(senha)
+
+	form = document.getElementById("formDjango")
+	form.removeChild(form.lastElementChild)
+	form.removeChild(form.lastElementChild)
+}
