@@ -27,29 +27,50 @@
 					<fieldset>
 						<h2>JLControl</h2>
 						<hr class="colorgraph">
-						<div class="form-group">
-							<input type="text" name="username" required autofocus autocomplete="username"
-								id="id_username" class="form-control input-lg" placeholder="Login">
+						<div class="form-group" id="rowLogin"></div>
+						<div class="form-group" id="rowPass"></div>
+						<hr class="colorgraph" style="margin-bottom: 5px;">
+						<div id="formDjango">
+							{{form}}
 						</div>
-						<div class="form-group">
-							<input type="password" name="password" required id="id_password"
-								class="form-control input-lg" placeholder="Senha">
-						</div>
-						<hr class="colorgraph">
 						<a onclick="esqueci({% url 'nova-senha' %})" class="btn btn-link pull-right">Esqueceu sua
 							senha?</a>
 						<div class="row" style="margin-left: 1%; margin-right: 1%;">
 							<div class="col-sm2">
 								<input id="submit" type="submit" class="btn btn-lg btn-primary btn-block" value="Logar">
 							</div>
+						</div>
+
+						<ul class="errorlist nonfield"></ul>
 					</fieldset>
 				</form>
 			</div>
 		</div>
 	</div>
-<div class="divAviso" id = "gamb">
-<h1 class= "textoAviso" id = "gambtext"></h1>
-</div>
+	<script>
+		user = document.getElementById("id_username")
+		user.classList.add("form-control")
+		user.classList.add("input-lg")
+		user.placeholder = "Login"
+
+		document.getElementById("rowLogin").appendChild(user)
+
+		senha = document.getElementById("id_password")
+		senha.classList.add("form-control")
+		senha.classList.add("input-lg")
+		senha.placeholder = "Login"
+
+		document.getElementById("rowPass").appendChild(senha)
+
+		form = document.getElementById("formDjango")
+		form.removeChild(form.lastElementChild)
+		form.removeChild(form.lastElementChild)
+
+
+	</script>
+	<div class="divAviso" id="gamb">
+		<h1 class="textoAviso" id="gambtext"></h1>
+	</div>
 
 </body>
 

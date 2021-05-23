@@ -24,3 +24,16 @@
   position: absolute; 
   display: none;
 }
+
+li {
+  list-style-type:none;
+  width: 100%;
+  color: red;
+  text-align: left;
+  margin-left: 0%;
+}
+ul {
+  padding-left: 0px;
+  margin-left: 1%;
+  margin-bottom: 0%;
+}
