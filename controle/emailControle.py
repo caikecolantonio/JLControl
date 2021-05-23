@@ -33,12 +33,12 @@ def avisa_trajes(locacao, cliente, lista):
 def envia(msg, corpo):
     try:
         # setup the parameters of the message
-        password = "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"
+        password = "0npwbKjXkyr2Wz8J"
         msg['From'] = "grupopenelopechavosa@gmail.com"
-        msg['login'] = "apikey"
+        msg['login'] = "grupopenelopechavosa@gmail.com"
         # add in the message body
         msg.attach(MIMEText(corpo, 'plain'))      
-        server = smtplib.SMTP('smtp.sendgrid.net: 587')  
+        server = smtplib.SMTP('smtp-relay.sendinblue.com: 587')  
         server.starttls()
         # Login Credentials for sending the mail
         server.login(msg['login'], password)
