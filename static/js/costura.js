@@ -13,9 +13,10 @@ function finalizaAjustes(id, url){
         }else {
         atoastAlertaGenerico("Finaliza ajustes", "Aconteceu algum erro ao finalizar o ajustes")
         }
+        setTimeout(function () {
+            document.getElementById("testeSucess").style.display = "none"
+            document.location.reload(true);
+        }, 2000);  
     });
-    setTimeout(function () {
-        document.getElementById("testeSucess").style.display = "none"
-        document.location.reload(true);
-    }, 2000);      
+    
 }
