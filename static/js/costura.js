@@ -17,5 +17,5 @@ function finalizaAjustes(id, url){
     setTimeout(function () {
         document.getElementById("testeSucess").style.display = "none"
         document.location.reload(true);
-    }, 1500);      
+    }, 2000);      
 }
