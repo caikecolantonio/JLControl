@@ -305,17 +305,22 @@ def retornaTrajeSelecionado(request):
 
 
 def salvar_locacao(request):
+    retorno = {}
     infoCliente = json.loads(request.GET.get('form'))
     listaTrajes = json.loads(request.GET.get('listatraje'))
+    if not listaTrajes:
+        retorno["status"] = 402
+        return JsonResponse(retorno, safe=False)
+
     dataPrevisao = request.GET.get('dPrevDevolucao')
     valorTotal = request.GET.get('valorTotal')
     infoCliente["Telefone"] = remover_caracteres(infoCliente["Telefone"])
     infoCliente["RG"] = remover_caracteres(infoCliente["RG"])
-    infoCliente["CPF"] = remover_caracteres(infoCliente["CPF"])
-    retorno = {}
+
 
     if infoCliente['isEstrangeiro'] == False:
         if validate_cpf(infoCliente['CPF']):
+            infoCliente["CPF"] = str(remover_caracteres(infoCliente["CPF"]))
             cliente = procura_ou_cria_cliente(
                 infoCliente, "cpf", infoCliente['CPF'])
         else:

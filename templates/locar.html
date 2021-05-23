@@ -416,6 +416,7 @@ atoastAlertaGenerico("Busca por Nome","Mais de um cliente encontrado, busque por
                     if (document.getElementById("DocumentoExterno").value != "") {
                         passou = true
                     } else {
+                        atoastAlertaGenerico("Campo não preenchido.", "Para clientes estrangeiros, preencha o documento externo.")
                         passou = false
                     }
                 } else {
@@ -423,18 +424,21 @@ atoastAlertaGenerico("Busca por Nome","Mais de um cliente encontrado, busque por
                         passou = true
                     } else {
                         passou = false
+                        atoastAlertaGenerico("Campo não preenchido.", "Insira o CPF.")
                     }
                 }
             } else {
+                atoastAlertaGenerico("Campo não preenchido.", "Nome ou telefone em branco.")
                 passou = false
             }
         } else {
             passou = false
+            atoastAlertaGenerico("Campo não preenchido.", "Coloque a data de previsão de devolução.")
         }
         if (document.getElementById("FormNovoEmail").value != ""){
             const re = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
             if (!re.test(document.getElementById("FormNovoEmail").value.toLowerCase())){
-                atoastAlertaGenerico("Criacao de locação", "Coloque um email valido.")
+                atoastAlertaGenerico("Tentativa da locação", "Coloque um email valido.")
                 return
             }
         }
@@ -453,14 +457,16 @@ atoastAlertaGenerico("Busca por Nome","Mais de um cliente encontrado, busque por
                     }, 1500);
                 }
                 else if (resposta["status"] == 401){
-                    atoastAlertaGenerico("Criacao de locação", "Por favor, digite um CPF valido.")
+                    atoastAlertaGenerico("Criação de locação", "Por favor, digite um CPF valido.")
                 }
-                else {
-                    atoastAlertaGenerico("Criacao de locação", "Aconteceu algum erro na locação.")
+                else if (resposta["status"] == 402){
+                    atoastAlertaGenerico("Criação de locação", "Por favor, coloque pelo menos um traje!")
+                }else {
+                    atoastAlertaGenerico("Criação de locação", "Aconteceu algum erro na locação.")
                 }
             });
         } else {
-            atoastAlertaGenerico("Tentativa de locação", "Preencha todos os campos obrigatórios.")
+            
         }
     }
 </script>
