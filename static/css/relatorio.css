@@ -8,6 +8,7 @@ html {
   box-shadow: 0 8px 16px 0 rgba(139, 139, 139, 0.2);
   border-radius: 5px;
   height: 465px;
+  margin-bottom: 5%;
 }
 
 #btn-dark {
