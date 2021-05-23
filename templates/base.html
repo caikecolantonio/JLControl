@@ -64,7 +64,9 @@
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
               <a href="{% url 'locar' %}" class="dropdown-item">Locar</a>
               <a href="{% url 'costura' %}" class="dropdown-item">Costura</a>
+              {% if 'admin' in perms %}
               <a href="{% url 'relatorio' %}" class="dropdown-item">Relatórios</a>
+              {% endif %}
             </div>
           </div>
           <div class="btn-group dropdown">

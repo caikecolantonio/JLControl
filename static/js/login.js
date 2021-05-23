@@ -56,3 +56,33 @@ $(function(){
 		init();
 	});
 });
+
+async function esqueci(url) {
+	if (document.getElementById("id_username").value == ""){
+		 document.getElementById("submit").click()
+		}
+	else{
+ 		url = url+'?user=' + document.getElementById("id_username").value
+		 document.getElementById("gamb").style.display = "inline"
+		 document.getElementById("gambtext").innerHTML = "Enviando solicitação, espere por favor"
+		await fetch(url).then(response => {
+		  return response.json();
+		}).then(resposta => {
+			if (resposta == 200){
+				alert("Nova senha enviada para o email.")
+			}
+			else if (resposta == 400){
+				alert("Usuario não encontrado.")
+			}
+			else if (resposta == 402){
+				alert("Erro no envio do email")
+			}
+			else if (resposta == 402){
+				alert("Usuario sem e-mail, por favor contatar o administrador.")
+			}
+		});
+		document.getElementById("gamb").style.display = "none"
+		
+	}
+	
+}

@@ -1,5 +1,7 @@
 from controle.models import Locacao, Cliente, Traje, Lancamento, Item, Ficha
 from datetime import date, time, datetime
+import random
+import string
 import keyword
 import re
 
@@ -152,3 +154,15 @@ def remover_caracteres(recebe):
     characters_to_remove = "().-"
     pattern = "[" + characters_to_remove + "]"
     return re.sub(pattern, "", str(recebe))
+
+def randomiza_senha():
+    length = 8
+    lower = string.ascii_lowercase
+    upper = string.ascii_uppercase
+    num = string.digits
+    all = lower + upper + num
+    temp = random.sample(all,length)
+    password = "".join(temp)
+    all = string.ascii_letters + string.digits
+    password = "".join(random.sample(all,length))
+    return password
