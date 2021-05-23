@@ -4,7 +4,7 @@ from controle.models import Locacao, Cliente, Traje, Ficha, Lancamento, Item
 from controle.forms import ConsultarCliente, ConsultarTraje, FormFicha
 from controle.funcoes import is_traje_disponivel, busca_locacao_por_cliente, busca_traje, validate_cpf, criar_cliente, \
     criar_locacao, procura_ou_cria_cliente, remover_caracteres, randomiza_senha
-from controle.emailControle import envia_senha
+from controle.emailControle import avisa_trajes, envia_senha
 from django.http import JsonResponse
 from django.forms.models import model_to_dict
 from django.core import serializers
@@ -516,6 +516,13 @@ def finaliza_ajustes(request):
         item.status = 'Pronto'
         item.data_entrega = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         item.save()
+    listaItem = []
+    for locacao in item.locacao_set.all():
+        for item in locacao.item.all():
+            if item.status == "Aguardando":
+                return JsonResponse("200", safe=False)
+            listaItem.append(item)        
+        avisa_trajes(locacao, locacao.cliente, listaItem)
         return JsonResponse("200", safe=False)
     else:
         return JsonResponse("400", safe=False)
