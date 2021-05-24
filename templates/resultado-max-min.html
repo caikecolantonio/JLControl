@@ -3,24 +3,25 @@
 {% block content %}
 
 <p></p>
-<div class="container-fluid">
-  <table class="table table-dark">
-    <thead>
-      <tr>
-        <th scope="col">Traje</th>
-        <th scope="col">Quantidade</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for key, value in trajes.items %}
+<div class="table-responsive-sm">
+  <div class="container-fluid">
+    <table class="table table-dark">
+      <thead>
+        <tr>
+          <th scope="col">Traje</th>
+          <th scope="col">Quantidade</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for key, value in trajes.items %}
 
-      <tr>
-        <td>{{ key }} </td>
-        <td>{{ value }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+        <tr>
+          <td>{{ key }} </td>
+          <td>{{ value }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
-
 {% endblock %}

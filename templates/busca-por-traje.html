@@ -2,38 +2,40 @@
 {% load static %}
 {% block content %}
 <p></p>
-<div class="container-fluid">
-  <p></p>
-  <table class="table table-dark">
-    <thead>
-      <tr>
-        <th scope="col">Código</th>
-        <th scope="col">Nome</th>
-        <th scope="col">Modelo</th>
-        <th scope="col">Corte</th>
-        <th scope="col">Valor</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for traje in trajes %}
-      <tr>
-        <th scope="row">{{ traje.codigo }}</th>
-        <td>{{ traje.nome }}</td>
-        <td>{{ traje.modelo }}</td>
-        <td>{{ traje.corte }}</td>
-        <td>{{ traje.valor }}</td>
-      </tr>
-      {% endfor %}
-      {% for traje in trajes1 %}
-      <tr>
-        <th scope="row">{{ traje.codigo }}</th>
-        <td>{{ traje.nome }}</td>
-        <td>{{ traje.modelo }}</td>
-        <td>{{ traje.corte }}</td>
-        <td>{{ traje.valor }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div class="table-responsive-sm">
+  <div class="container-fluid">
+    <p></p>
+    <table class="table table-dark">
+      <thead>
+        <tr>
+          <th scope="col">Código</th>
+          <th scope="col">Nome</th>
+          <th scope="col">Modelo</th>
+          <th scope="col">Corte</th>
+          <th scope="col">Valor</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for traje in trajes %}
+        <tr>
+          <th scope="row">{{ traje.codigo }}</th>
+          <td>{{ traje.nome }}</td>
+          <td>{{ traje.modelo }}</td>
+          <td>{{ traje.corte }}</td>
+          <td>{{ traje.valor }}</td>
+        </tr>
+        {% endfor %}
+        {% for traje in trajes1 %}
+        <tr>
+          <th scope="row">{{ traje.codigo }}</th>
+          <td>{{ traje.nome }}</td>
+          <td>{{ traje.modelo }}</td>
+          <td>{{ traje.corte }}</td>
+          <td>{{ traje.valor }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
 {% endblock %}
