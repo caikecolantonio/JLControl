@@ -83,6 +83,7 @@ var totalLista = 0
 function AtualizaValor() {
     if (listaTrajes.length > 0){
         document.getElementById("tabelaTrajes").style.display = "table"
+        document.getElementsByTagName("html")[0].style = "overflow-x: hidden; max-width: 100%"
     }
     totalLista = 0
     //Atualiza valor
