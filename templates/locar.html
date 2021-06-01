@@ -452,7 +452,11 @@ atoastAlertaGenerico("Busca por Nome","Mais de um cliente encontrado, busque por
                 }
                 else if (resposta["status"] == 402){
                     atoastAlertaGenerico("Criação de locação", "Por favor, coloque pelo menos um traje!")
-                }else {
+                }
+                else if (resposta["status"] == 405){
+                    atoastAlertaGenerico("Criação de locação", "Previsão de devolução menor que a data atual.")
+                }
+                else {
                     atoastAlertaGenerico("Criação de locação", "Aconteceu algum erro na locação.")
                 }
             });

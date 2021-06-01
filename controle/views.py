@@ -313,6 +313,9 @@ def salvar_locacao(request):
         return JsonResponse(retorno, safe=False)
 
     dataPrevisao = request.GET.get('dPrevDevolucao')
+    if datetime.strptime(dataPrevisao, '%Y-%m-%dT%H:%M') < datetime.now():
+        retorno["status"] = 405
+        return JsonResponse(retorno, safe=False)
     valorTotal = request.GET.get('valorTotal')
     infoCliente["Telefone"] = remover_caracteres(infoCliente["Telefone"])
     infoCliente["RG"] = remover_caracteres(infoCliente["RG"])
