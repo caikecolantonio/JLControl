@@ -210,12 +210,14 @@ atoastAlertaGenerico("Busca por Nome","Mais de um cliente encontrado, busque por
         return new Promise(resolve => setTimeout(resolve, ms));
     }
     async function aplicaMascara() {
+    if (!document.getElementById("DocumentoExterno")){
     document.getElementById("FormNovoRG").dispatchEvent(new KeyboardEvent('keydown',{'key':'alt'}))
     document.getElementById("FormNovoRG").dispatchEvent(new KeyboardEvent('keyup',{'key':'alt'}))
-    await sleep(1)
+    await sleep(20)
     document.getElementById("FormNovoCPF").dispatchEvent(new KeyboardEvent('keydown',{'key':'alt'}))
     document.getElementById("FormNovoCPF").dispatchEvent(new KeyboardEvent('keyup',{'key':'alt'}))
-    await sleep(1)
+    }
+    await sleep(20)
     document.getElementById("FormNovoTelefone").dispatchEvent(new KeyboardEvent('keydown',{'key':'alt'}))
     document.getElementById("FormNovoTelefone").dispatchEvent(new KeyboardEvent('keyup',{'key':'alt'}))
     }
@@ -238,7 +240,7 @@ atoastAlertaGenerico("Busca por Nome","Mais de um cliente encontrado, busque por
     Esconde();
     document.getElementById("DocumentoExterno").value = "{{cliente.documento_externo}}"
     document.getElementById("DocumentoExterno").disabled = true
-    {% endif %}  
+    {% endif %} 
     aplicaMascara()
 </script>
 
@@ -557,6 +559,8 @@ atoastAlertaGenerico("Busca por Nome","Mais de um cliente encontrado, busque por
 </script>
 <!-- Fim Script com jinja2 -->
 <script>
+    if (!document.getElementById("DocumentoExterno")){
     const saved_keydown = document.getElementById("FormNovoCPF").onkeydown;
+    }
 </script>
 {% endblock %}
