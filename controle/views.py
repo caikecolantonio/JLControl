@@ -42,6 +42,11 @@ def locar(request):
                     cliente = Cliente.objects.get(nome=campos['Nome'])
                 else:
                     cliente = "#ERRO004"
+            if campos['DocumentoExterno']:
+                if len(Cliente.objects.filter(documento_externo=campos['DocumentoExterno'])) == 1:
+                    cliente = Cliente.objects.get(documento_externo=campos['DocumentoExterno'])
+                else:
+                    cliente = "#ERRO004"
 
             if cliente == None:
                 cliente = 0
