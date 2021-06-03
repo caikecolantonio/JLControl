@@ -91,7 +91,7 @@ atoastAlertaGenerico("Busca por Nome","Mais de um cliente encontrado, busque por
                         <label for="formMedidaPaleto" class="col-sm-3 col-form-label">Barra paleto </label>
                         <div class="col-sm-9">
                             <input id="formMedidaPaleto" class="form-control" type="number" name="paleto_barra" min="0"
-                                step=".01" placeholder="Barra paleto" style="">
+                                step=".01" placeholder="Barra paleto">
                         </div>
                     </div>
 
@@ -240,10 +240,9 @@ atoastAlertaGenerico("Busca por Nome","Mais de um cliente encontrado, busque por
     document.getElementById("DocumentoExterno").disabled = true
     {% endif %}  
     aplicaMascara()
-
-
-
 </script>
+
+
 
 
 {% elif cliente == 0 %}
@@ -429,7 +428,7 @@ atoastAlertaGenerico("Busca por Nome","Mais de um cliente encontrado, busque por
         if (document.getElementById("FormNovoEmail").value != ""){
             const re = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
             if (!re.test(document.getElementById("FormNovoEmail").value.toLowerCase())){
-                atoastAlertaGenerico("Tentativa da locação", "Coloque um email valido.")
+                atoastAlertaGenerico("Tentativa da locação", "Coloque um email válido.")
                 return
             }
         }
@@ -448,7 +447,7 @@ atoastAlertaGenerico("Busca por Nome","Mais de um cliente encontrado, busque por
                     }, 1500);
                 }
                 else if (resposta["status"] == 401){
-                    atoastAlertaGenerico("Criação de locação", "Por favor, digite um CPF valido.")
+                    atoastAlertaGenerico("Criação de locação", "Por favor, digite um CPF válido.")
                 }
                 else if (resposta["status"] == 402){
                     atoastAlertaGenerico("Criação de locação", "Por favor, coloque pelo menos um traje!")
@@ -557,8 +556,7 @@ atoastAlertaGenerico("Busca por Nome","Mais de um cliente encontrado, busque por
     }
 </script>
 <!-- Fim Script com jinja2 -->
-
-
-
-
+<script>
+    const saved_keydown = document.getElementById("FormNovoCPF").onkeydown;
+</script>
 {% endblock %}

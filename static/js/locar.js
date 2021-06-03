@@ -8,29 +8,7 @@ function validaCamposLocar() {
     }
 }
 
-//Script que mostra ou esconde as infos de cliente estrangeiro
-function Esconde(value) {
-    if (document.getElementById("isEstrangeiro").checked) {
-        document.getElementById("FormNovoCPF").id = "DocumentoExterno"
-        document.getElementById("DocumentoExterno").placeholder = "Documento Externo"
-        document.getElementById("DocumentoExterno").name = "DocumentoExterno"
-        document.getElementById("DocumentoExterno").maxLength = "50"
-        document.getElementById("DocumentoExterno").value = ""
-        document.getElementById("labelNovoCPF").innerHTML = "Documento Externo"
-        document.getElementById("FormNovoRG").style.visibility = "hidden"
-        document.getElementById("labelNovoRG").style.visibility = "hidden"
 
-    } else {
-        document.getElementById("DocumentoExterno").id = "FormNovoCPF"
-        document.getElementById("FormNovoCPF").placeholder = "CPF"
-        document.getElementById("FormNovoCPF").value = ""
-        document.getElementById("FormNovoCPF").name = "CPF"
-        document.getElementById("FormNovoCPF").maxLength = "11"
-        document.getElementById("labelNovoCPF").innerHTML = "CPF"
-        document.getElementById("FormNovoRG").style.visibility = "visible"
-        document.getElementById("labelNovoRG").style.visibility = "visible"
-    }
-};
 
 // Seleciona o Traje na Table (deixando azul)
 function seleciona(id) {
@@ -76,7 +54,31 @@ function animaBotaoMedida(id)
     }
 
 }
-
+//Script que mostra ou esconde as infos de cliente estrangeiro
+function Esconde(value) {
+    if (document.getElementById("isEstrangeiro").checked) {
+        document.getElementById("FormNovoCPF").onkeydown = null
+        document.getElementById("FormNovoCPF").id = "DocumentoExterno"
+        document.getElementById("DocumentoExterno").placeholder = "Documento Externo"
+        document.getElementById("DocumentoExterno").name = "DocumentoExterno"
+        document.getElementById("DocumentoExterno").maxLength = "50"
+        document.getElementById("DocumentoExterno").value = ""
+        document.getElementById("labelNovoCPF").innerHTML = "Documento Externo"
+        document.getElementById("FormNovoRG").style.visibility = "hidden"
+        document.getElementById("labelNovoRG").style.visibility = "hidden"
+    } else {
+        document.getElementById("DocumentoExterno").id = "FormNovoCPF"
+        document.getElementById("FormNovoCPF").placeholder = "CPF"
+        document.getElementById("FormNovoCPF").value = ""
+        document.getElementById("FormNovoCPF").name = "CPF"
+        document.getElementById("FormNovoCPF").maxLength = "14"
+        document.getElementById("labelNovoCPF").innerHTML = "CPF"
+        document.getElementById("FormNovoRG").style.visibility = "visible"
+        document.getElementById("FormNovoRG").value = ""
+        document.getElementById("labelNovoRG").style.visibility = "visible"
+        document.getElementById("FormNovoCPF").onkeydown = saved_keydown
+    }
+};
 //Script pra atualizar o valor de todos os trajes da table
 var totalLista = 0
 

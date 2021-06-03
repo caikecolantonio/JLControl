@@ -318,7 +318,8 @@ def salvar_locacao(request):
         return JsonResponse(retorno, safe=False)
     valorTotal = request.GET.get('valorTotal')
     infoCliente["Telefone"] = remover_caracteres(infoCliente["Telefone"])
-    infoCliente["RG"] = remover_caracteres(infoCliente["RG"])
+    if "RG" in infoCliente:
+        infoCliente["RG"] = remover_caracteres(infoCliente["RG"])
 
 
     if infoCliente['isEstrangeiro'] == False:
